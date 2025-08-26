@@ -1,1 +1,126 @@
-<html><body><nav><h2>TESTE da aplicação</h2></nav></body></html>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>SmartSpaar - Energieeffizienz Prognose</title>
+  <!-- Link to Nexa Heavy font in the same folder -->
+  <link rel="stylesheet" href="nexa-heavy.css">
+  <style>
+    body {
+      font-family: 'Nexa Heavy', Arial, sans-serif;
+      margin: 0;
+      background: #f7f9fb;
+      color: #1E3A5F;
+    }
+    nav {
+      background: #fff;
+      padding: 0 3rem;
+      box-shadow: 0 2px 8px rgba(30,58,95,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+    .nav-logo {
+      font-size: 1.7rem;
+      font-family: 'Nexa Heavy', Arial, sans-serif;
+      color: #1E3A5F;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+    }
+    .nav-menu {
+      display: flex;
+      gap: 2.2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-menu li {
+      display: flex;
+      align-items: center;
+    }
+    .nav-menu a {
+      text-decoration: none;
+      color: #1E3A5F;
+      font-family: 'Nexa Heavy', Arial, sans-serif;
+      font-size: 1.07rem;
+      padding: 8px 0;
+      transition: color 0.18s, border-bottom 0.18s;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-menu a:hover {
+      color: #0B8C38;
+      border-bottom: 2px solid #95BF39;
+    }
+    @media (max-width: 750px) {
+      nav { flex-direction: column; align-items: flex-start; height: auto; padding: 1.2rem 1rem;}
+      .nav-logo { margin-bottom: 0.9rem;}
+      .nav-menu { flex-direction: column; gap: 1rem; }
+    }
+    .hero {
+      background: linear-gradient(90deg,#1E3A5F 65%,#95BF39 100%);
+      padding: 5rem 3rem 4rem 3rem;
+      color: #fff;
+      text-align: left;
+      font-family: 'Nexa Heavy', Arial, sans-serif;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      color: #fff;
+      font-family: 'Nexa Heavy', Arial, sans-serif;
+      line-height: 1.1;
+      letter-spacing: 0.01em;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 520px;
+      color: #f7f9fb;
+      font-family: 'Nexa Heavy', Arial, sans-serif;
+      margin-bottom: 2.5rem;
+    }
+    .cta-btn {
+      background: #0B8C38;
+      color: #fff;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 2rem;
+      font-size: 1.1rem;
+      font-family: 'Nexa Heavy', Arial, sans-serif;
+      margin-top: 1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(11,140,56,0.12);
+      transition: background 0.18s;
+    }
+    .cta-btn:hover {
+      background: #95BF39;
+      color: #1E3A5F;
+    }
+    @media (max-width: 650px) {
+      .hero { padding: 2.5rem 1rem;}
+      .hero h1 { font-size: 2rem;}
+      .hero p { font-size: 1rem;}
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#" class="nav-logo">SmartSpaar</a>
+    <ul class="nav-menu">
+      <li><a href="#leistungen">Leistungen</a></li>
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+      <li><a href="#about">Über Uns</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <h1>Transparenz für Ihren Energieverbrauch</h1>
+    <p>
+      SmartSpaar liefert Ihnen individuelle Prognosen auf Abruf und ein übersichtliches Dashboard für Ihre Energieeffizienz. Treffen Sie datengestützte Entscheidungen und sparen Sie Kosten – effizient und nachhaltig.
+    </p>
+    <button class="cta-btn">Prognose anfragen</button>
+  </section>
+</body>
+</html>
