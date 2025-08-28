@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SmartSpaar — Painel Admin</title>
+  <meta name="description" content="Painel administrativo SmartSpaar — overview clientes, links para CRMs e gestão de utilizadores." />
+  <link rel="icon" href="../favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{--primary:#1E3A5F;--accent:#95BF39;--accent2:#0B8C38}
+    body{font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <header class="bg-white shadow-sm fixed w-full z-30">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="text-xl font-bold text-[var(--primary)]">SmartSpaar — Admin</div>
+      <nav class="hidden md:flex items-center space-x-4">
+        <a href="/admin" class="text-slate-700">Dashboard</a>
+        <a href="#crms" class="text-slate-700">CRMs</a>
+        <a href="#users" class="text-slate-700">Usuários</a>
+        <a href="/logout" class="text-red-600">Sair</a>
+      </nav>
+      <button id="menuBtn" class="md:hidden px-3 py-2 border rounded" onclick="location.href='/admin'">Menu</button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 pt-28 pb-20">
+    <section class="bg-white rounded-lg shadow p-6 mb-6">
+      <h1 class="text-2xl font-semibold text-[var(--primary)]">Overview rápido</h1>
+      <p class="mt-2 text-slate-700">Visão geral dos clientes ativos agregados por CRMs conectados.</p>
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="p-4 border rounded">
+          <h2 class="font-semibold">Clientes ativos (total)</h2>
+          <div id="totalClients" class="text-3xl mt-2">—</div>
+        </div>
+        <div class="p-4 border rounded">
+          <h2 class="font-semibold">Leads novos (30d)</h2>
+          <div id="newLeads" class="text-3xl mt-2">—</div>
+        </div>
+        <div class="p-4 border rounded">
+          <h2 class="font-semibold">Clientes com alertas</h2>
+          <div id="alertsCount" class="text-3xl mt-2">—</div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <button onclick="fetchOverview()" class="px-4 py-2 rounded bg-[var(--accent2)] text-white">Atualizar</button>
+      </div>
+    </section>
+
+    <section id="crms" class="bg-white rounded-lg shadow p-6 mb-6">
+      <h2 class="text-xl font-semibold text-[var(--primary)]">Integrações CRM</h2>
+      <p class="text-slate-700 mt-2">Conectar APIs para obter overview de clientes ativos.</p>
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-4 border rounded">
+          <h3 class="font-semibold">HubSpot</h3>
+          <p class="text-sm text-slate-600">Contacts API / Companies API — API Key ou OAuth. Exemplos: contatos ativos, último contato.</p>
+          <a class="inline-block mt-3 text-white bg-[var(--primary)] px-3 py-1 rounded" href="https://developers.hubspot.com/docs/api/overview" target="_blank">Docs HubSpot</a>
+        </div>
+        <div class="p-4 border rounded">
+          <h3 class="font-semibold">Pipedrive</h3>
+          <p class="text-sm text-slate-600">REST API com API token — bom para pipelines, negócios e pessoas.</p>
+          <a class="inline-block mt-3 text-white bg-[var(--primary)] px-3 py-1 rounded" href="https://pipedrive.readme.io/docs/intro" target="_blank">Docs Pipedrive</a>
+        </div>
+        <div class="p-4 border rounded">
+          <h3 class="font-semibold">Salesforce</h3>
+          <p class="text-sm text-slate-600">Enterprise-grade — OAuth 2.0 + REST / Bulk APIs. Excelente para grandes volumes.</p>
+          <a class="inline-block mt-3 text-white bg-[var(--primary)] px-3 py-1 rounded" href="https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest" target="_blank">Docs Salesforce</a>
+        </div>
+        <div class="p-4 border rounded">
+          <h3 class="font-semibold">Zoho CRM</h3>
+          <p class="text-sm text-slate-600">OAuth 2.0 — Contacts, Leads e Deals via API.</p>
+          <a class="inline-block mt-3 text-white bg-[var(--primary)] px-3 py-1 rounded" href="https://www.zoho.com/crm/developer/docs/" target="_blank">Docs Zoho</a>
+        </div>
+      </div>
+      <p class="mt-4 text-sm text-slate-600">Observação: cada integração precisa de credenciais; recomendamos guardar segredos no Azure Key Vault.</p>
+    </section>
+
+    <section id="users" class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-semibold text-[var(--primary)]">Gestão de usuários</h2>
+      <p class="text-slate-700 mt-2">Lista simplificada de administradores e operadores.</p>
+      <div class="mt-4">
+        <table class="w-full text-left">
+          <thead class="text-sm text-slate-600">
+            <tr><th>Usuário</th><th>Email</th><th>Role</th></tr>
+          </thead>
+          <tbody id="usersTable" class="text-sm">
+            <tr><td colspan="3" class="text-slate-500">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    async function fetchOverview(){
+      try {
+        const res = await fetch('/api/overview');
+        if(!res.ok) throw new Error('error');
+        const json = await res.json();
+        document.getElementById('totalClients').textContent = json.totalClients ?? '0';
+        document.getElementById('newLeads').textContent = json.newLeads ?? '0';
+        document.getElementById('alertsCount').textContent = json.alerts ?? '0';
+      } catch(e){
+        console.error(e);
+        alert('Erro ao obter overview. Ver consola.');
+      }
+      // fetch users list
+      try {
+        const r2 = await fetch('/api/users');
+        const ujson = await r2.json();
+        const tbody = document.getElementById('usersTable');
+        tbody.innerHTML = ujson.map(u => `<tr><td>${u.username}</td><td>${u.email}</td><td>${u.role}</td></tr>`).join('');
+      } catch(e){
+        console.warn(e);
+      }
+    }
+
+    // initial load
+    fetchOverview();
+  </script>
+</body>
+</html>
