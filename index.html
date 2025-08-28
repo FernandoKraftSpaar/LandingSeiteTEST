@@ -1,351 +1,345 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>SmartSpaar - Energieeffizienz Prognose & Dashboard</title>
-  <meta name="description" content="SmartSpaar bietet Prognosen auf Abruf und ein intuitives Dashboard für Energieeffizienz. Sparen Sie Kosten durch datenbasierte Entscheidungen – nachhaltig und effizient.">
-  <meta name="keywords" content="energieeffizienz, prognose, dashboard, energie, sparen, SmartSpaar, nachhaltigkeit, energy efficiency, forecast, sustainability">
-  <meta name="author" content="SmartSpaar">
-  <link rel="canonical" href="https://www.smartspaar.com/">
-  <!-- Open Graph/Facebook -->
-  <meta property="og:title" content="SmartSpaar - Energieeffizienz Prognose & Dashboard">
-  <meta property="og:description" content="Intelligente Energieprognosen und Effizienz-Dashboard für Unternehmen.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.smartspaar.com/">
-  <meta property="og:image" content="https://www.smartspaar.com/og-image.jpg">
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="SmartSpaar - Energieeffizienz Prognose & Dashboard">
-  <meta name="twitter:description" content="Intelligente Energieprognosen und Effizienz-Dashboard für Unternehmen.">
-  <meta name="twitter:image" content="https://www.smartspaar.com/og-image.jpg">
-  <!-- Language alternates -->
-  <link rel="alternate" hreflang="de" href="https://www.smartspaar.com/de/">
-  <link rel="alternate" hreflang="hrx" href="https://www.smartspaar.com/hrx/">
-  <link rel="alternate" hreflang="pt" href="https://www.smartspaar.com/pt/">
-  <link rel="alternate" hreflang="en" href="https://www.smartspaar.com/en/">
-  <link rel="icon" href="favicon.ico">
-  <!-- Font and CSS -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SmartSpaar — Economia imediata, eficiência contínua.</title>
+  <meta name="description" content="SmartSpaar: economia imediata, simplicidade na implementação e inovação estruturada para PMEs industriais. Diagnóstico rápido, projeções e dashboard com alertas via WhatsApp." />
+  <link rel="icon" href="favicon.ico" />
+
+  <!-- Tailwind Play CDN (rápido pra protótipo). Troque por build do Tailwind em produção. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonte Nexa Heavy (arquivo local) -->
   <link rel="stylesheet" href="nexa-heavy.css">
-  <!-- Structured Data (example for Organization) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "SmartSpaar",
-    "url": "https://www.smartspaar.com/",
-    "logo": "https://www.smartspaar.com/logo.png",
-    "description": "SmartSpaar bietet Prognosen auf Abruf und ein intuitives Dashboard für Energieeffizienz.",
-    "sameAs": [
-      "https://www.linkedin.com/company/smartspaar",
-      "https://twitter.com/smartspaar"
-    ]
-  }
-  </script>
-  <title>SmartSpaar - Energieeffizienz Prognose</title>
-  <!-- Link to Nexa Heavy font in the same folder -->
-  <link rel="stylesheet" href="nexa-heavy.css">
+
   <style>
-    body {
-      font-family: 'Nexa Heavy', Arial, sans-serif;
-      margin: 0;
-      background: #f7f9fb;
-      color: #1E3A5F;
-    }
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      width: 100vw;
-      z-index: 1000;
-      background: #fff;
-      padding: 0 3rem;
-      box-shadow: 0 2px 8px rgba(30,58,95,0.07);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 70px;
-      transition: height 0.2s;
-    }
-    .nav-logo {
-      font-size: 1.7rem;
-      font-family: 'Nexa Heavy', Arial, sans-serif;
-      color: #1E3A5F;
-      letter-spacing: 0.03em;
-      text-decoration: none;
-      flex-shrink: 0;
-      z-index: 1200;
-    }
-    .nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 2rem;
-      color: #1E3A5F;
-      cursor: pointer;
-      z-index: 1200;
-      margin-left: 1.2rem;
-    }
-    .nav-menu {
-      display: flex;
-      gap: 2.2rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      transition: max-height 0.3s, opacity 0.2s;
-    }
-    .nav-menu li {
-      display: flex;
-      align-items: center;
-    }
-    .nav-menu a {
-      text-decoration: none;
-      color: #1E3A5F;
-      font-family: 'Nexa Heavy', Arial, sans-serif;
-      font-size: 1.07rem;
-      padding: 8px 0;
-      transition: color 0.18s, border-bottom 0.18s;
-      border-bottom: 2px solid transparent;
-    }
-    .nav-menu a:hover {
-      color: #0B8C38;
-      border-bottom: 2px solid #95BF39;
-    }
-    .lang-switch {
-      margin-left: 1.5rem;
-      display: flex;
-      gap: 0.4rem;
-      align-items: center;
-    }
-    .lang-btn {
-      background: #1E3A5F;
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      font-size: 1rem;
-      cursor: pointer;
-      font-family: 'Nexa Heavy', Arial, sans-serif;
-      transition: background 0.18s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .lang-btn.active, .lang-btn:hover {
-      background: #95BF39;
-      color: #1E3A5F;
-    }
-    /* Responsive nav */
-    @media (max-width: 900px) {
-      nav {padding: 0 1rem;}
-    }
-    @media (max-width: 750px) {
-      nav {
-        flex-direction: row;
-        align-items: flex-start;
-        height: auto;
-        padding: 0.7rem 0.5rem 0.3rem 1rem;
-      }
-      .nav-logo {
-        margin-bottom: 0;
-      }
-      .nav-toggle {
-        display: block;
-      }
-      .nav-menu {
-        flex-direction: column;
-        gap: 0.8rem;
-        position: absolute;
-        top: 65px;
-        left: 0;
-        right: 0;
-        background: #fff;
-        box-shadow: 0 4px 18px rgba(30,58,95,0.11);
-        max-height: 0;
-        opacity: 0;
-        overflow: hidden;
-        pointer-events: none;
-      }
-      .nav-menu.expanded {
-        max-height: 280px;
-        opacity: 1;
-        pointer-events: auto;
-        padding-bottom: 0.7rem;
-      }
-      .lang-switch {
-        margin: 1rem 0 0 0.5rem;
-      }
-      .page-offset { height: 85px; }
-    }
-    /* Prevent content from hiding behind fixed nav */
-    .page-offset {
-      height: 70px;
-      width: 100%;
-    }
-    /* Hero Section */
-    .hero {
-      background: linear-gradient(90deg,#1E3A5F 65%,#95BF39 100%);
-      padding: 5rem 3rem 4rem 3rem;
-      color: #fff;
-      text-align: left;
-      font-family: 'Nexa Heavy', Arial, sans-serif;
-      transition: background 0.18s;
-    }
-    .hero h1 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-      color: #fff;
-      font-family: 'Nexa Heavy', Arial, sans-serif;
-      line-height: 1.1;
-      letter-spacing: 0.01em;
-      transition: color 0.18s;
-    }
-    .hero p {
-      font-size: 1.2rem;
-      max-width: 520px;
-      color: #f7f9fb;
-      font-family: 'Nexa Heavy', Arial, sans-serif;
-      margin-bottom: 2.5rem;
-      transition: color 0.18s;
-    }
-    .cta-btn {
-      background: #0B8C38;
-      color: #fff;
-      padding: 1rem 2.5rem;
-      border: none;
-      border-radius: 2rem;
-      font-size: 1.1rem;
-      font-family: 'Nexa Heavy', Arial, sans-serif;
-      margin-top: 1rem;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(11,140,56,0.12);
-      transition: background 0.18s, color 0.18s;
-    }
-    .cta-btn:hover {
-      background: #95BF39;
-      color: #1E3A5F;
-    }
-    @media (max-width: 650px) {
-      .hero { padding: 2.5rem 1rem;}
-      .hero h1 { font-size: 2rem;}
-      .hero p { font-size: 1rem;}
-    }
+    /* pequenas customizações para que a Nexa seja usada corretamente como fallback */
+    :root { --primary: #1E3A5F; --accent: #95BF39; --accent-2: #0B8C38; }
+    .nexa { font-family: 'Nexa Heavy', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    /* garantir comportamento suave do menu quando fixed */
+    html { scroll-behavior: smooth; }
   </style>
 </head>
-<body>
-  <nav>
-    <a href="#" class="nav-logo">SmartSpaar</a>
-    <button class="nav-toggle" aria-label="Menü öffnen/schließen" onclick="toggleMenu()">
-      &#9776;
-    </button>
-    <ul class="nav-menu" id="navMenu">
-      <li><a href="#leistungen" data-i18n="menu_services">Leistungen</a></li>
-      <li><a href="#dashboard" data-i18n="menu_dashboard">Dashboard</a></li>
-      <li><a href="#kontakt" data-i18n="menu_contact">Kontakt</a></li>
-      <li><a href="#about" data-i18n="menu_about">Über Uns</a></li>
-      <li>
-        <div class="lang-switch">
-          <button class="lang-btn active" onclick="switchLang('de')" id="lang-de" title="Deutsch">DE</button>
-          <button class="lang-btn" onclick="switchLang('hrx')" id="lang-hrx" title="Riograndenser Hunsrückisch">HRX</button>
-          <button class="lang-btn" onclick="switchLang('pt')" id="lang-pt" title="Português">PT</button>
-          <button class="lang-btn" onclick="switchLang('en')" id="lang-en" title="English">EN</button>
-        </div>
-      </li>
-    </ul>
-  </nav>
-  <div class="page-offset"></div>
-  <section class="hero" id="hero">
-    <h1 id="hero-title">Transparenz für Ihren Energieverbrauch</h1>
-    <p id="hero-desc">
-      SmartSpaar liefert Ihnen individuelle Prognosen auf Abruf und ein übersichtliches Dashboard für Ihre Energieeffizienz. Treffen Sie datengestützte Entscheidungen und sparen Sie Kosten – effizient und nachhaltig.
-    </p>
-    <button class="cta-btn" id="hero-cta">Sparen wir heute!</button>
-  </section>
-  <script>
-    // Menu toggle for mobile
-    function toggleMenu() {
-      var navMenu = document.getElementById('navMenu');
-      navMenu.classList.toggle('expanded');
-    }
+<body class="nexa bg-gray-50 text-slate-900">
 
-    // Language resources
+  <!-- NAV: fixo -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo / Nome -->
+        <div class="flex items-center">
+          <a href="#" class="text-2xl text-[var(--primary)] tracking-tight">SmartSpaar</a>
+        </div>
+
+        <!-- Menu desktop -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#o-que-entregamos" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_services">O que entregamos</a>
+          <a href="#como-funciona" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_how">Como funciona</a>
+          <a href="#por-que" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_why">Por que escolher</a>
+          <a href="#validacao" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_social">Validação</a>
+        </div>
+
+        <!-- Right: language + mobile toggle -->
+        <div class="flex items-center space-x-3">
+          <div class="hidden md:flex items-center space-x-2">
+            <button id="btn-pt" class="lang-btn px-2 py-1 rounded-md bg-[var(--primary)] text-white" onclick="switchLang('pt')">PT</button>
+            <button id="btn-hrx" class="lang-btn px-2 py-1 rounded-md bg-white text-[var(--primary)] border border-[var(--primary)]" onclick="switchLang('hrx')">HRX</button>
+          </div>
+
+          <!-- Mobile menu button -->
+          <button id="mobileBtn" class="md:hidden p-2 rounded-md text-[var(--primary)]" aria-label="Abrir menu" onclick="toggleMobileMenu()">
+            <svg id="icon-open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+            </svg>
+            <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile expanded menu -->
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+      <div class="px-4 py-4 space-y-2">
+        <a href="#o-que-entregamos" class="block text-[var(--primary)]" data-i18n="menu_services">O que entregamos</a>
+        <a href="#como-funciona" class="block text-[var(--primary)]" data-i18n="menu_how">Como funciona</a>
+        <a href="#por-que" class="block text-[var(--primary)]" data-i18n="menu_why">Por que escolher</a>
+        <a href="#validacao" class="block text-[var(--primary)]" data-i18n="menu_social">Validação</a>
+
+        <div class="pt-2 border-t flex items-center space-x-2">
+          <button id="m-btn-pt" class="w-1/2 py-2 rounded-md bg-[var(--primary)] text-white" onclick="switchLang('pt')">PT</button>
+          <button id="m-btn-hrx" class="w-1/2 py-2 rounded-md bg-white text-[var(--primary)] border border-[var(--primary)]" onclick="switchLang('hrx')">HRX</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- offset para nav fixa -->
+  <div class="h-16 md:h-16"></div>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- HERO -->
+    <section class="bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] rounded-xl text-white px-6 py-16 md:py-24 -mx-4 md:mx-0">
+      <div class="max-w-3xl">
+        <h1 id="hero-title" class="text-3xl md:text-4xl font-extrabold leading-tight" data-i18n="hero_title">Economia imediata, eficiência contínua.</h1>
+        <p id="hero-sub" class="mt-4 text-lg md:text-xl" data-i18n="hero_sub">Sua empresa reduz custos agora e se prepara para crescer com inteligência energética no futuro.</p>
+        <div class="mt-8 flex items-center space-x-4">
+          <a id="hero-cta" href="https://wa.me/seunumero" target="_blank" rel="noopener" class="inline-block px-6 py-3 rounded-full bg-[var(--accent-2)] hover:bg-[var(--accent)] text-white font-semibold" data-i18n="hero_cta">Quero economizar agora</a>
+          <a href="#o-que-entregamos" class="text-white/90 underline" data-i18n="hero_secondary">Saiba como funciona</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bloco 1 – O que entregamos -->
+    <section id="o-que-entregamos" class="mt-12 bg-white rounded-xl shadow-sm p-6">
+      <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="block1_title">O que entregamos</h2>
+      <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-700">
+        <li class="flex items-start space-x-3">
+          <svg class="h-6 w-6 text-[var(--accent-2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>
+          <span data-i18n="deliver_1">Diagnóstico energético rápido e sem esforço</span>
+        </li>
+        <li class="flex items-start space-x-3">
+          <svg class="h-6 w-6 text-[var(--accent-2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 11V7a4 4 0 10-8 0v4M21 13v5a2 2 0 01-2 2H7"/></svg>
+          <span data-i18n="deliver_2">Projeções precisas de consumo e custos</span>
+        </li>
+        <li class="flex items-start space-x-3">
+          <svg class="h-6 w-6 text-[var(--accent-2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h12M3 17h6"/></svg>
+          <span data-i18n="deliver_3">Otimização de demanda com payback acelerado</span>
+        </li>
+        <li class="flex items-start space-x-3">
+          <svg class="h-6 w-6 text-[var(--accent-2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"/></svg>
+          <span data-i18n="deliver_4">Suporte para projetos de eficiência e automação</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Bloco 2 – Como funciona -->
+    <section id="como-funciona" class="mt-8 bg-white rounded-xl shadow-sm p-6">
+      <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="block2_title">Como funciona</h2>
+      <ol class="mt-6 list-decimal list-inside space-y-3 text-slate-700">
+        <li data-i18n="how_1">Integramos dados da sua operação sem atrito</li>
+        <li data-i18n="how_2">Aplicamos heurísticas inteligentes para planejar máquinas e cargas</li>
+        <li data-i18n="how_3">Você recebe alertas e recomendações claras, via dashboard ou WhatsApp</li>
+      </ol>
+    </section>
+
+    <!-- Bloco 3 – Por que escolher -->
+    <section id="por-que" class="mt-8 bg-white rounded-xl shadow-sm p-6">
+      <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="block3_title">Por que escolher a SmartSpaar</h2>
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-700">
+        <div>
+          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_speed">Agilidade</h3>
+          <p data-i18n="why_speed_desc">Resultado visível em semanas, não meses</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_cost">Baixo custo</h3>
+          <p data-i18n="why_cost_desc">Sem consultorias pesadas ou longos contratos</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_client">Foco no cliente</h3>
+          <p data-i18n="why_client_desc">Nós fazemos o trabalho, você colhe o resultado</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_scale">Escalável</h3>
+          <p data-i18n="why_scale_desc">Preparada para integrar sensores e ERPs no futuro</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Validação Social -->
+    <section id="validacao" class="mt-8 bg-white rounded-xl shadow-sm p-6 flex flex-col md:flex-row items-center gap-6">
+      <div class="flex-1">
+        <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="social_title">Validação social</h2>
+        <p class="mt-4 text-slate-700" data-i18n="social_text">5 clientes piloto com resultados de 5% a 80% de economia já validaram nossa solução.</p>
+      </div>
+      <div class="flex items-center space-x-4">
+        <!-- Logo CEI-UFRGS: coloque o arquivo assets/cei-ufrgs.png na pasta -->
+        <img src="assets/cei-ufrgs.png" alt="CEI-UFRGS" class="h-16 object-contain" />
+      </div>
+    </section>
+
+    <!-- Faixa de Inovação Estruturada -->
+    <section class="mt-8 rounded-xl bg-gradient-to-r from-white to-white border p-6">
+      <div class="bg-[var(--primary)]/5 rounded-lg p-6">
+        <h3 class="text-xl font-semibold text-[var(--primary)]" data-i18n="innovation_title">Faixa de Inovação Estruturada</h3>
+        <p class="mt-3 text-slate-700" data-i18n="innovation_text">Mais que reduzir custos, estruturamos inovação na sua empresa com tecnologia proprietária e rede de parceiros locais.</p>
+      </div>
+    </section>
+
+    <!-- Espaço / Mais conteúdo -->
+    <div class="my-12"></div>
+  </main>
+
+  <!-- Footer com CTA final -->
+  <footer class="mt-12 bg-[var(--primary)] text-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between">
+      <div>
+        <p class="font-semibold text-lg" data-i18n="footer_title">Comece agora sem investimento inicial</p>
+        <p class="text-sm mt-1 text-white/90" data-i18n="footer_sub">Agilidade, baixo custo e resultado em semanas para PMEs industriais.</p>
+      </div>
+      <div class="mt-4 md:mt-0">
+        <!-- IMPORTANTE: ajuste o número abaixo para o número correto (coloque com country code sem +). -->
+        <a id="footer-cta" href="https://wa.me/5551998712569" target="_blank" rel="noopener" class="inline-block px-6 py-3 bg-[var(--accent-2)] rounded-full font-semibold hover:bg-[var(--accent)]" data-i18n="footer_cta">Comece agora sem investimento inicial</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ========================
+    // Mobile menu toggle
+    // ========================
+    const mobileMenuEl = document.getElementById('mobileMenu');
+    const iconOpen = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
+    function toggleMobileMenu() {
+      const isHidden = mobileMenuEl.classList.contains('hidden');
+      if (isHidden) {
+        mobileMenuEl.classList.remove('hidden');
+        iconOpen.classList.add('hidden');
+        iconClose.classList.remove('hidden');
+      } else {
+        mobileMenuEl.classList.add('hidden');
+        iconOpen.classList.remove('hidden');
+        iconClose.classList.add('hidden');
+      }
+    }
+    // Close mobile menu on resize > md
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) {
+        if (!mobileMenuEl.classList.contains('hidden')) {
+          mobileMenuEl.classList.add('hidden');
+          iconOpen.classList.remove('hidden');
+          iconClose.classList.add('hidden');
+        }
+      }
+    });
+    // Close on internal link click (mobile)
+    document.querySelectorAll('#mobileMenu a').forEach(a => {
+      a.addEventListener('click', () => {
+        if (window.innerWidth < 768) toggleMobileMenu();
+      });
+    });
+
+    // ========================
+    // Language switch (pt/hrx)
+    // ========================
     const translations = {
-      de: {
-        menu_services: "Leistungen",
-        menu_dashboard: "Dashboard",
-        menu_contact: "Kontakt",
-        menu_about: "Über Uns",
-        hero_title: "Transparenz für Ihren Energieverbrauch",
-        hero_desc: "SmartSpaar liefert Ihnen individuelle Prognosen auf Abruf und ein übersichtliches Dashboard für Ihre Energieeffizienz. Treffen Sie datengestützte Entscheidungen und sparen Sie Kosten – effizient und nachhaltig.",
-        hero_cta: "Sparen wir heute!"
-      },
-      hrx: {
-        menu_services: "Dienschtleistunge",
-        menu_dashboard: "Dashboard",
-        menu_contact: "Kontakt",
-        menu_about: "Iwwa Uns",
-        hero_title: "Transparens fer Eiern Energieverbrauch",
-        hero_desc: "SmartSpaar gebt Eich individuelle Prognose, wann ihr braucht, un e klares Dashboard fer die Energieeffizienz. Macht Daten-Entscheidung un spart Kuschte – effiziänt un nachhaltig.",
-        hero_cta: "Lass uns heit spare!"
-      },
       pt: {
-        menu_services: "Serviços",
-        menu_dashboard: "Painel",
-        menu_contact: "Contato",
-        menu_about: "Sobre Nós",
-        hero_title: "Transparência para seu consumo de energia",
-        hero_desc: "A SmartSpaar oferece prognósticos sob demanda e um painel claro para sua eficiência energética. Tome decisões baseadas em dados e economize custos – eficiente e sustentável.",
-        hero_cta: "Vamos economizar hoje!"
+        menu_services: "O que entregamos",
+        menu_how: "Como funciona",
+        menu_why: "Por que escolher",
+        menu_social: "Validação",
+        hero_title: "Economia imediata, eficiência contínua.",
+        hero_sub: "Sua empresa reduz custos agora e se prepara para crescer com inteligência energética no futuro.",
+        hero_cta: "Quero economizar agora",
+        hero_secondary: "Saiba como funciona",
+        block1_title: "O que entregamos",
+        deliver_1: "Diagnóstico energético rápido e sem esforço",
+        deliver_2: "Projeções precisas de consumo e custos",
+        deliver_3: "Otimização de demanda com payback acelerado",
+        deliver_4: "Suporte para projetos de eficiência e automação",
+        block2_title: "Como funciona",
+        how_1: "Integramos dados da sua operação sem atrito",
+        how_2: "Aplicamos heurísticas inteligentes para planejar máquinas e cargas",
+        how_3: "Você recebe alertas e recomendações claras, via dashboard ou WhatsApp",
+        block3_title: "Por que escolher a SmartSpaar",
+        why_speed: "Agilidade",
+        why_speed_desc: "Resultado visível em semanas, não meses",
+        why_cost: "Baixo custo",
+        why_cost_desc: "Sem consultorias pesadas ou longos contratos",
+        why_client: "Foco no cliente",
+        why_client_desc: "Nós fazemos o trabalho, você colhe o resultado",
+        why_scale: "Escalável",
+        why_scale_desc: "Preparada para integrar sensores e ERPs no futuro",
+        social_title: "Validação social",
+        social_text: "5 clientes piloto com resultados de 5% a 80% de economia já validaram nossa solução.",
+        innovation_title: "Faixa de Inovação Estruturada",
+        innovation_text: "Mais que reduzir custos, estruturamos inovação na sua empresa com tecnologia proprietária e rede de parceiros locais.",
+        footer_title: "Comece agora sem investimento inicial",
+        footer_sub: "Agilidade, baixo custo e resultado em semanas para PMEs industriais.",
+        footer_cta: "Comece agora sem investimento inicial"
       },
-      en: {
-        menu_services: "Services",
-        menu_dashboard: "Dashboard",
-        menu_contact: "Contact",
-        menu_about: "About Us",
-        hero_title: "Transparency for your energy consumption",
-        hero_desc: "SmartSpaar provides you with on-demand forecasts and a clear dashboard for your energy efficiency. Make data-driven decisions and save costs – efficient and sustainable.",
-        hero_cta: "Let's save today!"
+      // Hunsrik / Riograndenser Hunsrückisch (variante aproximada)
+      hrx: {
+        menu_services: "Dienscht",
+        menu_how: "Wie's funktioniert",
+        menu_why: "Warum SmartSpaar",
+        menu_social: "Validatschon",
+        hero_title: "Glei erspaare, Effizienz bleevt dauernd.",
+        hero_sub: "Eir Betrib spart jetzt Kosde un isch bereit fer Wachs mit intelligenter Energie.",
+        hero_cta: "Ich will jetz spare",
+        hero_secondary: "Seh wie's funktioniert",
+        block1_title: "Was mer liefere",
+        deliver_1: "E schnells, unproblematisches Energiesdiagnose",
+        deliver_2: "Präzise Prognose fer Verbruuche un Kosde",
+        deliver_3: "Nachfraach-Optimierung mit schnellem Payback",
+        deliver_4: "Unnerstützung fer Effizienz- un Automatisierungsprojekte",
+        block2_title: "Wie mer's mache",
+        how_1: "Mer integriere die Betriebsdate ohne Stropp",
+        how_2: "Mer benutze schlau Heuristike zum Plane von Maschiene un Lade",
+        how_3: "Ihr kriegt Warnunge un klare Empfehlung, im Dashboard oder WhatsApp",
+        block3_title: "Warum SmartSpaar",
+        why_speed: "Schnelligkeit",
+        why_speed_desc: "Resultat sichtba in Woche, nit Monet",
+        why_cost: "Niedrige Kosde",
+        why_cost_desc: "Ohne schware Beratungen oder langi Verträg",
+        why_client: "Kunde im Mittelpunckt",
+        why_client_desc: "Mir mache die Arbeit, Ihr trinkt die Vorteil",
+        why_scale: "Skalierbar",
+        why_scale_desc: "Pickt fer Sensoren- un ERP-Integration in Zuekunft",
+        social_title: "Sozial Validatschon",
+        social_text: "5 Pilote Kunde hot 5% bis 80% Einsparung beleggt.",
+        innovation_title: "Band fir strukturiert Innovation",
+        innovation_text: "Mer mache mehr wie Kosde sparen — mer strukturiere Innovation mit eigne Technologie un lokale Partnernetz.",
+        footer_title: "Fangt jetzt an ohne Ausgangsinvestition",
+        footer_sub: "Schnell, günstig und Resultat in Woche fer industrielle KMUs.",
+        footer_cta: "Fangt jetzt an ohne Investition"
       }
     };
 
     function switchLang(lang) {
-      // Set active button
-      ['de','hrx','pt','en'].forEach(l => {
-        document.getElementById('lang-' + l).classList.toggle('active', l === lang);
-      });
-      // Update menu
+      // update buttons visual
+      document.getElementById('btn-pt').classList.toggle('bg-[var(--primary)]', lang === 'pt');
+      document.getElementById('btn-pt').classList.toggle('text-white', lang === 'pt');
+      document.getElementById('btn-pt').classList.toggle('bg-white', lang !== 'pt');
+      document.getElementById('btn-pt').classList.toggle('text-[var(--primary)]', lang !== 'pt');
+
+      document.getElementById('btn-hrx').classList.toggle('bg-[var(--primary)]', lang === 'hrx');
+      document.getElementById('btn-hrx').classList.toggle('text-white', lang === 'hrx');
+      document.getElementById('btn-hrx').classList.toggle('bg-white', lang !== 'hrx');
+      document.getElementById('btn-hrx').classList.toggle('text-[var(--primary)]', lang !== 'hrx');
+
+      // mobile buttons
+      document.getElementById('m-btn-pt').classList.toggle('bg-[var(--primary)]', lang === 'pt');
+      document.getElementById('m-btn-pt').classList.toggle('text-white', lang === 'pt');
+      document.getElementById('m-btn-pt').classList.toggle('bg-white', lang !== 'pt');
+      document.getElementById('m-btn-pt').classList.toggle('text-[var(--primary)]', lang !== 'pt');
+
+      document.getElementById('m-btn-hrx').classList.toggle('bg-[var(--primary)]', lang === 'hrx');
+      document.getElementById('m-btn-hrx').classList.toggle('text-white', lang === 'hrx');
+      document.getElementById('m-btn-hrx').classList.toggle('bg-white', lang !== 'hrx');
+      document.getElementById('m-btn-hrx').classList.toggle('text-[var(--primary)]', lang !== 'hrx');
+
+      // update elements with data-i18n
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        el.textContent = translations[lang][key];
-      });
-      // Update hero
-      document.getElementById('hero-title').textContent = translations[lang].hero_title;
-      document.getElementById('hero-desc').textContent = translations[lang].hero_desc;
-      document.getElementById('hero-cta').textContent = translations[lang].hero_cta;
-      // Optionally, set lang attribute on <html>
-      document.documentElement.lang = lang == 'pt' ? 'pt' : lang == 'en' ? 'en' : lang == 'hrx' ? 'de' : 'de';
-    }
-    // Close menu on link click in mobile
-    document.querySelectorAll('.nav-menu a').forEach(link =>
-      link.addEventListener('click', function() {
-        if(window.innerWidth <= 750)
-          document.getElementById('navMenu').classList.remove('expanded');
-      })
-    );
-    // Optionally: close menu if clicking outside (mobile)
-    window.addEventListener('click', function(e) {
-      var navMenu = document.getElementById('navMenu');
-      var navToggle = document.querySelector('.nav-toggle');
-      if(window.innerWidth <= 750 && navMenu.classList.contains('expanded')) {
-        if (!navMenu.contains(e.target) && !navToggle.contains(e.target)) {
-          navMenu.classList.remove('expanded');
+        if (translations[lang] && translations[lang][key]) {
+          el.textContent = translations[lang][key];
         }
-      }
-    });
+      });
+
+      // update links that may need language-specific hrefs (example: hero CTA points to whatsapp - keep it same)
+      // set html lang attribute
+      document.documentElement.lang = (lang === 'pt') ? 'pt' : 'de';
+    }
+
+    // Set default language to Portuguese
+    switchLang('pt');
+
   </script>
+
 </body>
 </html>
