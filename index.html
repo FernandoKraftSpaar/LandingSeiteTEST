@@ -14,10 +14,8 @@
   <link rel="stylesheet" href="nexa-heavy.css">
 
   <style>
-    /* pequenas customizações para que a Nexa seja usada corretamente como fallback */
     :root { --primary: #1E3A5F; --accent: #95BF39; --accent-2: #0B8C38; }
     .nexa { font-family: 'Nexa Heavy', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-    /* garantir comportamento suave do menu quando fixed */
     html { scroll-behavior: smooth; }
   </style>
 </head>
@@ -27,12 +25,10 @@
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <!-- Logo / Nome -->
         <div class="flex items-center">
           <a href="#" class="text-2xl text-[var(--primary)] tracking-tight">SmartSpaar</a>
         </div>
 
-        <!-- Menu desktop -->
         <div class="hidden md:flex items-center space-x-8">
           <a href="#o-que-entregamos" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_services">O que entregamos</a>
           <a href="#como-funciona" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_how">Como funciona</a>
@@ -40,14 +36,12 @@
           <a href="#validacao" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_social">Validação</a>
         </div>
 
-        <!-- Right: language + mobile toggle -->
         <div class="flex items-center space-x-3">
           <div class="hidden md:flex items-center space-x-2">
             <button id="btn-pt" class="lang-btn px-2 py-1 rounded-md bg-[var(--primary)] text-white" onclick="switchLang('pt')">PT</button>
             <button id="btn-hrx" class="lang-btn px-2 py-1 rounded-md bg-white text-[var(--primary)] border border-[var(--primary)]" onclick="switchLang('hrx')">HRX</button>
           </div>
 
-          <!-- Mobile menu button -->
           <button id="mobileBtn" class="md:hidden p-2 rounded-md text-[var(--primary)]" aria-label="Abrir menu" onclick="toggleMobileMenu()">
             <svg id="icon-open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
@@ -60,7 +54,6 @@
       </div>
     </div>
 
-    <!-- Mobile expanded menu -->
     <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
       <div class="px-4 py-4 space-y-2">
         <a href="#o-que-entregamos" class="block text-[var(--primary)]" data-i18n="menu_services">O que entregamos</a>
@@ -76,12 +69,10 @@
     </div>
   </nav>
 
-  <!-- offset para nav fixa -->
   <div class="h-16 md:h-16"></div>
 
   <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <!-- HERO -->
     <section class="bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] rounded-xl text-white px-6 py-16 md:py-24 -mx-4 md:mx-0">
       <div class="max-w-3xl">
         <h1 id="hero-title" class="text-3xl md:text-4xl font-extrabold leading-tight" data-i18n="hero_title">Economia imediata, eficiência contínua.</h1>
@@ -93,7 +84,6 @@
       </div>
     </section>
 
-    <!-- Bloco 1 – O que entregamos -->
     <section id="o-que-entregamos" class="mt-12 bg-white rounded-xl shadow-sm p-6">
       <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="block1_title">O que entregamos</h2>
       <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-700">
@@ -116,7 +106,6 @@
       </ul>
     </section>
 
-    <!-- Bloco 2 – Como funciona -->
     <section id="como-funciona" class="mt-8 bg-white rounded-xl shadow-sm p-6">
       <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="block2_title">Como funciona</h2>
       <ol class="mt-6 list-decimal list-inside space-y-3 text-slate-700">
@@ -126,7 +115,6 @@
       </ol>
     </section>
 
-    <!-- Bloco 3 – Por que escolher -->
     <section id="por-que" class="mt-8 bg-white rounded-xl shadow-sm p-6">
       <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="block3_title">Por que escolher a SmartSpaar</h2>
       <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-700">
@@ -149,21 +137,17 @@
       </div>
     </section>
 
-    <!-- Validação Social -->
     <section id="validacao" class="mt-8 bg-white rounded-xl shadow-sm p-6 flex flex-col md:flex-row items-center gap-6">
       <div class="flex-1">
         <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="social_title">Validação social</h2>
         <p class="mt-4 text-slate-700" data-i18n="social_text">5 clientes piloto com resultados de 5% a 80% de economia já validaram nossa solução.</p>
-      
         <p class="mt-4 text-slate-700" data-i18n="social_text_2">Empresa Incubada no Centro de Empreendimentos em Informática/Parque Tecnológico UFRGS</p>
       </div>
       <div class="flex items-center space-x-4">
-        <!-- Logo CEI-UFRGS: coloque o arquivo assets/cei-ufrgs.png na pasta -->
         <img src="LOGOTIPO_CEI.jpg" alt="CEI-UFRGS" class="h-16 object-contain" />
       </div>
     </section>
 
-    <!-- Faixa de Inovação Estruturada -->
     <section class="mt-8 rounded-xl bg-gradient-to-r from-white to-white border p-6">
       <div class="bg-[var(--primary)]/5 rounded-lg p-6">
         <h3 class="text-xl font-semibold text-[var(--primary)]" data-i18n="innovation_title">Faixa de Inovação Estruturada</h3>
@@ -171,11 +155,9 @@
       </div>
     </section>
 
-    <!-- Espaço / Mais conteúdo -->
     <div class="my-12"></div>
   </main>
 
-  <!-- Footer com CTA final -->
   <footer class="mt-12 bg-[var(--primary)] text-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between">
       <div>
@@ -183,16 +165,13 @@
         <p class="text-sm mt-1 text-white/90" data-i18n="footer_sub">Agilidade, baixo custo e resultado em semanas para PMEs industriais.</p>
       </div>
       <div class="mt-4 md:mt-0">
-        <!-- IMPORTANTE: ajuste o número abaixo para o número correto (coloque com country code sem +). -->
         <a id="footer-cta" href="https://wa.me/5551998712569" target="_blank" rel="noopener" class="inline-block px-6 py-3 bg-[var(--accent-2)] rounded-full font-semibold hover:bg-[var(--accent)]" data-i18n="footer_cta">Comece agora sem investimento inicial</a>
       </div>
     </div>
   </footer>
 
   <script>
-    // ========================
     // Mobile menu toggle
-    // ========================
     const mobileMenuEl = document.getElementById('mobileMenu');
     const iconOpen = document.getElementById('icon-open');
     const iconClose = document.getElementById('icon-close');
@@ -208,7 +187,6 @@
         iconClose.classList.add('hidden');
       }
     }
-    // Close mobile menu on resize > md
     window.addEventListener('resize', () => {
       if (window.innerWidth >= 768) {
         if (!mobileMenuEl.classList.contains('hidden')) {
@@ -218,16 +196,13 @@
         }
       }
     });
-    // Close on internal link click (mobile)
     document.querySelectorAll('#mobileMenu a').forEach(a => {
       a.addEventListener('click', () => {
         if (window.innerWidth < 768) toggleMobileMenu();
       });
     });
 
-    // ========================
-    // Language switch (pt/hrx)
-    // ========================
+    // Language translations
     const translations = {
       pt: {
         menu_services: "O que entregamos",
@@ -258,14 +233,13 @@
         why_scale_desc: "Preparada para integrar sensores e ERPs no futuro",
         social_title: "Validação social",
         social_text: "5 clientes piloto com resultados de 5% a 80% de economia já validaram nossa solução.",
-        social_text_2: "Empresa Incubada no Centro de Empreendimentos em Informática/Parque Tecnológico UFRGS"
+        social_text_2: "Empresa Incubada no Centro de Empreendimentos em Informática/Parque Tecnológico UFRGS",
         innovation_title: "Faixa de Inovação Estruturada",
         innovation_text: "Mais que reduzir custos, estruturamos inovação na sua empresa com tecnologia proprietária e rede de parceiros locais.",
         footer_title: "Comece agora sem investimento inicial",
         footer_sub: "Agilidade, baixo custo e resultado em semanas para PMEs industriais.",
         footer_cta: "Comece agora sem investimento inicial"
       },
-      // Hunsrik / Riograndenser Hunsrückisch (variante aproximada)
       hrx: {
         menu_services: "Dienscht",
         menu_how: "Wie's funktioniert",
@@ -295,7 +269,7 @@
         why_scale_desc: "Pickt fer Sensoren- un ERP-Integration in Zuekunft",
         social_title: "Sozial Validatschon",
         social_text: "5 Pilote Kunde hot 5% bis 80% Einsparung beleggt.",
-        social_text_2: "Des Unternehme is im Centro de Empreendimentos em Informática incubiert, in dä Technische Park UFRGS",
+        social_text_2: "Firma im CEI-UFRGS inkubiert",
         innovation_title: "Band fir strukturiert Innovation",
         innovation_text: "Mer mache mehr wie Kosde sparen — mer strukturiere Innovation mit eigne Technologie un lokale Partnernetz.",
         footer_title: "Fangt jetzt an ohne Ausgangsinvestition",
@@ -305,29 +279,33 @@
     };
 
     function switchLang(lang) {
-      // update buttons visual
-      document.getElementById('btn-pt').classList.toggle('bg-[var(--primary)]', lang === 'pt');
-      document.getElementById('btn-pt').classList.toggle('text-white', lang === 'pt');
-      document.getElementById('btn-pt').classList.toggle('bg-white', lang !== 'pt');
-      document.getElementById('btn-pt').classList.toggle('text-[var(--primary)]', lang !== 'pt');
-
-      document.getElementById('btn-hrx').classList.toggle('bg-[var(--primary)]', lang === 'hrx');
-      document.getElementById('btn-hrx').classList.toggle('text-white', lang === 'hrx');
-      document.getElementById('btn-hrx').classList.toggle('bg-white', lang !== 'hrx');
-      document.getElementById('btn-hrx').classList.toggle('text-[var(--primary)]', lang !== 'hrx');
+      // button visuals (desktop)
+      const btnPt = document.getElementById('btn-pt');
+      const btnHrx = document.getElementById('btn-hrx');
+      if (btnPt && btnHrx) {
+        if (lang === 'pt') {
+          btnPt.classList.add('bg-[var(--primary)]','text-white'); btnPt.classList.remove('bg-white','text-[var(--primary)]','border');
+          btnHrx.classList.remove('bg-[var(--primary)]','text-white'); btnHrx.classList.add('bg-white','text-[var(--primary)]','border');
+        } else {
+          btnHrx.classList.add('bg-[var(--primary)]','text-white'); btnHrx.classList.remove('bg-white','text-[var(--primary)]','border');
+          btnPt.classList.remove('bg-[var(--primary)]','text-white'); btnPt.classList.add('bg-white','text-[var(--primary)]','border');
+        }
+      }
 
       // mobile buttons
-      document.getElementById('m-btn-pt').classList.toggle('bg-[var(--primary)]', lang === 'pt');
-      document.getElementById('m-btn-pt').classList.toggle('text-white', lang === 'pt');
-      document.getElementById('m-btn-pt').classList.toggle('bg-white', lang !== 'pt');
-      document.getElementById('m-btn-pt').classList.toggle('text-[var(--primary)]', lang !== 'pt');
+      const mBtnPt = document.getElementById('m-btn-pt');
+      const mBtnHrx = document.getElementById('m-btn-hrx');
+      if (mBtnPt && mBtnHrx) {
+        if (lang === 'pt') {
+          mBtnPt.classList.add('bg-[var(--primary)]','text-white'); mBtnPt.classList.remove('bg-white','text-[var(--primary)]','border');
+          mBtnHrx.classList.remove('bg-[var(--primary)]','text-white'); mBtnHrx.classList.add('bg-white','text-[var(--primary)]','border');
+        } else {
+          mBtnHrx.classList.add('bg-[var(--primary)]','text-white'); mBtnHrx.classList.remove('bg-white','text-[var(--primary)]','border');
+          mBtnPt.classList.remove('bg-[var(--primary)]','text-white'); mBtnPt.classList.add('bg-white','text-[var(--primary)]','border');
+        }
+      }
 
-      document.getElementById('m-btn-hrx').classList.toggle('bg-[var(--primary)]', lang === 'hrx');
-      document.getElementById('m-btn-hrx').classList.toggle('text-white', lang === 'hrx');
-      document.getElementById('m-btn-hrx').classList.toggle('bg-white', lang !== 'hrx');
-      document.getElementById('m-btn-hrx').classList.toggle('text-[var(--primary)]', lang !== 'hrx');
-
-      // update elements with data-i18n
+      // update all data-i18n elements
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[lang] && translations[lang][key]) {
@@ -335,14 +313,12 @@
         }
       });
 
-      // update links that may need language-specific hrefs (example: hero CTA points to whatsapp - keep it same)
-      // set html lang attribute
-      document.documentElement.lang = (lang === 'pt') ? 'pt' : 'de';
+      // set html lang attribute (use hrx if available)
+      document.documentElement.lang = (lang === 'pt') ? 'pt' : (lang === 'hrx' ? 'hrx' : 'pt');
     }
 
-    // Set default language to Portuguese
+    // default language
     switchLang('pt');
-
   </script>
 
 </body>
