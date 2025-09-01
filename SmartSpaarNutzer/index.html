@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Login | SmartSpaar</title>
-  <meta http-equiv="refresh" content="0; url=/.auth/login/aad?post_login_redirect_uri=/" />
+  <meta http-equiv="refresh" content="0; url=/.auth/login/aad?post_login_redirect_uri=/dashboard" />
   <script>
-    // Redirecionamento extra caso o meta refresh não funcione
-    window.location.href = '/.auth/login/aad?post_login_redirect_uri=/';
+    // Fallback JS para navegadores que não suportam meta refresh
+    window.location.href = '/.auth/login/aad?post_login_redirect_uri=/dashboard';
   </script>
   <style>
     body {
@@ -31,7 +31,7 @@
   <div class="msg">
     <h1>Redirecionando para o login seguro...</h1>
     <p>Se não for redirecionado automaticamente,<br>
-      <a href="/.auth/login/aad?post_login_redirect_uri=/">clique aqui para entrar com Entra ID</a>.
+      <a href="/.auth/login/aad?post_login_redirect_uri=/dashboard">clique aqui para entrar com Entra ID</a>.
     </p>
   </div>
 </body>
