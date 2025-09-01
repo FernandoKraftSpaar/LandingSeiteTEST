@@ -1,1 +1,1 @@
-{"navigationFallback":{"rewrite":"/index.html"}}
+{"navigationFallback":{"rewrite":"/index.html"},"auth":{"rolesSource":"api/Nutzerfunktion/staticwebapp.config.json","identityProviders":{"azureActiveDirectory":{"registration":{"openIdIssuer":"https://login.microsoftonline.com/b34c1d55-a43e-4a20-9218-a1a42eab149a","clientIdSettingName":"AZURE_CLIENT_ID","clientSecretSettingName":"AZURE_CLIENT_SECRET_APP_SETTING_NAME"}}}}}
