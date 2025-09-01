@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | SmartSpaar</title>
+  <meta http-equiv="refresh" content="0; url=/.auth/login/aad?post_login_redirect_uri=/" />
+  <script>
+    // Redirecionamento extra caso o meta refresh não funcione
+    window.location.href = '/.auth/login/aad?post_login_redirect_uri=/';
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f7fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .msg {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px #ccc;
+      padding: 2em 3em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="msg">
+    <h1>Redirecionando para o login seguro...</h1>
+    <p>Se não for redirecionado automaticamente,<br>
+      <a href="/.auth/login/aad?post_login_redirect_uri=/">clique aqui para entrar com Entra ID</a>.
+    </p>
+  </div>
+</body>
+</html>
