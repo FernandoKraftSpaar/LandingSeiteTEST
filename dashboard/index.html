@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard de Equipamentos</title>
+  <link rel="stylesheet" href="../nexa-heavy.css">
+</head>
+<body>
+  <header>
+    <h1>Dashboard de Equipamentos</h1>
+    <nav>
+      <a href="/dashboard/equipamentos.html">Equipamentos</a>
+      <a href="/dashboard/adicionar_equipamento.html">Adicionar Equipamento</a>
+      <a href="/">Início</a>
+    </nav>
+  </header>
+  <main>
+    <section class="metricas">
+      <div class="card">
+        <h2 id="qtd-equip">0</h2>
+        <p>Quantidade de Equipamentos</p>
+      </div>
+      <div class="card">
+        <h2 id="pot-total">0 kW</h2>
+        <p>Potência Instalada Total</p>
+      </div>
+      <div class="card">
+        <h2 id="uso-medio">0 h/dia</h2>
+        <p>Média de Uso Diário</p>
+      </div>
+      <div class="card">
+        <h2 id="consumo-mensal">0 kWh/mês</h2>
+        <p>Consumo Mensal Estimado</p>
+      </div>
+    </section>
+    <section>
+      <h2>Lista de Equipamentos</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Potência (kW)</th>
+            <th>Uso Diário (h)</th>
+            <th>Categoria</th>
+            <th>Idade (anos)</th>
+            <th>Etiqueta Eficiência</th>
+            <th>Consumo Diário (kWh)</th>
+            <th>Observações</th>
+            <th>Última Atualização</th>
+          </tr>
+        </thead>
+        <tbody id="lista-equipamentos"></tbody>
+      </table>
+    </section>
+  </main>
+  <script>
+    fetch('/api/equipamentos')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('qtd-equip').innerText = data.qtd;
+        document.getElementById('pot-total').innerText = `${data.potencia_total} kW`;
+        document.getElementById('uso-medio').innerText = `${data.uso_medio_diario} h/dia`;
+        document.getElementById('consumo-mensal').innerText = `${data.consumo_mensal_estimado} kWh/mês`;
+        let tbody = document.getElementById('lista-equipamentos');
+        tbody.innerHTML = "";
+        data.equipamentos.forEach(eq => {
+          tbody.innerHTML += `<tr>
+            <td>${eq.nome}</td>
+            <td>${eq.potencia}</td>
+            <td>${eq.horas_uso}</td>
+            <td>${eq.categoria || ''}</td>
+            <td>${eq.idade !== null ? eq.idade : ''}</td>
+            <td>${eq.etiqueta_eficiencia || ''}</td>
+            <td>${(eq.potencia * eq.horas_uso).toFixed(2)}</td>
+            <td>${eq.observacoes || ''}</td>
+            <td>${eq.updated_at || ''}</td>
+          </tr>`;
+        });
+      });
+  </script>
+</body>
+</html>
