@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Adicionar Equipamento</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <h1>Adicionar Equipamento</h1>
+    <nav>
+      <a href="/dashboard/equipamentos.html">Equipamentos</a>
+      <a href="/">Início</a>
+    </nav>
+  </header>
+  <main>
+    <form id="form-equipamento" class="form-card">
+      <label>
+        Nome do Equipamento:
+        <input type="text" name="nome" required>
+      </label>
+      <label>
+        Potência (kW):
+        <input type="number" name="potencia" step="0.01" min="0" required>
+      </label>
+      <label>
+        Horas de Uso Diário:
+        <input type="number" name="horas_uso" step="0.1" min="0" required>
+      </label>
+      <label>
+        Categoria/Tipo:
+        <input type="text" name="categoria">
+      </label>
+      <label>
+        Idade do Equipamento (anos):
+        <input type="number" name="idade" min="0">
+      </label>
+      <label>
+        Etiqueta de Eficiência Energética:
+        <input type="text" name="etiqueta_eficiencia" maxlength="4" placeholder="A, B, C...">
+      </label>
+      <label>
+        Observações:
+        <textarea name="observacoes"></textarea>
+      </label>
+      <button type="submit">Adicionar</button>
+    </form>
+    <div id="msg"></div>
+  </main>
+  <script>
+    document.getElementById('form-equipamento').onsubmit = async function (ev) {
+      ev.preventDefault();
+      const form = ev.target;
+      const body = {
+        nome: form.nome.value,
+        potencia: parseFloat(form.potencia.value),
+        horas_uso: parseFloat(form.horas_uso.value),
+        categoria: form.categoria.value,
+        idade: form.idade.value ? parseInt(form.idade.value) : null,
+        etiqueta_eficiencia: form.etiqueta_eficiencia.value,
+        observacoes: form.observacoes.value,
+      };
+      const res = await fetch('/api/equipamentos', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+      });
+      const msgDiv = document.getElementById('msg');
+      if (res.ok) {
+        msgDiv.innerHTML = "<span class='success'>Equipamento adicionado!</span>";
+        setTimeout(() => window.location.href = "/dashboard/equipamentos.html", 1000);
+      } else {
+        msgDiv.innerHTML = "<span class='error'>Erro ao adicionar equipamento.</span>";
+      }
+    }
+  </script>
+</body>
+</html>
