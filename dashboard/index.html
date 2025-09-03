@@ -1,82 +1,134 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard de Equipamentos</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard de Equipamentos — SmartSpaar</title>
+
+  <!-- Tailwind for quick prototyping (substitute with a built build in production) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Nexa Heavy local font (same as landing) -->
   <link rel="stylesheet" href="/nexa-heavy.css">
+
+  <style>
+    :root { --primary: #1E3A5F; --accent: #95BF39; --accent-2: #0B8C38; }
+    .nexa { font-family: 'Nexa Heavy', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    html { scroll-behavior: smooth; }
+  </style>
 </head>
-<body>
-  <header>
-    <h1>Dashboard de Equipamentos</h1>
-    <nav>
-      <a href="/dashboard/equipamentos.html">Equipamentos</a>
-      <a href="/dashboard/adicionar_equipamento.html">Adicionar Equipamento</a>
-      <a href="/">Início</a>
-    </nav>
+<body class="nexa bg-gray-50 text-slate-900 min-h-screen">
+
+  <!-- Header (aligned visually with landing) -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center space-x-6">
+          <a href="/" class="text-2xl text-[var(--primary)] tracking-tight">SmartSpaar</a>
+          <nav class="hidden md:flex items-center space-x-4">
+            <a href="/dashboard" class="text-[var(--primary)] hover:text-[var(--accent-2)]">Dashboard</a>
+            <a href="/dashboard/equipamentos.html" class="text-slate-700 hover:text-[var(--primary)]">Equipamentos</a>
+            <a href="/dashboard/adicionar_equipamento.html" class="text-slate-700 hover:text-[var(--primary)]">Adicionar</a>
+          </nav>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <a href="/" class="hidden md:inline-block px-4 py-2 rounded-full bg-[var(--accent-2)] text-white font-semibold hover:bg-[var(--accent)]">Voltar à página pública</a>
+          <button class="md:hidden p-2 rounded-md text-[var(--primary)]" onclick="location.href='/'" aria-label="Inicio">Início</button>
+        </div>
+      </div>
+    </div>
   </header>
-  <main>
-    <section class="metricas">
-      <div class="card">
-        <h2 id="qtd-equip">0</h2>
-        <p>Quantidade de Equipamentos</p>
-      </div>
-      <div class="card">
-        <h2 id="pot-total">0 kW</h2>
-        <p>Potência Instalada Total</p>
-      </div>
-      <div class="card">
-        <h2 id="uso-medio">0 h/dia</h2>
-        <p>Média de Uso Diário</p>
-      </div>
-      <div class="card">
-        <h2 id="consumo-mensal">0 kWh/mês</h2>
-        <p>Consumo Mensal Estimado</p>
+
+  <!-- spacing for fixed header -->
+  <div class="h-16"></div>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <section class="bg-gradient-to-r from-[var(--primary)]/10 to-[var(--accent)]/10 rounded-xl p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-[var(--primary)]">Dashboard de Equipamentos</h1>
+          <p class="text-slate-700 mt-1">Visão rápida dos equipamentos e estimativas de consumo — estilo visual alinhado com a landing page.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button id="refreshBtn" class="px-4 py-2 rounded bg-[var(--accent-2)] text-white hover:bg-[var(--accent)]">Atualizar</button>
+          <a href="/" class="px-4 py-2 rounded border border-[var(--primary)] text-[var(--primary)]">Ir ao site</a>
+        </div>
       </div>
     </section>
-    <section>
-      <h2>Lista de Equipamentos</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Potência (kW)</th>
-            <th>Uso Diário (h)</th>
-            <th>Categoria</th>
-            <th>Idade (anos)</th>
-            <th>Etiqueta Eficiência</th>
-            <th>Consumo Diário (kWh)</th>
-            <th>Observações</th>
-            <th>Última Atualização</th>
-          </tr>
-        </thead>
-        <tbody id="lista-equipamentos"></tbody>
-      </table>
+
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <p class="text-sm text-slate-500">Quantidade de Equipamentos</p>
+        <h2 id="qtd-equip" class="mt-3 text-3xl font-bold text-[var(--primary)]">0</h2>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <p class="text-sm text-slate-500">Potência Instalada Total</p>
+        <h2 id="pot-total" class="mt-3 text-3xl font-bold text-[var(--primary)]">0 kW</h2>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <p class="text-sm text-slate-500">Consumo Mensal Estimado</p>
+        <h2 id="consumo-mensal" class="mt-3 text-3xl font-bold text-[var(--primary)]">0 kWh/mês</h2>
+      </div>
+    </section>
+
+    <section class="mt-6 bg-white rounded-xl shadow-sm p-6">
+      <h2 class="text-xl font-semibold text-[var(--primary)]">Lista de Equipamentos</h2>
+      <div class="mt-4 overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-white">
+            <tr>
+              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Nome</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Potência (kW)</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Uso Diário (h)</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Categoria</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Idade (anos)</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Etiqueta Eficiência</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Consumo Diário (kWh)</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Observações</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Última Atualização</th>
+            </tr>
+          </thead>
+          <tbody id="lista-equipamentos" class="bg-white divide-y divide-slate-100"></tbody>
+        </table>
+      </div>
     </section>
   </main>
+
   <script>
-    fetch('/api/equipamentos')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('qtd-equip').innerText = data.qtd;
-        document.getElementById('pot-total').innerText = `${data.potencia_total} kW`;
-        document.getElementById('uso-medio').innerText = `${data.uso_medio_diario} h/dia`;
-        document.getElementById('consumo-mensal').innerText = `${data.consumo_mensal_estimado} kWh/mês`;
-        let tbody = document.getElementById('lista-equipamentos');
-        tbody.innerHTML = "";
-        data.equipamentos.forEach(eq => {
-          tbody.innerHTML += `<tr>
-            <td>${eq.nome}</td>
-            <td>${eq.potencia}</td>
-            <td>${eq.horas_uso}</td>
-            <td>${eq.categoria || ''}</td>
-            <td>${eq.idade !== null ? eq.idade : ''}</td>
-            <td>${eq.etiqueta_eficiencia || ''}</td>
-            <td>${(eq.potencia * eq.horas_uso).toFixed(2)}</td>
-            <td>${eq.observacoes || ''}</td>
-            <td>${eq.updated_at || ''}</td>
-          </tr>`;
-        });
-      });
+    // helper to render table rows safely
+    function rowFor(eq) {
+      return `<tr>
+        <td class="px-4 py-3 text-sm">${eq.nome || ''}</td>
+        <td class="px-4 py-3 text-sm">${eq.potencia ?? ''}</td>
+        <td class="px-4 py-3 text-sm">${eq.horas_uso ?? ''}</td>
+        <td class="px-4 py-3 text-sm">${eq.categoria || ''}</td>
+        <td class="px-4 py-3 text-sm">${eq.idade !== null && eq.idade !== undefined ? eq.idade : ''}</td>
+        <td class="px-4 py-3 text-sm">${eq.etiqueta_eficiencia || ''}</td>
+        <td class="px-4 py-3 text-sm">${(eq.potencia && eq.horas_uso) ? (eq.potencia * eq.horas_uso).toFixed(2) : ''}</td>
+        <td class="px-4 py-3 text-sm">${eq.observacoes || ''}</td>
+        <td class="px-4 py-3 text-sm">${eq.updated_at || ''}</td>
+      </tr>`;
+    }
+
+    async function loadData() {
+      try {
+        const res = await fetch('/api/equipamentos');
+        const data = await res.json();
+        document.getElementById('qtd-equip').innerText = data.qtd ?? '0';
+        document.getElementById('pot-total').innerText = `${data.potencia_total ?? 0} kW`;
+        document.getElementById('consumo-mensal').innerText = `${data.consumo_mensal_estimado ?? 0} kWh/mês`;
+        const tbody = document.getElementById('lista-equipamentos');
+        tbody.innerHTML = (data.equipamentos || []).map(eq => rowFor(eq)).join('');
+      } catch (e) {
+        console.error('Erro ao carregar equipamentos', e);
+      }
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', loadData);
+
+    // initial load
+    loadData();
   </script>
 </body>
 </html>
