@@ -15,6 +15,9 @@
     :root { --primary: #1E3A5F; --accent: #95BF39; --accent-2: #0B8C38; }
     .nexa { font-family: 'Nexa Heavy', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
     html { scroll-behavior: smooth; }
+    .loading { opacity: 0.6; }
+    .error-message { color: #dc2626; }
+    .success-message { color: #059669; }
   </style>
 </head>
 <body class="nexa bg-gray-50 text-slate-900 min-h-screen">
@@ -33,7 +36,9 @@
         </div>
 
         <div class="flex items-center space-x-3">
+          <div id="userInfo" class="hidden text-sm text-slate-600"></div>
           <a href="/" class="hidden md:inline-block px-4 py-2 rounded-full bg-[var(--accent-2)] text-white font-semibold hover:bg-[var(--accent)]">Voltar à página pública</a>
+          <a href="/.auth/logout" class="hidden md:inline-block px-3 py-1 text-sm rounded border border-slate-300 text-slate-600">Sair</a>
           <button class="md:hidden p-2 rounded-md text-[var(--primary)]" onclick="location.href='/'" aria-label="Inicio">Início</button>
         </div>
       </div>
@@ -44,91 +49,296 @@
   <div class="h-16"></div>
 
   <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <!-- Status/Loading message -->
+    <div id="statusMessage" class="hidden mb-4 p-4 rounded-md text-center"></div>
+
     <section class="bg-gradient-to-r from-[var(--primary)]/10 to-[var(--accent)]/10 rounded-xl p-6 mb-6">
       <div class="flex items-center justify-between">
         <div>
           <h1 class="text-2xl md:text-3xl font-extrabold text-[var(--primary)]">Dashboard de Equipamentos</h1>
-          <p class="text-slate-700 mt-1">Visão rápida dos equipamentos e estimativas de consumo — estilo visual alinhado com a landing page.</p>
+          <p class="text-slate-700 mt-1">Visão rápida dos equipamentos e estimativas de consumo — integrado com Azure SQL Database.</p>
         </div>
         <div class="flex items-center space-x-2">
-          <button id="refreshBtn" class="px-4 py-2 rounded bg-[var(--accent-2)] text-white hover:bg-[var(--accent)]">Atualizar</button>
+          <button id="refreshBtn" class="px-4 py-2 rounded bg-[var(--accent-2)] text-white hover:bg-[var(--accent)] disabled:opacity-50">
+            <span id="refreshText">Atualizar</span>
+          </button>
+          <a href="/dashboard/adicionar_equipamento.html" class="px-4 py-2 rounded bg-[var(--accent)] text-white hover:bg-[var(--accent-2)]">Adicionar</a>
           <a href="/" class="px-4 py-2 rounded border border-[var(--primary)] text-[var(--primary)]">Ir ao site</a>
         </div>
       </div>
     </section>
 
-    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <section class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
       <div class="bg-white rounded-xl shadow-sm p-6">
         <p class="text-sm text-slate-500">Quantidade de Equipamentos</p>
-        <h2 id="qtd-equip" class="mt-3 text-3xl font-bold text-[var(--primary)]">0</h2>
+        <h2 id="qtd-equip" class="mt-3 text-3xl font-bold text-[var(--primary)]">-</h2>
       </div>
       <div class="bg-white rounded-xl shadow-sm p-6">
         <p class="text-sm text-slate-500">Potência Instalada Total</p>
-        <h2 id="pot-total" class="mt-3 text-3xl font-bold text-[var(--primary)]">0 kW</h2>
+        <h2 id="pot-total" class="mt-3 text-3xl font-bold text-[var(--primary)]">- kW</h2>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <p class="text-sm text-slate-500">Uso Médio Diário</p>
+        <h2 id="uso-medio" class="mt-3 text-3xl font-bold text-[var(--primary)]">- h</h2>
       </div>
       <div class="bg-white rounded-xl shadow-sm p-6">
         <p class="text-sm text-slate-500">Consumo Mensal Estimado</p>
-        <h2 id="consumo-mensal" class="mt-3 text-3xl font-bold text-[var(--primary)]">0 kWh/mês</h2>
+        <h2 id="consumo-mensal" class="mt-3 text-3xl font-bold text-[var(--primary)]">- kWh</h2>
       </div>
     </section>
 
     <section class="mt-6 bg-white rounded-xl shadow-sm p-6">
-      <h2 class="text-xl font-semibold text-[var(--primary)]">Lista de Equipamentos</h2>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-[var(--primary)]">Lista de Equipamentos</h2>
+        <div class="text-sm text-slate-500">
+          <span id="equipCount">0 equipamentos</span>
+        </div>
+      </div>
+      
       <div class="mt-4 overflow-x-auto">
         <table class="min-w-full divide-y divide-slate-200">
-          <thead class="bg-white">
+          <thead class="bg-slate-50">
             <tr>
-              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Nome</th>
-              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Potência (kW)</th>
-              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Uso Diário (h)</th>
-              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Categoria</th>
-              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Idade (anos)</th>
-              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Etiqueta Eficiência</th>
-              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Consumo Diário (kWh)</th>
-              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Observações</th>
-              <th class="px-4 py-2 text-left text-sm font-medium text-slate-600">Última Atualização</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nome</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Potência (kW)</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Uso Diário (h)</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Categoria</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Idade</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Eficiência</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Consumo Diário</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tag</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Atualização</th>
             </tr>
           </thead>
-          <tbody id="lista-equipamentos" class="bg-white divide-y divide-slate-100"></tbody>
+          <tbody id="lista-equipamentos" class="bg-white divide-y divide-slate-100">
+            <tr id="loadingRow">
+              <td colspan="9" class="px-4 py-8 text-center text-slate-500">
+                <div class="inline-flex items-center">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Carregando equipamentos...
+                </div>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </section>
+
+    <!-- Empty state -->
+    <div id="emptyState" class="hidden mt-6 text-center py-12">
+      <div class="mx-auto h-12 w-12 text-slate-400">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <h3 class="mt-2 text-sm font-medium text-slate-900">Nenhum equipamento encontrado</h3>
+      <p class="mt-1 text-sm text-slate-500">Comece adicionando seu primeiro equipamento.</p>
+      <div class="mt-6">
+        <a href="/dashboard/adicionar_equipamento.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[var(--accent-2)] hover:bg-[var(--accent)]">
+          Adicionar Equipamento
+        </a>
+      </div>
+    </div>
   </main>
 
   <script>
-    // helper to render table rows safely
-    function rowFor(eq) {
-      return `<tr>
-        <td class="px-4 py-3 text-sm">${eq.nome || ''}</td>
-        <td class="px-4 py-3 text-sm">${eq.potencia ?? ''}</td>
-        <td class="px-4 py-3 text-sm">${eq.horas_uso ?? ''}</td>
-        <td class="px-4 py-3 text-sm">${eq.categoria || ''}</td>
-        <td class="px-4 py-3 text-sm">${eq.idade !== null && eq.idade !== undefined ? eq.idade : ''}</td>
-        <td class="px-4 py-3 text-sm">${eq.etiqueta_eficiencia || ''}</td>
-        <td class="px-4 py-3 text-sm">${(eq.potencia && eq.horas_uso) ? (eq.potencia * eq.horas_uso).toFixed(2) : ''}</td>
-        <td class="px-4 py-3 text-sm">${eq.observacoes || ''}</td>
-        <td class="px-4 py-3 text-sm">${eq.updated_at || ''}</td>
-      </tr>`;
+    // Estado global
+    let isLoading = false;
+    let equipamentos = [];
+
+    // Utilitários
+    function showMessage(message, type = 'info') {
+      const statusEl = document.getElementById('statusMessage');
+      statusEl.className = `mb-4 p-4 rounded-md text-center ${type === 'error' ? 'bg-red-50 text-red-700' : type === 'success' ? 'bg-green-50 text-green-700' : 'bg-blue-50 text-blue-700'}`;
+      statusEl.textContent = message;
+      statusEl.classList.remove('hidden');
+      
+      setTimeout(() => {
+        statusEl.classList.add('hidden');
+      }, 5000);
     }
 
-    async function loadData() {
+    function formatDate(dateString) {
+      if (!dateString) return '-';
       try {
-        const res = await fetch('/api/equipamentos');
-        const data = await res.json();
-        document.getElementById('qtd-equip').innerText = data.qtd ?? '0';
-        document.getElementById('pot-total').innerText = `${data.potencia_total ?? 0} kW`;
-        document.getElementById('consumo-mensal').innerText = `${data.consumo_mensal_estimado ?? 0} kWh/mês`;
-        const tbody = document.getElementById('lista-equipamentos');
-        tbody.innerHTML = (data.equipamentos || []).map(eq => rowFor(eq)).join('');
-      } catch (e) {
-        console.error('Erro ao carregar equipamentos', e);
+        return new Date(dateString).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      } catch {
+        return dateString;
       }
     }
 
+    function safeValue(value, fallback = '-') {
+      return (value !== null && value !== undefined && value !== '') ? value : fallback;
+    }
+
+    // Gerar linha da tabela
+    function createEquipamentoRow(eq) {
+      const consumoDiario = (eq.potencia && eq.horas_uso) ? 
+        (parseFloat(eq.potencia) * parseFloat(eq.horas_uso)).toFixed(2) : '-';
+      
+      return `<tr class="hover:bg-slate-50">
+        <td class="px-4 py-3 text-sm font-medium text-slate-900">${safeValue(eq.nome)}</td>
+        <td class="px-4 py-3 text-sm text-slate-500">${safeValue(eq.potencia)}</td>
+        <td class="px-4 py-3 text-sm text-slate-500">${safeValue(eq.horas_uso)}</td>
+        <td class="px-4 py-3 text-sm text-slate-500">
+          <span class="inline-flex px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-800">
+            ${safeValue(eq.categoria, 'Não definida')}
+          </span>
+        </td>
+        <td class="px-4 py-3 text-sm text-slate-500">${safeValue(eq.idade)} ${eq.idade ? 'anos' : ''}</td>
+        <td class="px-4 py-3 text-sm text-slate-500">${safeValue(eq.etiqueta_eficiencia)}</td>
+        <td class="px-4 py-3 text-sm text-slate-500 font-medium">${consumoDiario} ${consumoDiario !== '-' ? 'kWh' : ''}</td>
+        <td class="px-4 py-3 text-sm text-slate-500 font-mono text-xs">${safeValue(eq.tag)}</td>
+        <td class="px-4 py-3 text-sm text-slate-400">${formatDate(eq.updated_at || eq.created_at)}</td>
+      </tr>`;
+    }
+
+    // Atualizar estatísticas
+    function updateStats(equipamentos) {
+      const qtd = equipamentos.length;
+      const potenciaTotal = equipamentos.reduce((sum, eq) => sum + (parseFloat(eq.potencia) || 0), 0);
+      const horasTotalDiario = equipamentos.reduce((sum, eq) => sum + (parseFloat(eq.horas_uso) || 0), 0);
+      const usoMedio = qtd > 0 ? (horasTotalDiario / qtd) : 0;
+      const consumoMensal = equipamentos.reduce((sum, eq) => {
+        const potencia = parseFloat(eq.potencia) || 0;
+        const horas = parseFloat(eq.horas_uso) || 0;
+        return sum + (potencia * horas * 30);
+      }, 0);
+
+      document.getElementById('qtd-equip').textContent = qtd.toString();
+      document.getElementById('pot-total').textContent = `${potenciaTotal.toFixed(2)} kW`;
+      document.getElementById('uso-medio').textContent = `${usoMedio.toFixed(1)} h`;
+      document.getElementById('consumo-mensal').textContent = `${consumoMensal.toLocaleString('pt-BR')} kWh`;
+      document.getElementById('equipCount').textContent = `${qtd} equipamento${qtd !== 1 ? 's' : ''}`;
+    }
+
+    // Verificar autenticação SWA
+    async function checkAuthentication() {
+      try {
+        const response = await fetch('/.auth/me');
+        const payload = await response.json();
+        const { clientPrincipal } = payload;
+        
+        if (clientPrincipal) {
+          // Usuário autenticado
+          document.getElementById('userInfo').textContent = `Olá, ${clientPrincipal.userDetails}`;
+          document.getElementById('userInfo').classList.remove('hidden');
+          return true;
+        } else {
+          // Redirecionar para login se não autenticado
+          window.location.href = '/.auth/login/aad'; // ou outro provider
+          return false;
+        }
+      } catch (error) {
+        console.error('Erro ao verificar autenticação:', error);
+        showMessage('Erro ao verificar autenticação. Tente novamente.', 'error');
+        return false;
+      }
+    }
+
+    // Carregar dados do SWA Data API
+    async function loadData() {
+      if (isLoading) return;
+      
+      isLoading = true;
+      const refreshBtn = document.getElementById('refreshBtn');
+      const refreshText = document.getElementById('refreshText');
+      
+      refreshBtn.disabled = true;
+      refreshText.textContent = 'Carregando...';
+      
+      try {
+        // Fazer requisição para SWA Data API REST endpoint
+        const response = await fetch('/data-api/rest/Equipamento', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+        }
+
+        const data = await response.json();
+        
+        // O SWA Data API retorna os dados em um formato específico
+        equipamentos = data.value || [];
+        
+        // Atualizar interface
+        updateStats(equipamentos);
+        
+        const tbody = document.getElementById('lista-equipamentos');
+        const emptyState = document.getElementById('emptyState');
+        const loadingRow = document.getElementById('loadingRow');
+        
+        if (loadingRow) {
+          loadingRow.remove();
+        }
+        
+        if (equipamentos.length === 0) {
+          tbody.innerHTML = '';
+          emptyState.classList.remove('hidden');
+        } else {
+          tbody.innerHTML = equipamentos.map(eq => createEquipamentoRow(eq)).join('');
+          emptyState.classList.add('hidden');
+          showMessage(`${equipamentos.length} equipamentos carregados com sucesso!`, 'success');
+        }
+
+      } catch (error) {
+        console.error('Erro ao carregar equipamentos:', error);
+        
+        const tbody = document.getElementById('lista-equipamentos');
+        const loadingRow = document.getElementById('loadingRow');
+        
+        if (loadingRow) {
+          loadingRow.innerHTML = `
+            <td colspan="9" class="px-4 py-8 text-center text-red-600">
+              <div class="inline-flex items-center">
+                <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                Erro ao carregar equipamentos: ${error.message}
+              </div>
+            </td>
+          `;
+        }
+        
+        showMessage(`Erro ao carregar equipamentos: ${error.message}`, 'error');
+      } finally {
+        isLoading = false;
+        refreshBtn.disabled = false;
+        refreshText.textContent = 'Atualizar';
+      }
+    }
+
+    // Event listeners
     document.getElementById('refreshBtn').addEventListener('click', loadData);
 
-    // initial load
-    loadData();
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Verificar autenticação antes de carregar dados
+      const isAuthenticated = await checkAuthentication();
+      if (isAuthenticated) {
+        loadData();
+      }
+    });
+
+    // Auto-refresh a cada 5 minutos
+    setInterval(() => {
+      if (!isLoading) {
+        loadData();
+      }
+    }, 300000);
   </script>
 </body>
 </html>
