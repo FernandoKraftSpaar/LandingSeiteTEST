@@ -34,7 +34,7 @@
       "source": "dbo.equipamentos",
       "permissions": [
         {
-          "actions": ["read"],
+          "actions": ["read", "create", "update", "delete"],
           "role": "anonymous"
         },
         {
