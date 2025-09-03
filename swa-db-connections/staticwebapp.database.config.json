@@ -30,17 +30,14 @@
   },
   "entities": {
    
-    "Equipamentos": {
+    "Equipamento": {
       "source": "dbo.equipamentos",
       "permissions": [
         {
           "actions": ["read", "create", "update", "delete"],
           "role": "anonymous"
         },
-        {
-          "actions": ["create", "update", "delete"],
-          "role": "authenticated"
-        }
+       
       ]
     }
   }
