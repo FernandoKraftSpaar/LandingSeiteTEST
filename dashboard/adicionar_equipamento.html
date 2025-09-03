@@ -1,78 +1,232 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <title>Adicionar Equipamento</title>
-  <link rel="stylesheet" href="../style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Adicionar Equipamento — SmartSpaar</title>
+
+  <!-- Tailwind (prototype) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Nexa font -->
+  <link rel="stylesheet" href="/nexa-heavy.css">
+
+  <style>
+    :root { --primary: #1E3A5F; --accent: #95BF39; --accent-2: #0B8C38; }
+    .nexa { font-family: 'Nexa Heavy', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+  </style>
 </head>
-<body>
-  <header>
-    <h1>Adicionar Equipamento</h1>
-    <nav>
-      <a href="/dashboard/equipamentos.html">Equipamentos</a>
-      <a href="/">Início</a>
-    </nav>
+<body class="nexa bg-gray-50 text-slate-900 min-h-screen">
+
+  <!-- Header (consistent with dashboard) -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-6">
+        <a href="/" class="text-2xl text-[var(--primary)] tracking-tight">SmartSpaar</a>
+        <nav class="hidden md:flex items-center space-x-4">
+          <a href="/dashboard" class="text-slate-700 hover:text-[var(--primary)]">Dashboard</a>
+          <a href="/dashboard/equipamentos.html" class="text-slate-700 hover:text-[var(--primary)]">Equipamentos</a>
+          <a href="/dashboard/adicionar_equipamento.html" class="text-[var(--primary)] hover:text-[var(--accent-2)]">Adicionar</a>
+        </nav>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <a class="hidden md:inline-block px-4 py-2 rounded-full bg-[var(--accent-2)] text-white hover:bg-[var(--accent)]" href="/">Ver site público</a>
+        <button class="md:hidden p-2 rounded-md text-[var(--primary)]" onclick="location.href='/'" aria-label="Inicio">Início</button>
+      </div>
+    </div>
   </header>
-  <main>
-    <form id="form-equipamento" class="form-card">
-      <label>
-        Nome do Equipamento:
-        <input type="text" name="nome" required>
-      </label>
-      <label>
-        Potência (kW):
-        <input type="number" name="potencia" step="0.01" min="0" required>
-      </label>
-      <label>
-        Horas de Uso Diário:
-        <input type="number" name="horas_uso" step="0.1" min="0" required>
-      </label>
-      <label>
-        Categoria/Tipo:
-        <input type="text" name="categoria">
-      </label>
-      <label>
-        Idade do Equipamento (anos):
-        <input type="number" name="idade" min="0">
-      </label>
-      <label>
-        Etiqueta de Eficiência Energética:
-        <input type="text" name="etiqueta_eficiencia" maxlength="4" placeholder="A, B, C...">
-      </label>
-      <label>
-        Observações:
-        <textarea name="observacoes"></textarea>
-      </label>
-      <button type="submit">Adicionar</button>
-    </form>
-    <div id="msg"></div>
+
+  <div class="h-16"></div>
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+    <section class="bg-white rounded-xl shadow-sm p-6 mt-6">
+      <div class="flex items-start justify-between">
+        <div>
+          <h1 class="text-2xl font-extrabold text-[var(--primary)]">Adicionar Equipamento</h1>
+          <p class="text-slate-600 mt-1">Preencha os dados para cadastrar um equipamento no sistema. Estes dados serão utilizados pelo dashboard para cálculos e alertas.</p>
+        </div>
+        <div class="text-right">
+          <a href="/dashboard" class="inline-block px-4 py-2 rounded border border-[var(--primary)] text-[var(--primary)]">Voltar ao Dashboard</a>
+        </div>
+      </div>
+
+      <form id="equipForm" class="mt-6 space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700">Nome</label>
+            <input name="nome" id="nome" required class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]" placeholder="Ex: Compressor AR-23" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700">Potência (kW)</label>
+            <input name="potencia" id="potencia" type="number" step="0.01" min="0" required class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]" placeholder="Ex: 3.5" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700">Uso diário (h)</label>
+            <input name="horas_uso" id="horas_uso" type="number" step="0.1" min="0" required class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]" placeholder="Ex: 6.5" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700">Categoria</label>
+            <select name="categoria" id="categoria" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]">
+              <option value="">— selecione —</option>
+              <option>Refrigeração</option>
+              <option>Motorização</option>
+              <option>Iluminação</option>
+              <option>Processo</option>
+              <option>Outro</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700">Idade (anos)</label>
+            <input name="idade" id="idade" type="number" min="0" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]" placeholder="Ex: 4" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700">Etiqueta de eficiência</label>
+            <input name="etiqueta_eficiencia" id="etiqueta_eficiencia" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]" placeholder="Ex: IE3 / A++" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Observações</label>
+          <textarea id="observacoes" name="observacoes" rows="3" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]" placeholder="Notas sobre o equipamento, localização física na planta, etc."></textarea>
+        </div>
+
+        <details class="rounded-md border border-slate-100 p-4 bg-slate-50">
+          <summary class="cursor-pointer font-medium text-[var(--primary)]">Configuração avançada (opcional)</summary>
+          <div class="mt-3 space-y-3 text-slate-700">
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Tag / Identificador interno</label>
+              <input id="tag" name="tag" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" placeholder="Ex: PISO-3-CPR-23" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Fator de correção (multiplicador)</label>
+              <input id="fator_correcao" name="fator_correcao" type="number" step="0.01" min="0" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" placeholder="Ex: 1.00" />
+              <p class="text-xs text-slate-500 mt-1">Usado para ajustar potência estimada (ex.: motor com rendimento conhecido).</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Horário de operação (opcional)</label>
+              <div class="mt-1 grid grid-cols-2 gap-2">
+                <input id="op_hora_ini" name="op_hora_ini" type="time" class="rounded-md border-gray-200 shadow-sm" />
+                <input id="op_hora_fim" name="op_hora_fim" type="time" class="rounded-md border-gray-200 shadow-sm" />
+              </div>
+              <p class="text-xs text-slate-500 mt-1">Se preenchido, ajuda nas análises de demanda/turnos.</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Conectar a (opcional)</label>
+              <select id="connected_to" name="connected_to" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm">
+                <option value="">— Nenhum —</option>
+                <option value="site_a">Site A</option>
+                <option value="site_b">Site B</option>
+              </select>
+              <p class="text-xs text-slate-500 mt-1">Relacionar equipamento a uma unidade/obra/cliente para filtros no dashboard.</p>
+            </div>
+          </div>
+        </details>
+
+        <div class="flex items-center space-x-3">
+          <button id="submitBtn" type="submit" class="px-5 py-2 rounded-full bg-[var(--accent-2)] text-white font-semibold hover:bg-[var(--accent)]">Adicionar equipamento</button>
+          <button id="clearBtn" type="button" class="px-4 py-2 rounded border border-slate-200 text-slate-700" onclick="document.getElementById('equipForm').reset()">Limpar</button>
+          <div id="status" class="text-sm text-slate-600 ml-4"></div>
+        </div>
+      </form>
+
+      <div class="mt-6">
+        <details class="text-slate-700">
+          <summary class="font-medium text-[var(--primary)]">Exemplo do payload esperado pelo endpoint /api/equipamentos</summary>
+          <pre class="mt-3 bg-slate-50 p-3 rounded text-sm overflow-x-auto">{
+  "nome": "Compressor AR-23",
+  "potencia": 3.5,
+  "horas_uso": 6.5,
+  "categoria": "Refrigeração",
+  "idade": 4,
+  "etiqueta_eficiencia": "IE3",
+  "observacoes": "Instalado no setor A - linha 2",
+  "tag": "PISO-3-CPR-23",
+  "fator_correcao": 1.00,
+  "op_hora_ini": "06:00",
+  "op_hora_fim": "18:30",
+  "connected_to": "site_a"
+}</pre>
+        </details>
+      </div>
+    </section>
   </main>
+
   <script>
-    document.getElementById('form-equipamento').onsubmit = async function (ev) {
-      ev.preventDefault();
-      const form = ev.target;
-      const body = {
-        nome: form.nome.value,
-        potencia: parseFloat(form.potencia.value),
-        horas_uso: parseFloat(form.horas_uso.value),
-        categoria: form.categoria.value,
-        idade: form.idade.value ? parseInt(form.idade.value) : null,
-        etiqueta_eficiencia: form.etiqueta_eficiencia.value,
-        observacoes: form.observacoes.value,
+    // Basic client-side form handling and POST to /api/equipamentos
+    const form = document.getElementById('equipForm');
+    const statusEl = document.getElementById('status');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusEl.textContent = '';
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+
+      // Build payload
+      const payload = {
+        nome: document.getElementById('nome').value.trim(),
+        potencia: parseFloat(document.getElementById('potencia').value) || 0,
+        horas_uso: parseFloat(document.getElementById('horas_uso').value) || 0,
+        categoria: document.getElementById('categoria').value || null,
+        idade: (document.getElementById('idade').value !== '') ? parseInt(document.getElementById('idade').value, 10) : null,
+        etiqueta_eficiencia: document.getElementById('etiqueta_eficiencia').value || null,
+        observacoes: document.getElementById('observacoes').value || null,
+        tag: document.getElementById('tag').value || null,
+        fator_correcao: (document.getElementById('fator_correcao').value !== '') ? parseFloat(document.getElementById('fator_correcao').value) : null,
+        op_hora_ini: document.getElementById('op_hora_ini').value || null,
+        op_hora_fim: document.getElementById('op_hora_fim').value || null,
+        connected_to: document.getElementById('connected_to').value || null
       };
-      const res = await fetch('/api/equipamentos', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(body)
-      });
-      const msgDiv = document.getElementById('msg');
-      if (res.ok) {
-        msgDiv.innerHTML = "<span class='success'>Equipamento adicionado!</span>";
-        setTimeout(() => window.location.href = "/dashboard/equipamentos.html", 1000);
-      } else {
-        msgDiv.innerHTML = "<span class='error'>Erro ao adicionar equipamento.</span>";
+
+      // Minimal validation
+      if (!payload.nome || payload.potencia <= 0 || payload.horas_uso < 0) {
+        statusEl.textContent = 'Por favor verifique nome, potência e horas de uso.';
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+        return;
       }
-    }
+
+      try {
+        const res = await fetch('/api/equipamentos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || `HTTP ${res.status}`);
+        }
+
+        const json = await res.json();
+        statusEl.textContent = 'Equipamento adicionado com sucesso.';
+        statusEl.classList.remove('text-slate-600');
+        statusEl.classList.add('text-green-600');
+
+        // Optionally redirect to equipamentos list
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 900);
+
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'Erro ao adicionar equipamento. Veja console para detalhes.';
+        statusEl.classList.remove('text-green-600');
+        statusEl.classList.add('text-red-600');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+      }
+    });
   </script>
 </body>
 </html>
