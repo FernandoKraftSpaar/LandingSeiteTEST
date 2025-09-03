@@ -57,5 +57,5 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: "upload"
           app_location: "/"      # Raiz do repositório (onde está o Flask app)
-          api_location: "/"      # Define que o Flask é a API + frontend
+          api_location: "api"      # Define que o Flask é a API + frontend
           output_location: ""    # Sem build adicional
