@@ -257,22 +257,46 @@
       refreshText.textContent = 'Carregando...';
       
       try {
+        console.log('🔄 Fazendo requisição para /data-api/rest/Equipamento...');
+        
         // Fazer requisição para SWA Data API REST endpoint
         const response = await fetch('/data-api/rest/Equipamento', {
           method: 'GET',
           headers: {
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
           }
         });
 
+        console.log('📡 Status da resposta:', response.status);
+        
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+          const errorText = await response.text();
+          console.error('❌ Erro na resposta:', errorText);
+          
+          // Tentar interpretar mensagem de erro específica
+          let errorMessage = `HTTP ${response.status}`;
+          try {
+            const errorJson = JSON.parse(errorText);
+            if (errorJson.Message) {
+              errorMessage += `: ${errorJson.Message}`;
+            }
+            if (errorJson.ActivityId) {
+              console.log('🆔 Activity ID:', errorJson.ActivityId);
+            }
+          } catch {
+            errorMessage += `: ${errorText}`;
+          }
+          
+          throw new Error(errorMessage);
         }
 
         const data = await response.json();
+        console.log('✅ Dados recebidos:', data);
         
         // O SWA Data API retorna os dados em um formato específico
-        equipamentos = data.value || [];
+        equipamentos = data.value || data || [];
+        console.log('📊 Equipamentos processados:', equipamentos.length);
         
         // Atualizar interface
         updateStats(equipamentos);
@@ -288,6 +312,7 @@
         if (equipamentos.length === 0) {
           tbody.innerHTML = '';
           emptyState.classList.remove('hidden');
+          showMessage('Nenhum equipamento encontrado no banco de dados.', 'info');
         } else {
           tbody.innerHTML = equipamentos.map(eq => createEquipamentoRow(eq)).join('');
           emptyState.classList.add('hidden');
@@ -295,7 +320,7 @@
         }
 
       } catch (error) {
-        console.error('Erro ao carregar equipamentos:', error);
+        console.error('💥 Erro ao carregar equipamentos:', error);
         
         const tbody = document.getElementById('lista-equipamentos');
         const loadingRow = document.getElementById('loadingRow');
@@ -303,17 +328,23 @@
         if (loadingRow) {
           loadingRow.innerHTML = `
             <td colspan="9" class="px-4 py-8 text-center text-red-600">
-              <div class="inline-flex items-center">
-                <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
-                Erro ao carregar equipamentos: ${error.message}
+              <div class="space-y-2">
+                <div class="inline-flex items-center">
+                  <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                  Erro ao carregar equipamentos
+                </div>
+                <div class="text-sm">${error.message}</div>
+                <div class="text-xs text-red-500 mt-2">
+                  Verifique o console (F12) para mais detalhes
+                </div>
               </div>
             </td>
           `;
         }
         
-        showMessage(`Erro ao carregar equipamentos: ${error.message}`, 'error');
+        showMessage(`Erro: ${error.message}`, 'error');
       } finally {
         isLoading = false;
         refreshBtn.disabled = false;
