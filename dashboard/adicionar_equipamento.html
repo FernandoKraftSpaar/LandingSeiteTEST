@@ -140,7 +140,7 @@
 
       <div class="mt-6">
         <details class="text-slate-700">
-          <summary class="font-medium text-[var(--primary)]">Exemplo do payload esperado pelo endpoint /api/equipamentos</summary>
+          <summary class="font-medium text-[var(--primary)]">Exemplo do payload esperado pelo endpoint REST do SWA</summary>
           <pre class="mt-3 bg-slate-50 p-3 rounded text-sm overflow-x-auto">{
   "nome": "Compressor AR-23",
   "potencia": 3.5,
@@ -151,8 +151,8 @@
   "observacoes": "Instalado no setor A - linha 2",
   "tag": "PISO-3-CPR-23",
   "fator_correcao": 1.00,
-  "op_hora_ini": "06:00",
-  "op_hora_fim": "18:30",
+  "op_hora_ini": "06:00:00",
+  "op_hora_fim": "18:30:00",
   "connected_to": "site_a"
 }</pre>
         </details>
@@ -161,7 +161,27 @@
   </main>
 
   <script>
-    // Basic client-side form handling and POST to /api/equipamentos
+    // SWA Authentication check
+    async function checkAuth() {
+      try {
+        const response = await fetch('/.auth/me');
+        const payload = await response.json();
+        const { clientPrincipal } = payload;
+        
+        if (!clientPrincipal) {
+          // Redireciona para login se não autenticado
+          window.location.href = '/.auth/login/aad'; // ou outro provider
+          return false;
+        }
+        
+        return true;
+      } catch (error) {
+        console.error('Erro ao verificar autenticação:', error);
+        return false;
+      }
+    }
+
+    // Form handling with SWA Data API
     const form = document.getElementById('equipForm');
     const statusEl = document.getElementById('status');
     const submitBtn = document.getElementById('submitBtn');
@@ -169,10 +189,15 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       statusEl.textContent = '';
+      
+      // Verificar autenticação
+      const isAuthenticated = await checkAuth();
+      if (!isAuthenticated) return;
+
       submitBtn.disabled = true;
       submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
 
-      // Build payload
+      // Build payload para SWA Data API
       const payload = {
         nome: document.getElementById('nome').value.trim(),
         potencia: parseFloat(document.getElementById('potencia').value) || 0,
@@ -182,51 +207,58 @@
         etiqueta_eficiencia: document.getElementById('etiqueta_eficiencia').value || null,
         observacoes: document.getElementById('observacoes').value || null,
         tag: document.getElementById('tag').value || null,
-        fator_correcao: (document.getElementById('fator_correcao').value !== '') ? parseFloat(document.getElementById('fator_correcao').value) : null,
+        fator_correcao: (document.getElementById('fator_correcao').value !== '') ? parseFloat(document.getElementById('fator_correcao').value) : 1.00,
         op_hora_ini: document.getElementById('op_hora_ini').value || null,
         op_hora_fim: document.getElementById('op_hora_fim').value || null,
         connected_to: document.getElementById('connected_to').value || null
       };
 
-      // Minimal validation
+      // Validação
       if (!payload.nome || payload.potencia <= 0 || payload.horas_uso < 0) {
         statusEl.textContent = 'Por favor verifique nome, potência e horas de uso.';
+        statusEl.className = 'text-sm text-red-600 ml-4';
         submitBtn.disabled = false;
         submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
         return;
       }
 
       try {
-        const res = await fetch('/api/equipamentos', {
+        // POST para SWA Data API
+        const res = await fetch('/data-api/rest/Equipamento', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
           body: JSON.stringify(payload)
         });
 
         if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || `HTTP ${res.status}`);
+          const errorText = await res.text();
+          throw new Error(`HTTP ${res.status}: ${errorText}`);
         }
 
         const json = await res.json();
-        statusEl.textContent = 'Equipamento adicionado com sucesso.';
-        statusEl.classList.remove('text-slate-600');
-        statusEl.classList.add('text-green-600');
+        statusEl.textContent = 'Equipamento adicionado com sucesso!';
+        statusEl.className = 'text-sm text-green-600 ml-4';
 
-        // Optionally redirect to equipamentos list
+        // Limpar form e redirecionar
+        form.reset();
         setTimeout(() => {
           window.location.href = '/dashboard';
-        }, 900);
+        }, 1500);
 
       } catch (err) {
-        console.error(err);
-        statusEl.textContent = 'Erro ao adicionar equipamento. Veja console para detalhes.';
-        statusEl.classList.remove('text-green-600');
-        statusEl.classList.add('text-red-600');
+        console.error('Erro ao adicionar equipamento:', err);
+        statusEl.textContent = `Erro: ${err.message}`;
+        statusEl.className = 'text-sm text-red-600 ml-4';
         submitBtn.disabled = false;
         submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
       }
     });
+
+    // Verificar auth ao carregar página
+    document.addEventListener('DOMContentLoaded', checkAuth);
   </script>
 </body>
 </html>
