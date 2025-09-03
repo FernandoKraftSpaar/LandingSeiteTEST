@@ -21,7 +21,7 @@
       "mode": "production",
       "cors": {
         "origins": ["https://www.smartspaar.com.br"],
-        "allow-credentials": false
+        "allow-credentials": true
       },
       "authentication": {
         "provider": "StaticWebApps"
@@ -35,7 +35,7 @@
       "permissions": [
         {
           "actions": ["read", "create", "update", "delete"],
-          "role": "anonymous"
+          "role": "authenticated"
         },
        
       ]
