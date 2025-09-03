@@ -36,7 +36,7 @@
         {
           "actions": ["read", "create", "update", "delete"],
           "role": "authenticated"
-        },
+        }
        
       ]
     }
