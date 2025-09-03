@@ -31,7 +31,7 @@
   "entities": {
    
     "Equipamentos": {
-      "source": "dbo.SmartSpaar",
+      "source": "dbo.equipamentos",
       "permissions": [
         {
           "actions": ["read"],
