@@ -1,1 +1,0 @@
-{"routes":[{"route":"/api/Nutzerfunktion","allowedRoles":["authenticated"]},{"route":"/verwaltung/*","allowedRoles":["admin"]},{"route":"/","allowedRoles":["anonymous","authenticated"]}]}
