@@ -30,11 +30,11 @@
   },
   "entities": {
     "Equipamento": {
-      "source": "dbo.vw_equipamentos",
+      "source": "dbo.equipamentos",
       "permissions": [
         {
           "actions": ["read", "create", "update", "delete"],
-          "role": "authenticated"
+          "role": "anonymous"
         }    
       ]
     }
