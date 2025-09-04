@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Avançado SWA</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+            line-height: 1.6;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 15px;
+        }
+        
+        .test-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .test-section h3 {
+            color: #374151;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover:not(:disabled) {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+        
+        .btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .btn-danger { background: #dc2626; }
+        .btn-danger:hover:not(:disabled) { background: #b91c1c; }
+        
+        .btn-success { background: #16a34a; }
+        .btn-success:hover:not(:disabled) { background: #15803d; }
+        
+        .result {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        
+        .result.success {
+            background: #dcfce7;
+            border: 1px solid #16a34a;
+            color: #15803d;
+        }
+        
+        .result.error {
+            background: #fef2f2;
+            border: 1px solid #dc2626;
+            color: #dc2626;
+        }
+        
+        .result.info {
+            background: #dbeafe;
+            border: 1px solid #3b82f6;
+            color: #1d4ed8;
+        }
+        
+        .result.warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #d97706;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-ok { background: #16a34a; }
+        .status-error { background: #dc2626; }
+        .status-warning { background: #f59e0b; }
+        .status-unknown { background: #6b7280; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Diagnóstico Avançado - Azure SWA Database Connection</h1>
+        
+        <div class="test-section">
+            <h3>
+                <span class="status-indicator status-unknown" id="config-status"></span>
+                1. Verificação de Configuração
+            </h3>
+            <p>Testa se os endpoints básicos estão acessíveis e se a Data API está funcionando.</p>
+            <div class="grid">
+                <button class="btn" onclick="testBasicEndpoints()">Testar Endpoints</button>
+                <button class="btn btn-success" onclick="testWithDifferentMethods()">Métodos HTTP</button>
+                <button class="btn" onclick="testCorsHeaders()">CORS Headers</button>
+            </div>
+            <div id="config-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>
+                <span class="status-indicator status-unknown" id="connection-status"></span>
+                2. Teste de Conexão com Database
+            </h3>
+            <p>Verifica especificamente a conexão com o Azure SQL Database.</p>
+            <div class="grid">
+                <button class="btn" onclick="testDatabaseConnection()">Conexão DB</button>
+                <button class="btn" onclick="testTableAccess()">Acesso à Tabela</button>
+                <button class="btn btn-success" onclick="testSimpleQuery()">Query Simples</button>
+            </div>
+            <div id="connection-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>
+                <span class="status-indicator status-unknown" id="permissions-status"></span>
+                3. Verificação de Permissões e Autenticação
+            </h3>
+            <p>Testa autenticação SWA e permissões da Data API.</p>
+            <div class="grid">
+                <button class="btn" onclick="checkAuthentication()">Status Auth</button>
+                <button class="btn" onclick="testAnonymousAccess()">Acesso Anônimo</button>
+                <button class="btn btn-danger" onclick="testAuthenticatedAccess()">Acesso Autenticado</button>
+            </div>
+            <div id="permissions-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>
+                <span class="status-indicator status-unknown" id="data-status"></span>
+                4. Teste de Operações CRUD
+            </h3>
+            <p>Testa operações Create, Read, Update, Delete na tabela equipamentos.</p>
+            <div class="grid">
+                <button class="btn" onclick="testRead()">READ (GET)</button>
+                <button class="btn btn-success" onclick="testCreate()">CREATE (POST)</button>
+                <button class="btn" onclick="testUpdate()">UPDATE (PATCH)</button>
+                <button class="btn btn-danger" onclick="testDelete()">DELETE</button>
+            </div>
+            <div id="data-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Análise de Logs e Debugging</h3>
+            <div class="grid">
+                <button class="btn btn-danger" onclick="clearAllLogs()">Limpar Logs</button>
+                <button class="btn" onclick="exportResults()">Exportar Resultados</button>
+                <button class="btn btn-success" onclick="runFullDiagnostic()">Diagnóstico Completo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {};
+        
+        function log(section, message, type = 'info') {
+            const container = document.getElementById(`${section}-results`);
+            const result = document.createElement('div');
+            result.className = `result ${type}`;
+            result.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            container.appendChild(result);
+            
+            // Update status indicator
+            const indicator = document.getElementById(`${section}-status`);
+            indicator.className = `status-indicator status-${type === 'error' ? 'error' : type === 'success' ? 'ok' : 'warning'}`;
+            
+            // Store result
+            if (!testResults[section]) testResults[section] = [];
+            testResults[section].push({ timestamp: new Date(), message, type });
+        }
+
+        // 1. Basic endpoint tests
+        async function testBasicEndpoints() {
+            log('config', 'Iniciando teste de endpoints básicos...', 'info');
+            
+            const endpoints = [
+                '/data-api/rest/Equipamentos',
+                '/data-api/rest/Equipamento', // Test both singular and plural
+                '/data-api/graphql'
+            ];
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint);
+                    log('config', `${endpoint}: HTTP ${response.status} ${response.statusText}`, 
+                        response.status < 500 ? 'success' : 'error');
+                    
+                    const text = await response.text();
+                    if (text.length > 0 && text.length < 500) {
+                        log('config', `Resposta: ${text.substring(0, 200)}...`, 'info');
+                    }
+                } catch (error) {
+                    log('config', `${endpoint}: Erro de rede - ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function testWithDifferentMethods() {
+            log('config', 'Testando diferentes métodos HTTP...', 'info');
+            
+            const methods = ['GET', 'POST', 'OPTIONS'];
+            
+            for (const method of methods) {
+                try {
+                    const response = await fetch('/data-api/rest/Equipamentos', {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    log('config', `${method}: HTTP ${response.status}`, 
+                        response.status < 500 ? 'success' : 'error');
+                } catch (error) {
+                    log('config', `${method}: Erro - ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function testCorsHeaders() {
+            log('config', 'Verificando headers CORS...', 'info');
+            
+            try {
+                const response = await fetch('/data-api/rest/Equipamentos', {
+                    method: 'OPTIONS',
+                });
+                
+                const corsHeaders = {};
+                response.headers.forEach((value, key) => {
+                    if (key.toLowerCase().startsWith('access-control')) {
+                        corsHeaders[key] = value;
+                    }
+                });
+                
+                log('config', `CORS Headers: ${JSON.stringify(corsHeaders, null, 2)}`, 'info');
+            } catch (error) {
+                log('config', `Erro CORS: ${error.message}`, 'error');
+            }
+        }
+
+        // 2. Database connection tests
+        async function testDatabaseConnection() {
+            log('connection', 'Testando conexão com Azure SQL Database...', 'info');
+            
+            try {
+                const response = await fetch('/data-api/rest/Equipamentos', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.status === 200) {
+                    log('connection', 'Conexão com database: OK', 'success');
+                    const data = await response.json();
+                    log('connection', `Dados recebidos: ${JSON.stringify(data).substring(0, 100)}...`, 'success');
+                } else if (response.status === 400) {
+                    const errorText = await response.text();
+                    log('connection', `HTTP 400 - Possível problema de configuração: ${errorText}`, 'error');
+                } else if (response.status === 500) {
+                    const errorText = await response.text();
+                    log('connection', `HTTP 500 - Problema no servidor/database: ${errorText}`, 'error');
+                }
+            } catch (error) {
+                log('connection', `Erro de conexão: ${error.message}`, 'error');
+            }
+        }
+
+        async function testTableAccess() {
+            log('connection', 'Verificando acesso à tabela equipamentos...', 'info');
+            
+            try {
+                // Test with specific query that should work if table exists
+                const response = await fetch('/data-api/rest/Equipamentos?$top=1');
+                
+                if (response.status === 200) {
+                    log('connection', 'Tabela equipamentos: ACESSÍVEL', 'success');
+                } else {
+                    const errorText = await response.text();
+                    log('connection', `Problema de acesso à tabela: ${errorText}`, 'error');
+                }
+            } catch (error) {
+                log('connection', `Erro ao acessar tabela: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSimpleQuery() {
+            log('connection', 'Executando query simples...', 'info');
+            
+            try {
+                const response = await fetch('/data-api/rest/Equipamentos?$select=id&$top=1');
+                
+                if (response.status === 200) {
+                    const data = await response.json();
+                    log('connection', 'Query executada com sucesso', 'success');
+                    log('connection', `Resultado: ${JSON.stringify(data)}`, 'info');
+                } else {
+                    const errorText = await response.text();
+                    log('connection', `Falha na query: ${errorText}`, 'error');
+                }
+            } catch (error) {
+                log('connection', `Erro na query: ${error.message}`, 'error');
+            }
+        }
+
+        // 3. Authentication tests
+        async function checkAuthentication() {
+            log('permissions', 'Verificando status de autenticação SWA...', 'info');
+            
+            try {
+                const response = await fetch('/.auth/me');
+                const payload = await response.json();
+                
+                if (payload.clientPrincipal) {
+                    log('permissions', `Usuário autenticado: ${payload.clientPrincipal.userDetails}`, 'success');
+                    log('permissions', `Roles: ${JSON.stringify(payload.clientPrincipal.userRoles)}`, 'info');
+                } else {
+                    log('permissions', 'Usuário não autenticado (anonymous)', 'warning');
+                }
+            } catch (error) {
+                log('permissions', `Erro ao verificar auth: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAnonymousAccess() {
+            log('permissions', 'Testando acesso anônimo...', 'info');
+            
+            try {
+                const response = await fetch('/data-api/rest/Equipamentos');
+                
+                if (response.status === 200) {
+                    log('permissions', 'Acesso anônimo: PERMITIDO', 'success');
+                } else if (response.status === 401 || response.status === 403) {
+                    log('permissions', 'Acesso anônimo: NEGADO (requer autenticação)', 'warning');
+                } else {
+                    log('permissions', `Acesso anônimo: HTTP ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log('permissions', `Erro no teste anônimo: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAuthenticatedAccess() {
+            log('permissions', 'Testando acesso autenticado...', 'info');
+            
+            try {
+                // First check if we're authenticated
+                const authResponse = await fetch('/.auth/me');
+                const authPayload = await authResponse.json();
+                
+                if (!authPayload.clientPrincipal) {
+                    log('permissions', 'Não autenticado - redirecionando para login', 'warning');
+                    window.location.href = '/.auth/login/aad';
+                    return;
+                }
+                
+                const response = await fetch('/data-api/rest/Equipamentos');
+                log('permissions', `Acesso autenticado: HTTP ${response.status}`, 
+                    response.status === 200 ? 'success' : 'error');
+                    
+            } catch (error) {
+                log('permissions', `Erro no teste autenticado: ${error.message}`, 'error');
+            }
+        }
+
+        // 4. CRUD operations tests
+        async function testRead() {
+            log('data', 'Testando operação READ (GET)...', 'info');
+            
+            try {
+                const response = await fetch('/data-api/rest/Equipamentos');
+                
+                if (response.status === 200) {
+                    const data = await response.json();
+                    const count = data.value ? data.value.length : data.length || 0;
+                    log('data', `READ: Sucesso - ${count} registros encontrados`, 'success');
+                } else {
+                    const errorText = await response.text();
+                    log('data', `READ: Falha - ${errorText}`, 'error');
+                }
+            } catch (error) {
+                log('data', `READ: Erro - ${error.message}`, 'error');
+            }
+        }
+
+        async function testCreate() {
+            log('data', 'Testando operação CREATE (POST)...', 'info');
+            
+            const testData = {
+                nome: 'TESTE - Equipamento Diagnóstico',
+                potencia: 1.0,
+                horas_uso: 1.0,
+                categoria: 'Teste'
+            };
+            
+            try {
+                const response = await fetch('/data-api/rest/Equipamentos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                if (response.status === 201 || response.status === 200) {
+                    log('data', 'CREATE: Sucesso - Registro inserido', 'success');
+                } else {
+                    const errorText = await response.text();
+                    log('data', `CREATE: Falha - ${errorText}`, 'error');
+                }
+            } catch (error) {
+                log('data', `CREATE: Erro - ${error.message}`, 'error');
+            }
+        }
+
+        async function testUpdate() {
+            log('data', 'UPDATE: Não implementado neste teste', 'warning');
+        }
+
+        async function testDelete() {
+            log('data', 'DELETE: Não implementado neste teste', 'warning');
+        }
+
+        // Utility functions
+        function clearAllLogs() {
+            ['config', 'connection', 'permissions', 'data'].forEach(section => {
+                document.getElementById(`${section}-results`).innerHTML = '';
+                document.getElementById(`${section}-status`).className = 'status-indicator status-unknown';
+            });
+            testResults = {};
+        }
+
+        function exportResults() {
+            const results = JSON.stringify(testResults, null, 2);
+            const blob = new Blob([results], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `swa-diagnostic-${new Date().toISOString().slice(0,19)}.json`;
+            a.click();
+        }
+
+        async function runFullDiagnostic() {
+            clearAllLogs();
+            
+            log('config', '🚀 Iniciando diagnóstico completo...', 'info');
+            
+            await testBasicEndpoints();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testDatabaseConnection();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await checkAuthentication();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testRead();
+            
+            log('config', '✅ Diagnóstico completo finalizado!', 'success');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            log('config', 'Ferramenta de diagnóstico carregada. Execute os testes para identificar problemas.', 'info');
+        });
+    </script>
+</body>
+</html>
