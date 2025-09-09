@@ -230,15 +230,57 @@
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
+          credentials: 'include', // Important for SWA authentication
           body: JSON.stringify(payload)
         });
 
+        console.log('📡 Status da resposta:', res.status);
+        console.log('📋 Headers da resposta:', Object.fromEntries(res.headers.entries()));
+
         if (!res.ok) {
           const errorText = await res.text();
-          throw new Error(`HTTP ${res.status}: ${errorText}`);
+          console.error('❌ Erro na resposta:', errorText);
+          
+          let errorMessage = `HTTP ${res.status}`;
+          let troubleshootingTip = '';
+          
+          if (res.status === 400) {
+            errorMessage += ' - Bad Request';
+            troubleshootingTip = 'Verifique os dados enviados ou a configuração da connection string.';
+          } else if (res.status === 401) {
+            errorMessage += ' - Unauthorized';
+            troubleshootingTip = 'Você precisa estar autenticado para adicionar equipamentos.';
+            // Redirecionar para login
+            setTimeout(() => window.location.href = '/.auth/login/aad', 2000);
+          } else if (res.status === 403) {
+            errorMessage += ' - Forbidden';
+            troubleshootingTip = 'Você não tem permissão para criar equipamentos.';
+          } else if (res.status === 500) {
+            errorMessage += ' - Internal Server Error';
+            troubleshootingTip = 'Erro no servidor. Verifique se o banco está acessível e a tabela existe.';
+          }
+          
+          try {
+            const errorJson = JSON.parse(errorText);
+            if (errorJson.Message) {
+              errorMessage += `: ${errorJson.Message}`;
+            }
+          } catch {
+            if (errorText) {
+              errorMessage += `: ${errorText}`;
+            }
+          }
+          
+          if (troubleshootingTip) {
+            errorMessage += `\n\n💡 Dica: ${troubleshootingTip}`;
+          }
+          
+          throw new Error(errorMessage);
         }
 
         const json = await res.json();
+        console.log('✅ Equipamento criado:', json);
+        
         statusEl.textContent = 'Equipamento adicionado com sucesso!';
         statusEl.className = 'text-sm text-green-600 ml-4';
 
