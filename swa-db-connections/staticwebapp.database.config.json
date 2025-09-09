@@ -10,7 +10,8 @@
   "runtime": {
     "rest": {
       "enabled": true,
-      "path": "/rest"
+      "path": "/rest",
+      "request-body-strict": false
     },
     "graphql": {
       "allow-introspection": true,
@@ -20,7 +21,12 @@
     "host": {
       "mode": "production",
       "cors": {
-        "origins": ["https://www.smartspaar.com.br"],
+        "origins": [
+          "https://www.smartspaar.com.br",
+          "https://jolly-tree-034e7b00f.5.azurestaticapps.net",
+          "http://localhost:3000",
+          "http://localhost:4280"
+        ],
         "allow-credentials": true
       },
       "authentication": {
@@ -30,13 +36,37 @@
   },
   "entities": {
     "Equipamento": {
-      "source": "dbo.equipamentos",
+      "source": {
+        "object": "dbo.equipamentos",
+        "type": "table"
+      },
       "permissions": [
         {
-          "actions": ["read", "create", "update", "delete"],
+          "actions": ["read"],
           "role": "anonymous"
-        }    
-      ]
+        },
+        {
+          "actions": ["create", "update", "delete"],
+          "role": "authenticated"
+        }
+      ],
+      "mappings": {
+        "id": "id",
+        "nome": "nome", 
+        "potencia": "potencia",
+        "horas_uso": "horas_uso",
+        "categoria": "categoria",
+        "idade": "idade",
+        "etiqueta_eficiencia": "etiqueta_eficiencia",
+        "observacoes": "observacoes",
+        "tag": "tag",
+        "fator_correcao": "fator_correcao",
+        "op_hora_ini": "op_hora_ini",
+        "op_hora_fim": "op_hora_fim",
+        "connected_to": "connected_to",
+        "created_at": "created_at",
+        "updated_at": "updated_at"
+      }
     }
   }
 }

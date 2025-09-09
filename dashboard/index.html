@@ -265,17 +265,34 @@
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-          }
+          },
+          credentials: 'include' // Important for SWA authentication
         });
 
         console.log('📡 Status da resposta:', response.status);
+        console.log('📋 Headers da resposta:', Object.fromEntries(response.headers.entries()));
         
         if (!response.ok) {
           const errorText = await response.text();
           console.error('❌ Erro na resposta:', errorText);
           
-          // Tentar interpretar mensagem de erro específica
+          // Criar mensagem de erro mais detalhada
           let errorMessage = `HTTP ${response.status}`;
+          let troubleshootingTip = '';
+          
+          if (response.status === 400) {
+            errorMessage += ' - Bad Request';
+            troubleshootingTip = 'Verifique a configuração da connection string no formato SQL Server.';
+          } else if (response.status === 401) {
+            errorMessage += ' - Unauthorized';
+            troubleshootingTip = 'Faça login novamente ou verifique as permissões.';
+            // Redirecionar para login
+            setTimeout(() => window.location.href = '/.auth/login/aad', 2000);
+          } else if (response.status === 500) {
+            errorMessage += ' - Internal Server Error';
+            troubleshootingTip = 'Verifique se o banco de dados está acessível e a tabela "dbo.equipamentos" existe.';
+          }
+          
           try {
             const errorJson = JSON.parse(errorText);
             if (errorJson.Message) {
@@ -285,10 +302,14 @@
               console.log('🆔 Activity ID:', errorJson.ActivityId);
             }
           } catch {
-            errorMessage += `: ${errorText}`;
+            if (errorText) {
+              errorMessage += `: ${errorText}`;
+            }
           }
           
-          throw new Error(errorMessage);
+          const fullError = new Error(errorMessage);
+          fullError.troubleshootingTip = troubleshootingTip;
+          throw fullError;
         }
 
         const data = await response.json();
@@ -335,9 +356,11 @@
                   </svg>
                   Erro ao carregar equipamentos
                 </div>
-                <div class="text-sm">${error.message}</div>
+                <div class="text-sm font-medium">${error.message}</div>
+                ${error.troubleshootingTip ? `<div class="text-xs text-red-500 mt-2 bg-red-50 p-2 rounded border">${error.troubleshootingTip}</div>` : ''}
                 <div class="text-xs text-red-500 mt-2">
-                  Verifique o console (F12) para mais detalhes
+                  Verifique o console (F12) para mais detalhes ou consulte o 
+                  <a href="/DAB_CONFIGURATION_GUIDE.md" target="_blank" class="underline">guia de configuração</a>
                 </div>
               </div>
             </td>
