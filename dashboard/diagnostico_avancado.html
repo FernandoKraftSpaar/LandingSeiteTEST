@@ -221,7 +221,7 @@
             log('config', 'Iniciando teste de endpoints básicos...', 'info');
             
             const endpoints = [
-                '/data-api/rest/Equipamentos',
+                '/data-api/rest/Equipamento',
                 '/data-api/rest/Equipamento', // Test both singular and plural
                 '/data-api/graphql'
             ];
@@ -249,7 +249,7 @@
             
             for (const method of methods) {
                 try {
-                    const response = await fetch('/data-api/rest/Equipamentos', {
+                    const response = await fetch('/data-api/rest/Equipamento', {
                         method: method,
                         headers: {
                             'Content-Type': 'application/json',
@@ -269,7 +269,7 @@
             log('config', 'Verificando headers CORS...', 'info');
             
             try {
-                const response = await fetch('/data-api/rest/Equipamentos', {
+                const response = await fetch('/data-api/rest/Equipamento', {
                     method: 'OPTIONS',
                 });
                 
@@ -291,7 +291,7 @@
             log('connection', 'Testando conexão com Azure SQL Database...', 'info');
             
             try {
-                const response = await fetch('/data-api/rest/Equipamentos', {
+                const response = await fetch('/data-api/rest/Equipamento', {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json'
@@ -319,7 +319,7 @@
             
             try {
                 // Test with specific query that should work if table exists
-                const response = await fetch('/data-api/rest/Equipamentos?$top=1');
+                const response = await fetch('/data-api/rest/Equipamento?$top=1');
                 
                 if (response.status === 200) {
                     log('connection', 'Tabela equipamentos: ACESSÍVEL', 'success');
@@ -336,7 +336,7 @@
             log('connection', 'Executando query simples...', 'info');
             
             try {
-                const response = await fetch('/data-api/rest/Equipamentos?$select=id&$top=1');
+                const response = await fetch('/data-api/rest/Equipamento?$select=id&$top=1');
                 
                 if (response.status === 200) {
                     const data = await response.json();
@@ -374,7 +374,7 @@
             log('permissions', 'Testando acesso anônimo...', 'info');
             
             try {
-                const response = await fetch('/data-api/rest/Equipamentos');
+                const response = await fetch('/data-api/rest/Equipamento');
                 
                 if (response.status === 200) {
                     log('permissions', 'Acesso anônimo: PERMITIDO', 'success');
@@ -402,7 +402,7 @@
                     return;
                 }
                 
-                const response = await fetch('/data-api/rest/Equipamentos');
+                const response = await fetch('/data-api/rest/Equipamento');
                 log('permissions', `Acesso autenticado: HTTP ${response.status}`, 
                     response.status === 200 ? 'success' : 'error');
                     
@@ -416,7 +416,7 @@
             log('data', 'Testando operação READ (GET)...', 'info');
             
             try {
-                const response = await fetch('/data-api/rest/Equipamentos');
+                const response = await fetch('/data-api/rest/Equipamento');
                 
                 if (response.status === 200) {
                     const data = await response.json();
@@ -442,7 +442,7 @@
             };
             
             try {
-                const response = await fetch('/data-api/rest/Equipamentos', {
+                const response = await fetch('/data-api/rest/Equipamento', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
