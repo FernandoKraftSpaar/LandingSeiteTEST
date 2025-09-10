@@ -1,0 +1,21 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/dashboard/*", "/data-api/*", "*.{css,js,jpg,png,gif,ico,svg,woff,woff2}"]
+  },
+  "routes": [
+    {
+      "route": "/dashboard/*",
+      "allowedRoles": ["authenticated"]
+    }
+  ],
+  "responseOverrides": {
+    "401": {
+      "redirect": "/.auth/login/aad",
+      "statusCode": 302
+    }
+  },
+  "dataApi": {
+    "enabled": true
+  }
+}
