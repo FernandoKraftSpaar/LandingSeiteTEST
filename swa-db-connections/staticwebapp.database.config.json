@@ -46,7 +46,7 @@
           "role": "anonymous"
         },
         {
-          "actions": ["create", "update", "delete"],
+          "actions": ["read","create", "update", "delete"],
           "role": "authenticated"
         }
       ],
