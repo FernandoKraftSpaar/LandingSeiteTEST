@@ -14,3 +14,22 @@ CREATE TABLE [ClientRecord] (
   [active] BIT DEFAULT 1,
   [last_seen] DATETIME2 DEFAULT GETUTCDATE()
 );
+
+-- Tabela de equipamentos para o dashboard SmartSpaar
+CREATE TABLE [Equipamento] (
+  [id] INT IDENTITY(1,1) PRIMARY KEY,
+  [nome] NVARCHAR(200) NOT NULL,
+  [potencia] DECIMAL(10,2) NOT NULL,
+  [horas_uso] DECIMAL(5,2) NOT NULL,
+  [categoria] NVARCHAR(100),
+  [idade] INT,
+  [etiqueta_eficiencia] NVARCHAR(50),
+  [observacoes] NVARCHAR(MAX),
+  [tag] NVARCHAR(100),
+  [fator_correcao] DECIMAL(5,2) DEFAULT 1.00,
+  [op_hora_ini] TIME,
+  [op_hora_fim] TIME,
+  [connected_to] NVARCHAR(100),
+  [created_at] DATETIME2 DEFAULT GETUTCDATE(),
+  [updated_at] DATETIME2 DEFAULT GETUTCDATE()
+);
