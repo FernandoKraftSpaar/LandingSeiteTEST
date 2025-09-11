@@ -41,10 +41,7 @@
         "type": "table"
       },
       "permissions": [
-        {
-          "actions": ["read"],
-          "role": "anonymous"
-        },
+
         {
           "actions": ["read","create", "update", "delete"],
           "role": "authenticated"
