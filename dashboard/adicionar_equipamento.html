@@ -162,17 +162,18 @@
   </main>
 
   <script>
-    // Estado global
+    // Estado global para controle do modo de edição
     let isEditMode = false;
     let editingEquipmentId = null;
 
-    // Obter parâmetros da URL
+    // Utilitário para obter parâmetros da URL
     function getUrlParameter(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
     }
 
-    // Verificar se está em modo de edição
+    // Verificar se a página foi aberta em modo de edição
+    // Detecta o parâmetro ?edit={id} na URL e configura a interface apropriada
     function checkEditMode() {
       const editId = getUrlParameter('edit');
       if (editId) {
@@ -190,7 +191,8 @@
       }
     }
 
-    // Carregar dados do equipamento para edição
+    // Carregar dados do equipamento para edição via API REST
+    // Utiliza GET /data-api/rest/Equipamento/{id} para buscar os dados
     async function loadEquipmentForEdit(id) {
       const statusEl = document.getElementById('status');
       statusEl.textContent = 'Carregando dados do equipamento...';
@@ -212,6 +214,11 @@
 
         const data = await response.json();
         const equipment = data.value?.[0] || data; // Handle both array and single object responses
+
+        // Verificar se o equipamento foi encontrado
+        if (!equipment || (Array.isArray(data.value) && data.value.length === 0)) {
+          throw new Error('Equipamento não encontrado ou foi removido');
+        }
 
         // Preencher formulário com dados do equipamento
         if (equipment) {
@@ -324,6 +331,7 @@
 
         if (isEditMode && editingEquipmentId) {
           // PATCH para atualizar equipamento existente
+          // Endpoint: PATCH /data-api/rest/Equipamento/{id}
           response = await fetch(`/data-api/rest/Equipamento/${editingEquipmentId}`, {
             method: 'PATCH',
             headers: { 
@@ -335,6 +343,7 @@
           successMessage = 'Equipamento atualizado com sucesso!';
         } else {
           // POST para criar novo equipamento
+          // Endpoint: POST /data-api/rest/Equipamento
           response = await fetch('/data-api/rest/Equipamento', {
             method: 'POST',
             headers: { 

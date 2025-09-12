@@ -361,7 +361,8 @@
       }
     }
 
-    // Editar equipamento
+    // Editar equipamento - navega para o formulário em modo de edição
+    // Utiliza parâmetro URL ?edit={id} para ativar o modo de edição
     function editEquipamento(id) {
       if (!id) {
         showMessage('ID do equipamento não encontrado.', 'error');
