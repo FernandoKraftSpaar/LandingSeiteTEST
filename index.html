@@ -30,7 +30,7 @@
         </div>
 
         <div class="hidden md:flex items-center space-x-8">
-          <a href="#o-que-entregamos" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_services">O que entregamos</a>
+          <a href="#servicos" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_services">Serviços</a>
           <a href="#como-funciona" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_how">Como funciona</a>
           <a href="#por-que" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_why">Por que escolher</a>
           <a href="#validacao" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_social">Validação</a>
@@ -56,7 +56,7 @@
 
     <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
       <div class="px-4 py-4 space-y-2">
-        <a href="#o-que-entregamos" class="block text-[var(--primary)]" data-i18n="menu_services">O que entregamos</a>
+        <a href="#servicos" class="block text-[var(--primary)]" data-i18n="menu_services">Serviços</a>
         <a href="#como-funciona" class="block text-[var(--primary)]" data-i18n="menu_how">Como funciona</a>
         <a href="#por-que" class="block text-[var(--primary)]" data-i18n="menu_why">Por que escolher</a>
         <a href="#validacao" class="block text-[var(--primary)]" data-i18n="menu_social">Validação</a>
@@ -76,63 +76,135 @@
     <section class="bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] rounded-xl text-white px-6 py-16 md:py-24 -mx-4 md:mx-0">
       <div class="max-w-3xl">
         <h1 id="hero-title" class="text-3xl md:text-4xl font-extrabold leading-tight" data-i18n="hero_title">Economia imediata, eficiência contínua.</h1>
-        <p id="hero-sub" class="mt-4 text-lg md:text-xl" data-i18n="hero_sub">Sua empresa reduz custos agora e se prepara para crescer com inteligência energética no futuro.</p>
-        <div class="mt-8 flex items-center space-x-4">
-          <a id="hero-cta" href="dashboard" target="_blank" rel="noopener" class="inline-block px-6 py-3 rounded-full bg-[var(--accent-2)] hover:bg-[var(--accent)] text-white font-semibold" data-i18n="hero_cta">Quero economizar agora</a>
-          <a href="#o-que-entregamos" class="text-white/90 underline" data-i18n="hero_secondary">Saiba como funciona</a>
+        <h2 id="hero-subtitle" class="text-xl md:text-2xl font-bold mt-2" data-i18n="hero_subtitle">Seja pioneiro na gestão energética: reduza custos já e prepare sua empresa para crescer com inteligência.</h2>
+        <p id="hero-sub" class="mt-4 text-lg md:text-xl" data-i18n="hero_sub">Participe como piloto: teste nossa solução sem investimento, receba diagnósticos precisos e acompanhe resultados reais em um dashboard simples e transparente.</p>
+        <div class="mt-8 flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+          <a id="hero-cta" href="#piloto-form" class="inline-block px-6 py-3 rounded-full bg-[var(--accent-2)] hover:bg-[var(--accent)] text-white font-semibold" data-i18n="hero_cta">Quero ser piloto agora</a>
+          <a href="#servicos" class="text-white/90 underline" data-i18n="hero_secondary">Saiba como funciona</a>
         </div>
       </div>
     </section>
 
-    <section id="o-que-entregamos" class="mt-12 bg-white rounded-xl shadow-sm p-6">
-      <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="block1_title">O que entregamos</h2>
-      <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-700">
-        <li class="flex items-start space-x-3">
-          <svg class="h-6 w-6 text-[var(--accent-2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>
-          <span data-i18n="deliver_1">Diagnóstico energético rápido e sem esforço</span>
-        </li>
-        <li class="flex items-start space-x-3">
-          <svg class="h-6 w-6 text-[var(--accent-2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 11V7a4 4 0 10-8 0v4M21 13v5a2 2 0 01-2 2H7"/></svg>
-          <span data-i18n="deliver_2">Projeções precisas de consumo e custos</span>
-        </li>
-        <li class="flex items-start space-x-3">
-          <svg class="h-6 w-6 text-[var(--accent-2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h12M3 17h6"/></svg>
-          <span data-i18n="deliver_3">Otimização de demanda com payback acelerado</span>
-        </li>
-        <li class="flex items-start space-x-3">
-          <svg class="h-6 w-6 text-[var(--accent-2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"/></svg>
-          <span data-i18n="deliver_4">Suporte para projetos de eficiência e automação</span>
-        </li>
-      </ul>
+    <!-- Dynamic Service Blocks -->
+    <section id="servicos" class="mt-12 space-y-6">
+      <!-- Diagnóstico de Demanda -->
+      <div class="bg-gradient-to-r from-white to-[var(--accent)]/10 rounded-xl shadow-sm p-6 border-l-4 border-[var(--accent)] transform hover:scale-105 transition-transform duration-300">
+        <h3 class="text-xl font-bold text-[var(--primary)]" data-i18n="service_demand_title">Diagnóstico de Demanda</h3>
+        <p class="mt-3 text-slate-700" data-i18n="service_demand_desc">Contratação de energia otimizada com a concessionária, sem pagar a mais ou multas. Personalização conforme a operação da empresa, com transparência e agilidade.</p>
+        <div class="mt-4 flex items-center justify-between">
+          <span class="text-[var(--accent-2)] font-semibold" data-i18n="service_demand_benefit">✓ Elimine multas por demanda</span>
+          <a href="#contato-demanda" class="px-4 py-2 bg-[var(--accent)] text-white rounded-lg hover:bg-[var(--accent-2)] transition-colors" data-i18n="service_demand_cta">Solicitar diagnóstico</a>
+        </div>
+      </div>
+
+      <!-- Gerenciamento de Carga -->
+      <div class="bg-gradient-to-r from-white to-[var(--primary)]/10 rounded-xl shadow-sm p-6 border-l-4 border-[var(--primary)] transform hover:scale-105 transition-transform duration-300">
+        <h3 class="text-xl font-bold text-[var(--primary)]" data-i18n="service_load_title">Gerenciamento de Carga</h3>
+        <p class="mt-3 text-slate-700" data-i18n="service_load_desc">Estimar cargas, otimizar demanda e consumo, reduzir desgaste, usando dashboard interativo na rotina da empresa.</p>
+        <div class="mt-4 flex items-center justify-between">
+          <span class="text-[var(--accent-2)] font-semibold" data-i18n="service_load_benefit">✓ Dashboard interativo em tempo real</span>
+          <a href="#contato-carga" class="px-4 py-2 bg-[var(--primary)] text-white rounded-lg hover:bg-[var(--accent-2)] transition-colors" data-i18n="service_load_cta">Agendar gerenciamento</a>
+        </div>
+      </div>
+
+      <!-- Projetos de Eficiência Energética -->
+      <div class="bg-gradient-to-r from-white to-[var(--accent-2)]/10 rounded-xl shadow-sm p-6 border-l-4 border-[var(--accent-2)] transform hover:scale-105 transition-transform duration-300">
+        <h3 class="text-xl font-bold text-[var(--primary)]" data-i18n="service_efficiency_title">Projetos de Eficiência Energética</h3>
+        <p class="mt-3 text-slate-700" data-i18n="service_efficiency_desc">Projetos pontuais e gerais, acompanhamento da estrutura de custos, indicação do momento ótimo para aplicação.</p>
+        <div class="mt-4 flex items-center justify-between">
+          <span class="text-[var(--accent-2)] font-semibold" data-i18n="service_efficiency_benefit">✓ ROI calculado e momento ótimo</span>
+          <a href="#contato-eficiencia" class="px-4 py-2 bg-[var(--accent-2)] text-white rounded-lg hover:bg-[var(--primary)] transition-colors" data-i18n="service_efficiency_cta">Ver projetos disponíveis</a>
+        </div>
+      </div>
+
+      <!-- Gestão de Geração Distribuída Solar -->
+      <div class="bg-gradient-to-r from-white to-yellow-100 rounded-xl shadow-sm p-6 border-l-4 border-yellow-500 transform hover:scale-105 transition-transform duration-300">
+        <h3 class="text-xl font-bold text-[var(--primary)]" data-i18n="service_solar_title">Gestão de Geração Distribuída (GD) Solar</h3>
+        <p class="mt-3 text-slate-700" data-i18n="service_solar_desc">Acompanhamento da GD solar, otimização de compensações, manutenção da usina e garantia de não acumular créditos não recuperáveis.</p>
+        <div class="mt-4 flex items-center justify-between">
+          <span class="text-[var(--accent-2)] font-semibold" data-i18n="service_solar_benefit">✓ Máximo aproveitamento de créditos</span>
+          <a href="#contato-solar" class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors" data-i18n="service_solar_cta">Gerenciar minha GD solar</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Institutional Content -->
+    <section class="mt-8 bg-gradient-to-r from-[var(--primary)]/5 to-[var(--accent)]/5 rounded-xl p-6">
+      <div class="text-center mb-6">
+        <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="institutional_title">SmartSpaar</h2>
+        <p class="text-slate-600 mt-2" data-i18n="institutional_subtitle">Democratizando o acesso à eficiência energética</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <h3 class="font-semibold text-[var(--primary)] mb-2" data-i18n="mission_title">Missão</h3>
+          <p class="text-sm text-slate-700" data-i18n="mission_text">Democratizar o acesso à eficiência energética com tecnologia acessível, diagnósticos precisos e proximidade com o setor produtivo.</p>
+        </div>
+        
+        <div class="text-center">
+          <h3 class="font-semibold text-[var(--primary)] mb-2" data-i18n="vision_title">Visão</h3>
+          <p class="text-sm text-slate-700" data-i18n="vision_text">Ser referência em soluções inteligentes de entrada para a gestão energética na indústria e serviços do Cone Sul, integrando-se ao ecossistema ESG e energia verde até 2030.</p>
+        </div>
+        
+        <div class="text-center">
+          <h3 class="font-semibold text-[var(--primary)] mb-2" data-i18n="values_title">Valores</h3>
+          <p class="text-sm text-slate-700" data-i18n="values_text">Efetividade, Transparência, Simplicidade, Parceria Local, Sustentabilidade.</p>
+        </div>
+      </div>
     </section>
 
     <section id="como-funciona" class="mt-8 bg-white rounded-xl shadow-sm p-6">
       <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="block2_title">Como funciona</h2>
-      <ol class="mt-6 list-decimal list-inside space-y-3 text-slate-700">
-        <li data-i18n="how_1">Integramos dados da sua operação sem atrito</li>
-        <li data-i18n="how_2">Aplicamos heurísticas inteligentes para planejar máquinas e cargas</li>
-        <li data-i18n="how_3">Você recebe alertas e recomendações claras, via dashboard ou WhatsApp</li>
-      </ol>
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="w-12 h-12 bg-[var(--accent)] rounded-full flex items-center justify-center mx-auto mb-3">
+            <span class="text-white font-bold">1</span>
+          </div>
+          <h3 class="font-semibold text-[var(--primary)] mb-2" data-i18n="how_step1_title">Integração sem atrito</h3>
+          <p class="text-slate-700 text-sm" data-i18n="how_1">Integramos dados da sua operação sem atrito</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="w-12 h-12 bg-[var(--accent)] rounded-full flex items-center justify-center mx-auto mb-3">
+            <span class="text-white font-bold">2</span>
+          </div>
+          <h3 class="font-semibold text-[var(--primary)] mb-2" data-i18n="how_step2_title">IA Inteligente</h3>
+          <p class="text-slate-700 text-sm" data-i18n="how_2">Aplicamos heurísticas inteligentes para planejar máquinas e cargas</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="w-12 h-12 bg-[var(--accent)] rounded-full flex items-center justify-center mx-auto mb-3">
+            <span class="text-white font-bold">3</span>
+          </div>
+          <h3 class="font-semibold text-[var(--primary)] mb-2" data-i18n="how_step3_title">Alertas Inteligentes</h3>
+          <p class="text-slate-700 text-sm" data-i18n="how_3">Você recebe alertas e recomendações claras, via dashboard ou WhatsApp</p>
+        </div>
+      </div>
+      
+      <div class="mt-8 bg-[var(--accent)]/10 rounded-lg p-4">
+        <h3 class="font-semibold text-[var(--primary)] mb-2" data-i18n="experience_title">Experiência Frictionless</h3>
+        <p class="text-slate-700 text-sm" data-i18n="experience_desc">Facilidade de uso, simplicidade, transparência e tecnologia de IA que normaliza quaisquer fontes de dados. O dashboard automatiza ações, demonstra onde foi economizado e aponta novas oportunidades de economia.</p>
+      </div>
     </section>
 
     <section id="por-que" class="mt-8 bg-white rounded-xl shadow-sm p-6">
       <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="block3_title">Por que escolher a SmartSpaar</h2>
-      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-700">
-        <div>
-          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_speed">Agilidade</h3>
-          <p data-i18n="why_speed_desc">Resultado visível em semanas, não meses</p>
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6 text-slate-700">
+        <div class="bg-[var(--accent)]/5 p-4 rounded-lg">
+          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_ease">Facilidade e Transparência</h3>
+          <p data-i18n="why_ease_desc">Facilidade de utilização e transparência total em todos os processos</p>
         </div>
-        <div>
-          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_cost">Baixo custo</h3>
-          <p data-i18n="why_cost_desc">Sem consultorias pesadas ou longos contratos</p>
+        <div class="bg-[var(--primary)]/5 p-4 rounded-lg">
+          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_tech">Tecnologia Proprietária</h3>
+          <p data-i18n="why_tech_desc">IA própria para normalização de dados de qualquer fonte</p>
         </div>
-        <div>
-          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_client">Foco no cliente</h3>
-          <p data-i18n="why_client_desc">Nós fazemos o trabalho, você colhe o resultado</p>
+        <div class="bg-[var(--accent-2)]/10 p-4 rounded-lg">
+          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_innovation">Ecossistema de Inovação</h3>
+          <p data-i18n="why_innovation_desc">Incubada no CEI UFRGS, membro do Ecossistema Veleiro de Inovação</p>
         </div>
-        <div>
-          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_scale">Escalável</h3>
-          <p data-i18n="why_scale_desc">Preparada para integrar sensores e ERPs no futuro</p>
+        <div class="bg-yellow-50 p-4 rounded-lg">
+          <h3 class="font-semibold text-[var(--primary)]" data-i18n="why_proven">Resultados Comprovados</h3>
+          <p data-i18n="why_proven_desc">Projetos e pilotos já realizados na UFRGS com resultados validados</p>
         </div>
       </div>
     </section>
@@ -152,6 +224,45 @@
       <div class="bg-[var(--primary)]/5 rounded-lg p-6">
         <h3 class="text-xl font-semibold text-[var(--primary)]" data-i18n="innovation_title">Faixa de Inovação Estruturada</h3>
         <p class="mt-3 text-slate-700" data-i18n="innovation_text">Mais que reduzir custos, estruturamos inovação na sua empresa com tecnologia proprietária e rede de parceiros locais.</p>
+      </div>
+    </section>
+
+    <!-- Pilot Program Form -->
+    <section id="piloto-form" class="mt-8 bg-gradient-to-r from-[var(--accent)]/10 to-[var(--primary)]/10 rounded-xl p-6">
+      <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-2xl font-bold text-[var(--primary)]" data-i18n="pilot_title">Seja um Piloto SmartSpaar</h2>
+        <p class="mt-3 text-slate-700" data-i18n="pilot_subtitle">Teste nossa solução sem investimento inicial e receba benefícios exclusivos</p>
+        
+        <div class="mt-6 bg-white rounded-lg p-6 shadow-sm">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <input type="text" placeholder="Nome completo" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_name_placeholder">
+            <input type="email" placeholder="Email corporativo" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_email_placeholder">
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <input type="text" placeholder="Empresa" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_company_placeholder">
+            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]">
+              <option data-i18n="pilot_sector_option">Setor de atividade</option>
+              <option>Indústria Metalúrgica</option>
+              <option>Indústria Química</option>
+              <option>Indústria Alimentícia</option>
+              <option>Indústria Têxtil</option>
+              <option>Serviços</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          
+          <div class="mb-4">
+            <textarea placeholder="Conte-nos sobre seu maior desafio energético (opcional)" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_challenge_placeholder"></textarea>
+          </div>
+          
+          <button class="w-full bg-[var(--accent-2)] text-white font-semibold py-3 rounded-lg hover:bg-[var(--accent)] transition-colors" data-i18n="pilot_submit">Quero ser piloto agora</button>
+          
+          <div class="mt-4 flex items-center justify-center space-x-4">
+            <span class="text-sm text-slate-600" data-i18n="pilot_or">ou</span>
+          </div>
+          
+          <a href="https://wa.me/5551998712569?text=Olá, quero ser piloto da SmartSpaar!" target="_blank" rel="noopener" class="inline-block mt-2 px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors" data-i18n="pilot_whatsapp">Falar via WhatsApp</a>
+        </div>
       </div>
     </section>
 
@@ -206,37 +317,82 @@
     // Language translations
     const translations = {
       pt: {
-        menu_services: "O que entregamos",
+        menu_services: "Serviços",
         menu_how: "Como funciona",
         menu_why: "Por que escolher",
         menu_social: "Validação",
         hero_title: "Economia imediata, eficiência contínua.",
-        hero_sub: "Sua empresa reduz custos agora e se prepara para crescer com inteligência energética no futuro.",
-        hero_cta: "Quero economizar agora",
+        hero_subtitle: "Seja pioneiro na gestão energética: reduza custos já e prepare sua empresa para crescer com inteligência.",
+        hero_sub: "Participe como piloto: teste nossa solução sem investimento, receba diagnósticos precisos e acompanhe resultados reais em um dashboard simples e transparente.",
+        hero_cta: "Quero ser piloto agora",
         hero_secondary: "Saiba como funciona",
-        block1_title: "O que entregamos",
-        deliver_1: "Diagnóstico energético rápido e sem esforço",
-        deliver_2: "Projeções precisas de consumo e custos",
-        deliver_3: "Otimização de demanda com payback acelerado",
-        deliver_4: "Suporte para projetos de eficiência e automação",
+        
+        service_demand_title: "Diagnóstico de Demanda",
+        service_demand_desc: "Contratação de energia otimizada com a concessionária, sem pagar a mais ou multas. Personalização conforme a operação da empresa, com transparência e agilidade.",
+        service_demand_benefit: "✓ Elimine multas por demanda",
+        service_demand_cta: "Solicitar diagnóstico",
+        
+        service_load_title: "Gerenciamento de Carga",
+        service_load_desc: "Estimar cargas, otimizar demanda e consumo, reduzir desgaste, usando dashboard interativo na rotina da empresa.",
+        service_load_benefit: "✓ Dashboard interativo em tempo real",
+        service_load_cta: "Agendar gerenciamento",
+        
+        service_efficiency_title: "Projetos de Eficiência Energética",
+        service_efficiency_desc: "Projetos pontuais e gerais, acompanhamento da estrutura de custos, indicação do momento ótimo para aplicação.",
+        service_efficiency_benefit: "✓ ROI calculado e momento ótimo",
+        service_efficiency_cta: "Ver projetos disponíveis",
+        
+        service_solar_title: "Gestão de Geração Distribuída (GD) Solar",
+        service_solar_desc: "Acompanhamento da GD solar, otimização de compensações, manutenção da usina e garantia de não acumular créditos não recuperáveis.",
+        service_solar_benefit: "✓ Máximo aproveitamento de créditos",
+        service_solar_cta: "Gerenciar minha GD solar",
+        
+        institutional_title: "SmartSpaar",
+        institutional_subtitle: "Democratizando o acesso à eficiência energética",
+        mission_title: "Missão",
+        mission_text: "Democratizar o acesso à eficiência energética com tecnologia acessível, diagnósticos precisos e proximidade com o setor produtivo.",
+        vision_title: "Visão",
+        vision_text: "Ser referência em soluções inteligentes de entrada para a gestão energética na indústria e serviços do Cone Sul, integrando-se ao ecossistema ESG e energia verde até 2030.",
+        values_title: "Valores",
+        values_text: "Efetividade, Transparência, Simplicidade, Parceria Local, Sustentabilidade.",
+        
         block2_title: "Como funciona",
+        how_step1_title: "Integração sem atrito",
+        how_step2_title: "IA Inteligente",
+        how_step3_title: "Alertas Inteligentes",
         how_1: "Integramos dados da sua operação sem atrito",
         how_2: "Aplicamos heurísticas inteligentes para planejar máquinas e cargas",
         how_3: "Você recebe alertas e recomendações claras, via dashboard ou WhatsApp",
+        experience_title: "Experiência Frictionless",
+        experience_desc: "Facilidade de uso, simplicidade, transparência e tecnologia de IA que normaliza quaisquer fontes de dados. O dashboard automatiza ações, demonstra onde foi economizado e aponta novas oportunidades de economia.",
+        
         block3_title: "Por que escolher a SmartSpaar",
-        why_speed: "Agilidade",
-        why_speed_desc: "Resultado visível em semanas, não meses",
-        why_cost: "Baixo custo",
-        why_cost_desc: "Sem consultorias pesadas ou longos contratos",
-        why_client: "Foco no cliente",
-        why_client_desc: "Nós fazemos o trabalho, você colhe o resultado",
-        why_scale: "Escalável",
-        why_scale_desc: "Preparada para integrar sensores e ERPs no futuro",
+        why_ease: "Facilidade e Transparência",
+        why_ease_desc: "Facilidade de utilização e transparência total em todos os processos",
+        why_tech: "Tecnologia Proprietária",
+        why_tech_desc: "IA própria para normalização de dados de qualquer fonte",
+        why_innovation: "Ecossistema de Inovação",
+        why_innovation_desc: "Incubada no CEI UFRGS, membro do Ecossistema Veleiro de Inovação",
+        why_proven: "Resultados Comprovados",
+        why_proven_desc: "Projetos e pilotos já realizados na UFRGS com resultados validados",
+        
         social_title: "Validação social",
         social_text: "5 clientes piloto com resultados de 5% a 80% de economia já validaram nossa solução.",
         social_text_2: "Empresa Incubada no Centro de Empreendimentos em Informática/Parque Tecnológico UFRGS",
         innovation_title: "Faixa de Inovação Estruturada",
         innovation_text: "Mais que reduzir custos, estruturamos inovação na sua empresa com tecnologia proprietária e rede de parceiros locais.",
+        
+        pilot_title: "Seja um Piloto SmartSpaar",
+        pilot_subtitle: "Teste nossa solução sem investimento inicial e receba benefícios exclusivos",
+        pilot_name_placeholder: "Nome completo",
+        pilot_email_placeholder: "Email corporativo",
+        pilot_company_placeholder: "Empresa",
+        pilot_sector_option: "Setor de atividade",
+        pilot_challenge_placeholder: "Conte-nos sobre seu maior desafio energético (opcional)",
+        pilot_submit: "Quero ser piloto agora",
+        pilot_or: "ou",
+        pilot_whatsapp: "Falar via WhatsApp",
+        
         footer_title: "Comece agora sem investimento inicial",
         footer_sub: "Agilidade, baixo custo e resultado em semanas para PMEs industriais.",
         footer_cta: "Comece agora sem investimento inicial",
@@ -248,32 +404,77 @@
         menu_why: "Warum SmartSpaar",
         menu_social: "Validatschon",
         hero_title: "Glei erspaare, Effizienz bleevt dauernd.",
-        hero_sub: "Eir Betrib spart jetzt Kosde un isch bereit fer Wachs mit intelligenter Energie.",
-        hero_cta: "Ich will jetz spare",
+        hero_subtitle: "Sei dä erschte in dä Energieverwaltung: spar jetzt Kosde un bereit dei Betrib fir zu wachse met Intelligenz.",
+        hero_sub: "Als Pilot mitmache: test unser Lösung ohne Investition, krieg präzise Diagnose un verfolg echte Resultat in emfache, transparente Dashboard.",
+        hero_cta: "Ich will Pilot sein jetzt",
         hero_secondary: "Seh wie's funktioniert",
-        block1_title: "Was mer liefere",
-        deliver_1: "E schnells, unproblematisches Energiesdiagnose",
-        deliver_2: "Präzise Prognose fer Verbruuche un Kosde",
-        deliver_3: "Nachfraach-Optimierung mit schnellem Payback",
-        deliver_4: "Unnerstützung fer Effizienz- un Automatisierungsprojekte",
+        
+        service_demand_title: "Nachfraach Diagnose",
+        service_demand_desc: "Optimiert Energiekontratierung met däm Versorger, ohne ze viel zahle oder Strof. Personalisierung entsprechend däm Betriebsablauf, met Transparenz un Schnelligkeit.",
+        service_demand_benefit: "✓ Eliminier Nachfraach-Strof",
+        service_demand_cta: "Diagnose aafroge",
+        
+        service_load_title: "Laschtverwaltung",
+        service_load_desc: "Laschte schätze, Nachfraach un Verbruuch optimiere, Verschleiß reduziere, met interaktive Dashboard in dä Betriebsroutine.",
+        service_load_benefit: "✓ Interaktive Dashboard in Echtzit",
+        service_load_cta: "Verwaltung terminiure",
+        
+        service_efficiency_title: "Energieeffizienz Projekte",
+        service_efficiency_desc: "Einzeln un allgemein Projekte, Kosteschtruktur Begleitung, Anzeig vom optimale Zitpunkt fir Aawending.",
+        service_efficiency_benefit: "✓ ROI berechent un optimale Zit",
+        service_efficiency_cta: "Verfügbare Projekte gsehe",
+        
+        service_solar_title: "Solar Verteilte Generation (VG) Verwaltung",
+        service_solar_desc: "Solar VG Begleitung, Kompensatione Optimierung, Anlageninstandhaltung un Garantie fer kein nit-wiederkriegbare Kredite akkumuliere.",
+        service_solar_benefit: "✓ Maximum Kreditnutzung",
+        service_solar_cta: "Mei Solar VG verwalte",
+        
+        institutional_title: "SmartSpaar",
+        institutional_subtitle: "Energieeffizienz Zugang demokratisiere",
+        mission_title: "Mission",
+        mission_text: "Energieeffizienz Zugang demokratisiere met zugängliche Technologie, präzise Diagnose un Nähe zum produktive Sektor.",
+        vision_title: "Vision",
+        vision_text: "Referenz sein in intelligente Einstiegslösunge fir Energieverwaltung in Industrie un Dienscht vom Südkegel, integrier in ESG un grün Energie Ökosystem bis 2030.",
+        values_title: "Werte",
+        values_text: "Wirksamkeit, Transparenz, Einfachheit, Lokale Partnerschaft, Nachhaltigkeit.",
+        
         block2_title: "Wie mer's mache",
+        how_step1_title: "Integration ohne Reibung",
+        how_step2_title: "Intelligente KI",
+        how_step3_title: "Intelligente Alarme",
         how_1: "Mer integriere die Betriebsdate ohne Stropp",
         how_2: "Mer benutze schlau Heuristike zum Plane von Maschiene un Lade",
         how_3: "Ihr kriegt Warnunge un klare Empfehlung, im Dashboard oder WhatsApp",
+        experience_title: "Reibungslos Erfahrung",
+        experience_desc: "Einfachheit in dä Nutzung, Einfachkeit, Transparenz un KI Technologie wo alli Date-Quelle normalisiert. Dä Dashboard automatisiert Aktione, zeigt wo gespart wurd un zeigt neu Sparmöglichkeite.",
+        
         block3_title: "Warum SmartSpaar",
-        why_speed: "Schnelligkeit",
-        why_speed_desc: "Resultat sichtba in Woche, nit Monet",
-        why_cost: "Niedrige Kosde",
-        why_cost_desc: "Ohne schware Beratungen oder langi Verträg",
-        why_client: "Kunde im Mittelpunckt",
-        why_client_desc: "Mir mache die Arbeit, Ihr trinkt die Vorteil",
-        why_scale: "Skalierbar",
-        why_scale_desc: "Pickt fer Sensoren- un ERP-Integration in Zuekunft",
+        why_ease: "Einfachheit un Transparenz",
+        why_ease_desc: "Einfachheit in dä Nutzung un total Transparenz in alli Prozesse",
+        why_tech: "Eigne Technologie",
+        why_tech_desc: "Eign KI fir Date-Normalisierung von jede Quell",
+        why_innovation: "Innovation Ökosystem",
+        why_innovation_desc: "Inkubiert im CEI UFRGS, Mitglied vom Veleiro Innovation Ökosystem",
+        why_proven: "Bewiesn Resultat",
+        why_proven_desc: "Projekte un Pilote scho realisiert in UFRGS met validierte Resultat",
+        
         social_title: "Sozial Validatschon",
         social_text: "5 Pilote Kunde hot 5% bis 80% Einsparung beleggt.",
         social_text_2: "Firma im CEI-UFRGS inkubiert",
         innovation_title: "Band fir strukturiert Innovation",
-        innovation_text: "Mer mache mehr wie Kosde sparen — mer strukturiere Innovation mit eigne Technologie un lokale Partnernetz.",
+        innovation_text: "Mer mache mehr wie Kosde sparen — mer strukturiere Innovation met eigne Technologie un lokale Partnernetz.",
+        
+        pilot_title: "Sei en SmartSpaar Pilot",
+        pilot_subtitle: "Test unser Lösung ohne Ausgangsinvestition un krieg exklusiv Vorteile",
+        pilot_name_placeholder: "Vollständige Name",
+        pilot_email_placeholder: "Korporativ Email",
+        pilot_company_placeholder: "Firma",
+        pilot_sector_option: "Aktivitätbereich",
+        pilot_challenge_placeholder: "Verzähl uns über dei größte energetisch Herausforderung (optional)",
+        pilot_submit: "Ich will Pilot sein jetzt",
+        pilot_or: "oder",
+        pilot_whatsapp: "Über WhatsApp spreche",
+        
         footer_title: "Fangt jetzt an ohne Ausgangsinvestition",
         footer_sub: "Schnell, günstig und Resultat in Woche fer industrielle KMUs.",
         footer_cta: "Fangt jetzt an ohne Investition",
