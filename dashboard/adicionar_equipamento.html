@@ -43,8 +43,8 @@
     <section class="bg-white rounded-xl shadow-sm p-6 mt-6">
       <div class="flex items-start justify-between">
         <div>
-          <h1 class="text-2xl font-extrabold text-[var(--primary)]">Adicionar Equipamento</h1>
-          <p class="text-slate-600 mt-1">Preencha os dados para cadastrar um equipamento no sistema. Estes dados serão utilizados pelo dashboard para cálculos e alertas.</p>
+          <h1 id="pageTitle" class="text-2xl font-extrabold text-[var(--primary)]">Adicionar Equipamento</h1>
+          <p id="pageDescription" class="text-slate-600 mt-1">Preencha os dados para cadastrar um equipamento no sistema. Estes dados serão utilizados pelo dashboard para cálculos e alertas.</p>
         </div>
         <div class="text-right">
           <a href="/dashboard" class="inline-block px-4 py-2 rounded border border-[var(--primary)] text-[var(--primary)]">Voltar ao Dashboard</a>
@@ -133,7 +133,8 @@
 
         <div class="flex items-center space-x-3">
           <button id="submitBtn" type="submit" class="px-5 py-2 rounded-full bg-[var(--accent-2)] text-white font-semibold hover:bg-[var(--accent)]">Adicionar equipamento</button>
-          <button id="clearBtn" type="button" class="px-4 py-2 rounded border border-slate-200 text-slate-700" onclick="document.getElementById('equipForm').reset()">Limpar</button>
+          <button id="clearBtn" type="button" class="px-4 py-2 rounded border border-slate-200 text-slate-700" onclick="clearForm()">Limpar</button>
+          <button id="cancelEditBtn" type="button" class="hidden px-4 py-2 rounded border border-slate-200 text-slate-700" onclick="cancelEdit()">Cancelar edição</button>
           <div id="status" class="text-sm text-slate-600 ml-4"></div>
         </div>
       </form>
@@ -161,6 +162,108 @@
   </main>
 
   <script>
+    // Estado global para controle do modo de edição
+    let isEditMode = false;
+    let editingEquipmentId = null;
+
+    // Utilitário para obter parâmetros da URL
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // Verificar se a página foi aberta em modo de edição
+    // Detecta o parâmetro ?edit={id} na URL e configura a interface apropriada
+    function checkEditMode() {
+      const editId = getUrlParameter('edit');
+      if (editId) {
+        isEditMode = true;
+        editingEquipmentId = editId;
+        
+        // Atualizar interface para modo de edição
+        document.getElementById('pageTitle').textContent = 'Editar Equipamento';
+        document.getElementById('pageDescription').textContent = 'Modifique os dados do equipamento selecionado. As alterações serão salvas no sistema.';
+        document.getElementById('submitBtn').textContent = 'Salvar alterações';
+        document.getElementById('cancelEditBtn').classList.remove('hidden');
+        
+        // Carregar dados do equipamento
+        loadEquipmentForEdit(editId);
+      }
+    }
+
+    // Carregar dados do equipamento para edição via API REST
+    // Utiliza GET /data-api/rest/Equipamento/{id} para buscar os dados
+    async function loadEquipmentForEdit(id) {
+      const statusEl = document.getElementById('status');
+      statusEl.textContent = 'Carregando dados do equipamento...';
+      statusEl.className = 'text-sm text-blue-600 ml-4';
+
+      try {
+        const response = await fetch(`/data-api/rest/Equipamento/${id}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+
+        const data = await response.json();
+        const equipment = data.value?.[0] || data; // Handle both array and single object responses
+
+        // Verificar se o equipamento foi encontrado
+        if (!equipment || (Array.isArray(data.value) && data.value.length === 0)) {
+          throw new Error('Equipamento não encontrado ou foi removido');
+        }
+
+        // Preencher formulário com dados do equipamento
+        if (equipment) {
+          document.getElementById('nome').value = equipment.nome || '';
+          document.getElementById('potencia').value = equipment.potencia || '';
+          document.getElementById('horas_uso').value = equipment.horas_uso || '';
+          document.getElementById('categoria').value = equipment.categoria || '';
+          document.getElementById('idade').value = equipment.idade || '';
+          document.getElementById('etiqueta_eficiencia').value = equipment.etiqueta_eficiencia || '';
+          document.getElementById('observacoes').value = equipment.observacoes || '';
+          document.getElementById('tag').value = equipment.tag || '';
+          document.getElementById('fator_correcao').value = equipment.fator_correcao || '';
+          document.getElementById('op_hora_ini').value = equipment.op_hora_ini || '';
+          document.getElementById('op_hora_fim').value = equipment.op_hora_fim || '';
+          document.getElementById('connected_to').value = equipment.connected_to || '';
+
+          statusEl.textContent = 'Dados carregados com sucesso!';
+          statusEl.className = 'text-sm text-green-600 ml-4';
+          
+          // Limpar mensagem após alguns segundos
+          setTimeout(() => {
+            statusEl.textContent = '';
+          }, 3000);
+        } else {
+          throw new Error('Equipamento não encontrado');
+        }
+
+      } catch (error) {
+        console.error('Erro ao carregar equipamento:', error);
+        statusEl.textContent = `Erro ao carregar equipamento: ${error.message}`;
+        statusEl.className = 'text-sm text-red-600 ml-4';
+      }
+    }
+
+    // Limpar formulário
+    function clearForm() {
+      document.getElementById('equipForm').reset();
+      document.getElementById('status').textContent = '';
+    }
+
+    // Cancelar edição
+    function cancelEdit() {
+      window.location.href = '/dashboard';
+    }
+
     // SWA Authentication check
     async function checkAuth() {
       try {
@@ -223,33 +326,55 @@
       }
 
       try {
-        // POST para SWA Data API
-        const res = await fetch('/data-api/rest/Equipamento', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
+        let response;
+        let successMessage;
 
-        if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error(`HTTP ${res.status}: ${errorText}`);
+        if (isEditMode && editingEquipmentId) {
+          // PATCH para atualizar equipamento existente
+          // Endpoint: PATCH /data-api/rest/Equipamento/{id}
+          response = await fetch(`/data-api/rest/Equipamento/${editingEquipmentId}`, {
+            method: 'PATCH',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+          successMessage = 'Equipamento atualizado com sucesso!';
+        } else {
+          // POST para criar novo equipamento
+          // Endpoint: POST /data-api/rest/Equipamento
+          response = await fetch('/data-api/rest/Equipamento', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+          successMessage = 'Equipamento adicionado com sucesso!';
         }
 
-        const json = await res.json();
-        statusEl.textContent = 'Equipamento adicionado com sucesso!';
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+
+        const json = await response.json();
+        statusEl.textContent = successMessage;
         statusEl.className = 'text-sm text-green-600 ml-4';
 
         // Limpar form e redirecionar
-        form.reset();
+        if (!isEditMode) {
+          form.reset();
+        }
+        
         setTimeout(() => {
           window.location.href = '/dashboard';
         }, 1500);
 
       } catch (err) {
-        console.error('Erro ao adicionar equipamento:', err);
+        console.error('Erro ao salvar equipamento:', err);
         statusEl.textContent = `Erro: ${err.message}`;
         statusEl.className = 'text-sm text-red-600 ml-4';
         submitBtn.disabled = false;
@@ -257,8 +382,13 @@
       }
     });
 
-    // Verificar auth ao carregar página
-    document.addEventListener('DOMContentLoaded', checkAuth);
+    // Verificar auth e modo de edição ao carregar página
+    document.addEventListener('DOMContentLoaded', async () => {
+      const isAuthenticated = await checkAuth();
+      if (isAuthenticated) {
+        checkEditMode();
+      }
+    });
   </script>
 </body>
 </html>
