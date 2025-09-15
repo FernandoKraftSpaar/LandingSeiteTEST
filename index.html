@@ -42,6 +42,11 @@
             <button id="btn-hrx" class="lang-btn px-2 py-1 rounded-md bg-white text-[var(--primary)] border border-[var(--primary)]" onclick="switchLang('hrx')">HRX</button>
           </div>
 
+          <!-- Authentication Button -->
+          <div id="auth-button" class="hidden">
+            <!-- Will be populated by JavaScript -->
+          </div>
+
           <button id="mobileBtn" class="md:hidden p-2 rounded-md text-[var(--primary)]" aria-label="Abrir menu" onclick="toggleMobileMenu()">
             <svg id="icon-open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
@@ -544,6 +549,46 @@
 
     // default language
     switchLang('pt');
+
+    // Authentication status check
+    function checkAuthStatus() {
+      fetch('/.auth/me')
+        .then(response => response.json())
+        .then(data => {
+          const authButton = document.getElementById('auth-button');
+          
+          if (data.clientPrincipal && data.clientPrincipal.userId) {
+            // User is authenticated
+            authButton.innerHTML = `
+              <a href="/dashboard" class="bg-[var(--accent)] hover:bg-[var(--accent-2)] text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                Dashboard
+              </a>
+            `;
+          } else {
+            // User is not authenticated
+            authButton.innerHTML = `
+              <a href="/login" class="bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                Login
+              </a>
+            `;
+          }
+          
+          authButton.classList.remove('hidden');
+        })
+        .catch(error => {
+          // Error fetching auth status, show login button
+          const authButton = document.getElementById('auth-button');
+          authButton.innerHTML = `
+            <a href="/login" class="bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+              Login
+            </a>
+          `;
+          authButton.classList.remove('hidden');
+        });
+    }
+
+    // Check auth status on page load
+    checkAuthStatus();
   </script>
 
 </body>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login — SmartSpaar</title>
+  
+  <!-- Tailwind for quick prototyping -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Nexa Heavy local font -->
+  <link rel="stylesheet" href="/nexa-heavy.css">
+  
+  <style>
+    :root { --primary: #1E3A5F; --accent: #95BF39; --accent-2: #0B8C38; }
+    .nexa { font-family: 'Nexa Heavy', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+  </style>
+</head>
+<body class="nexa bg-gray-50 text-slate-900 min-h-screen flex items-center justify-center">
+
+  <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl text-[var(--primary)] mb-2">SmartSpaar</h1>
+      <p class="text-gray-600">Faça login para acessar sua conta</p>
+    </div>
+
+    <div class="space-y-4">
+      <!-- Azure Static Web Apps built-in authentication providers -->
+      <a href="/.auth/login/aad" class="w-full bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white font-medium py-3 px-4 rounded-lg text-center block transition-colors">
+        Login com Microsoft
+      </a>
+      
+      <a href="/.auth/login/github" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg text-center block transition-colors">
+        Login com GitHub
+      </a>
+      
+      <a href="/.auth/login/google" class="w-full bg-red-600 hover:bg-red-500 text-white font-medium py-3 px-4 rounded-lg text-center block transition-colors">
+        Login com Google
+      </a>
+    </div>
+
+    <div class="text-center mt-6">
+      <a href="/" class="text-[var(--primary)] hover:text-[var(--accent-2)] text-sm">
+        ← Voltar para página inicial
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Check if user is already authenticated and redirect to dashboard
+    fetch('/.auth/me')
+      .then(response => response.json())
+      .then(data => {
+        if (data.clientPrincipal && data.clientPrincipal.userId) {
+          // User is authenticated, redirect to dashboard
+          window.location.href = '/dashboard';
+        }
+      })
+      .catch(error => {
+        // User is not authenticated, stay on login page
+        console.log('User not authenticated');
+      });
+  </script>
+
+</body>
+</html>

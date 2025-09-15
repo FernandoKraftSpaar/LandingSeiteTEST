@@ -1,0 +1,29 @@
+{
+  "routes": [
+    {
+      "route": "/login",
+      "allowedRoles": ["anonymous"],
+      "rewrite": "/login.html"
+    },
+    {
+      "route": "/dashboard",
+      "allowedRoles": ["authenticated"],
+      "rewrite": "/dashboard.html"
+    },
+    {
+      "route": "/perfil",
+      "allowedRoles": ["authenticated"],
+      "rewrite": "/perfil.html"
+    },
+    {
+      "route": "/*",
+      "allowedRoles": ["anonymous"],
+      "rewrite": "/login.html"
+    }
+  ],
+  "authentication": {
+    "login": {
+      "loginPath": "/login"
+    }
+  }
+}
