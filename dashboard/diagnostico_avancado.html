@@ -357,6 +357,10 @@
             
             try {
                 const response = await fetch('/.auth/me');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 const payload = await response.json();
                 
                 if (payload.clientPrincipal) {
@@ -394,11 +398,15 @@
             try {
                 // First check if we're authenticated
                 const authResponse = await fetch('/.auth/me');
+                if (!authResponse.ok) {
+                    throw new Error(`HTTP ${authResponse.status}: ${authResponse.statusText}`);
+                }
+                
                 const authPayload = await authResponse.json();
                 
                 if (!authPayload.clientPrincipal) {
                     log('permissions', 'Não autenticado - redirecionando para login', 'warning');
-                    window.location.href = '/.auth/login/aad';
+                    window.location.href = '/.auth/login/aad?post_login_redirect_url=/dashboard';
                     return;
                 }
                 
