@@ -8,7 +8,11 @@
     {
       "route": "/dashboard",
       "allowedRoles": ["authenticated"],
-      "rewrite": "/dashboard.html"
+      "rewrite": "/dashboard/index.html"
+    },
+    {
+      "route": "/dashboard/*",
+      "allowedRoles": ["authenticated"]
     },
     {
       "route": "/perfil",
@@ -16,9 +20,13 @@
       "rewrite": "/perfil.html"
     },
     {
-      "route": "/*",
+      "route": "/",
       "allowedRoles": ["anonymous"],
-      "rewrite": "/login.html"
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/*",
+      "allowedRoles": ["anonymous"]
     }
   ],
   "authentication": {
