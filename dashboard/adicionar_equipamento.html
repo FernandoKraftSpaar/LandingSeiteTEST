@@ -273,7 +273,7 @@
         
         if (!clientPrincipal) {
           // Redireciona para login se não autenticado
-          window.location.href = '/.auth/login/aad'; // ou outro provider
+          window.location.href = '/.auth/login/aad?post_login_redirect_url=/dashboard';
           return false;
         }
         

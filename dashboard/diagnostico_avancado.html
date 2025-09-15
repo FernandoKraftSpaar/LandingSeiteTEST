@@ -398,7 +398,7 @@
                 
                 if (!authPayload.clientPrincipal) {
                     log('permissions', 'Não autenticado - redirecionando para login', 'warning');
-                    window.location.href = '/.auth/login/aad';
+                    window.location.href = '/.auth/login/aad?post_login_redirect_url=/dashboard';
                     return;
                 }
                 
