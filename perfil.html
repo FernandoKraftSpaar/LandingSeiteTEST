@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Perfil — SmartSpaar</title>
+  
+  <!-- Tailwind for quick prototyping -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Nexa Heavy local font -->
+  <link rel="stylesheet" href="/nexa-heavy.css">
+  
+  <style>
+    :root { --primary: #1E3A5F; --accent: #95BF39; --accent-2: #0B8C38; }
+    .nexa { font-family: 'Nexa Heavy', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+  </style>
+</head>
+<body class="nexa bg-gray-50 text-slate-900 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center space-x-6">
+          <a href="/" class="text-2xl text-[var(--primary)] tracking-tight">SmartSpaar</a>
+          <span class="text-sm text-gray-500">Perfil</span>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <a href="/dashboard" class="text-[var(--primary)] hover:text-[var(--accent-2)]">Dashboard</a>
+          <a href="/.auth/logout" class="bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-[var(--primary)] mb-2">Perfil do Usuário</h1>
+      <p class="text-gray-600">Gerencie suas informações pessoais e configurações</p>
+    </div>
+
+    <!-- User Profile Information -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+      <h2 class="text-xl font-semibold text-[var(--primary)] mb-6">Informações da Conta</h2>
+      
+      <div id="profile-info" class="space-y-4">
+        <p class="text-gray-600">Carregando informações do perfil...</p>
+      </div>
+    </div>
+
+    <!-- Account Settings -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+      <h2 class="text-xl font-semibold text-[var(--primary)] mb-6">Configurações da Conta</h2>
+      
+      <div class="space-y-6">
+        <!-- Notification Settings -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-3">Notificações</h3>
+          <div class="space-y-3">
+            <label class="flex items-center">
+              <input type="checkbox" class="rounded border-gray-300 text-[var(--accent)] focus:ring-[var(--accent)]" checked>
+              <span class="ml-2 text-gray-700">Alertas por email</span>
+            </label>
+            <label class="flex items-center">
+              <input type="checkbox" class="rounded border-gray-300 text-[var(--accent)] focus:ring-[var(--accent)]" checked>
+              <span class="ml-2 text-gray-700">Notificações WhatsApp</span>
+            </label>
+            <label class="flex items-center">
+              <input type="checkbox" class="rounded border-gray-300 text-[var(--accent)] focus:ring-[var(--accent)]">
+              <span class="ml-2 text-gray-700">Relatórios semanais</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Language Settings -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-3">Idioma</h3>
+          <select class="w-full md:w-auto px-3 py-2 border border-gray-300 rounded-lg focus:ring-[var(--accent)] focus:border-[var(--accent)]">
+            <option value="pt" selected>Português</option>
+            <option value="hrx">Hunsrückisch</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+
+        <!-- Timezone Settings -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-3">Fuso Horário</h3>
+          <select class="w-full md:w-auto px-3 py-2 border border-gray-300 rounded-lg focus:ring-[var(--accent)] focus:border-[var(--accent)]">
+            <option value="America/Sao_Paulo" selected>Brasília (GMT-3)</option>
+            <option value="America/New_York">New York (GMT-5)</option>
+            <option value="Europe/Berlin">Berlin (GMT+1)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-6 border-t border-gray-200">
+        <button class="bg-[var(--accent)] hover:bg-[var(--accent-2)] text-white px-6 py-2 rounded-lg transition-colors">
+          Salvar Configurações
+        </button>
+      </div>
+    </div>
+
+    <!-- Security Section -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <h2 class="text-xl font-semibold text-[var(--primary)] mb-6">Segurança</h2>
+      
+      <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+          <div>
+            <h3 class="font-medium text-gray-900">Sessões Ativas</h3>
+            <p class="text-sm text-gray-600">Gerencie onde você está conectado</p>
+          </div>
+          <button class="text-[var(--primary)] hover:text-[var(--accent-2)] font-medium">
+            Ver Sessões
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+          <div>
+            <h3 class="font-medium text-gray-900">Autenticação de Dois Fatores</h3>
+            <p class="text-sm text-gray-600">Adicione uma camada extra de segurança</p>
+          </div>
+          <button class="text-[var(--primary)] hover:text-[var(--accent-2)] font-medium">
+            Configurar
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg">
+          <div>
+            <h3 class="font-medium text-red-900">Excluir Conta</h3>
+            <p class="text-sm text-red-600">Permanentemente excluir sua conta e dados</p>
+          </div>
+          <button class="text-red-600 hover:text-red-800 font-medium">
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="mt-8 text-center">
+      <a href="/dashboard" class="text-[var(--primary)] hover:text-[var(--accent-2)] font-medium">
+        ← Voltar ao Dashboard
+      </a>
+    </div>
+  </main>
+
+  <script>
+    // Fetch and display user profile information
+    fetch('/.auth/me')
+      .then(response => response.json())
+      .then(data => {
+        const profileInfoDiv = document.getElementById('profile-info');
+        
+        if (data.clientPrincipal && data.clientPrincipal.userId) {
+          profileInfoDiv.innerHTML = `
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nome de Usuário</label>
+                <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg">${data.clientPrincipal.userDetails || 'N/A'}</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Provedor de Autenticação</label>
+                <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg">${data.clientPrincipal.identityProvider}</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">ID do Usuário</label>
+                <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-xs font-mono">${data.clientPrincipal.userId}</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Funções</label>
+                <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg">${data.clientPrincipal.userRoles.join(', ')}</p>
+              </div>
+            </div>
+          `;
+        } else {
+          // User not authenticated, redirect to login
+          window.location.href = '/login';
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching profile info:', error);
+        // Redirect to login on error
+        window.location.href = '/login';
+      });
+  </script>
+
+</body>
+</html>
