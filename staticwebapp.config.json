@@ -3,18 +3,18 @@
     {
       "route": "/login",
       "allowedRoles": ["anonymous"],
-      "rewrite": "/login.html"
+      "rewrite": "/cliente.html"
     },
     {
       "route": "/dashboard",
       "allowedRoles": ["authenticated"],
-      "rewrite": "/dashboard.html"
+      "rewrite": "/dashboard"
     },
     {
-      "route": "/perfil",
+      "route": "/cliente",
       "allowedRoles": ["authenticated"],
-      "rewrite": "/perfil.html",
-      "statusCode": 401
+      "rewrite": "/cliente.html",
+      
     },
     {
       "route": "/*",
