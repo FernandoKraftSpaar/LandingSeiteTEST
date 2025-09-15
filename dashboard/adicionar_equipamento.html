@@ -268,6 +268,10 @@
     async function checkAuth() {
       try {
         const response = await fetch('/.auth/me');
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
         const payload = await response.json();
         const { clientPrincipal } = payload;
         
@@ -280,6 +284,8 @@
         return true;
       } catch (error) {
         console.error('Erro ao verificar autenticação:', error);
+        // Em caso de erro, também redireciona para login
+        window.location.href = '/.auth/login/aad?post_login_redirect_url=/dashboard';
         return false;
       }
     }
@@ -292,10 +298,6 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       statusEl.textContent = '';
-      
-      // Verificar autenticação
-      const isAuthenticated = await checkAuth();
-      if (!isAuthenticated) return;
 
       submitBtn.disabled = true;
       submitBtn.classList.add('opacity-60', 'cursor-not-allowed');

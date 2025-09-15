@@ -234,6 +234,10 @@
     async function checkAuthentication() {
       try {
         const response = await fetch('/.auth/me');
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
         const payload = await response.json();
         const { clientPrincipal } = payload;
         
@@ -249,7 +253,11 @@
         }
       } catch (error) {
         console.error('Erro ao verificar autenticação:', error);
-        showMessage('Erro ao verificar autenticação. Tente novamente.', 'error');
+        showMessage('Erro ao verificar autenticação. Redirecionando para login...', 'error');
+        // Redirecionar para login em caso de erro também
+        setTimeout(() => {
+          window.location.href = '/.auth/login/aad?post_login_redirect_url=/dashboard';
+        }, 2000);
         return false;
       }
     }
