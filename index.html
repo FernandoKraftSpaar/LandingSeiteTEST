@@ -549,46 +549,16 @@
 
     // default language
     switchLang('pt');
-
-    // Authentication status check
-    function checkAuthStatus() {
-      fetch('/.auth/me')
-        .then(response => response.json())
-        .then(data => {
-          const authButton = document.getElementById('auth-button');
-          
-          if (data.clientPrincipal && data.clientPrincipal.userId) {
-            // User is authenticated
-            authButton.innerHTML = `
-              <a href="/dashboard" class="bg-[var(--accent)] hover:bg-[var(--accent-2)] text-white px-4 py-2 rounded-lg text-sm transition-colors">
-                Dashboard
-              </a>
-            `;
-          } else {
-            // User is not authenticated
-            authButton.innerHTML = `
-              <a href="/login" class="bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-                Login
-              </a>
-            `;
-          }
-          
-          authButton.classList.remove('hidden');
-        })
-        .catch(error => {
-          // Error fetching auth status, show login button
-          const authButton = document.getElementById('auth-button');
-          authButton.innerHTML = `
-            <a href="/login" class="bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-              Login
-            </a>
-          `;
-          authButton.classList.remove('hidden');
-        });
-    }
-
-    // Check auth status on page load
-    checkAuthStatus();
+  </script>
+  
+  <!-- Auth utilities -->
+  <script src="/js/auth-utils.js"></script>
+  
+  <script>
+    // Check auth status on page load using the new utility
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuthStatusAndUpdateNav();
+    });
   </script>
 
 </body>

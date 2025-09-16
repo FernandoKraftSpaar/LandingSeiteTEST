@@ -28,6 +28,7 @@
         </div>
         
         <div class="flex items-center space-x-4">
+          <div id="userInfo" class="hidden text-sm text-slate-600"></div>
           <a href="/dashboard" class="text-[var(--primary)] hover:text-[var(--accent-2)]">Dashboard</a>
           <a href="/.auth/logout" class="bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white px-4 py-2 rounded-lg text-sm transition-colors">
             Logout
@@ -150,44 +151,58 @@
     </div>
   </main>
 
+  <!-- Auth utilities -->
+  <script src="/js/auth-utils.js"></script>
+  
   <script>
-    // Fetch and display user profile information
-    fetch('/.auth/me')
-      .then(response => response.json())
-      .then(data => {
-        const profileInfoDiv = document.getElementById('profile-info');
-        
-        if (data.clientPrincipal && data.clientPrincipal.userId) {
-          profileInfoDiv.innerHTML = `
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Nome de Usuário</label>
-                <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg">${data.clientPrincipal.userDetails || 'N/A'}</p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Provedor de Autenticação</label>
-                <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg">${data.clientPrincipal.identityProvider}</p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">ID do Usuário</label>
-                <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-xs font-mono">${data.clientPrincipal.userId}</p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Funções</label>
-                <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg">${data.clientPrincipal.userRoles.join(', ')}</p>
-              </div>
-            </div>
-          `;
-        } else {
-          // User not authenticated, redirect to login
-          window.location.href = '/login';
+    // Fetch and display user profile information using auth utility
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check authentication and update navigation with greeting
+      const authStatus = await requireAuthentication('/perfil');
+      
+      if (authStatus) {
+        // Add contextual greeting
+        const userInfo = document.getElementById('userInfo');
+        if (userInfo && authStatus.userName) {
+          const firstName = authStatus.userName.split(' ')[0];
+          userInfo.textContent = `${authStatus.greeting}, ${firstName}`;
+          userInfo.classList.remove('hidden');
         }
-      })
-      .catch(error => {
-        console.error('Error fetching profile info:', error);
-        // Redirect to login on error
-        window.location.href = '/login';
-      });
+        
+        // Fetch profile details
+        try {
+          const response = await fetch('/.auth/me');
+          const data = await response.json();
+          
+          const profileInfoDiv = document.getElementById('profile-info');
+          
+          if (data.clientPrincipal && data.clientPrincipal.userId) {
+            profileInfoDiv.innerHTML = `
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Nome de Usuário</label>
+                  <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg">${data.clientPrincipal.userDetails || 'N/A'}</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Provedor de Autenticação</label>
+                  <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg">${data.clientPrincipal.identityProvider}</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ID do Usuário</label>
+                  <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-xs font-mono">${data.clientPrincipal.userId}</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Funções</label>
+                  <p class="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg">${data.clientPrincipal.userRoles.join(', ')}</p>
+                </div>
+              </div>
+            `;
+          }
+        } catch (error) {
+          console.error('Error fetching profile info:', error);
+        }
+      }
+    });
   </script>
 
 </body>

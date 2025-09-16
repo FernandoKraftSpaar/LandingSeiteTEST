@@ -20,6 +20,14 @@
       "rewrite": "/perfil.html"
     },
     {
+      "route": "/cliente.html",
+      "allowedRoles": ["authenticated"]
+    },
+    {
+      "route": "/verwaltung/*",
+      "allowedRoles": ["authenticated"]
+    },
+    {
       "route": "/",
       "allowedRoles": ["anonymous"],
       "rewrite": "/index.html"
@@ -32,6 +40,37 @@
   "authentication": {
     "login": {
       "loginPath": "/login"
+    },
+    "identityProviders": {
+      "azureActiveDirectory": {
+        "registration": {
+          "openIdIssuer": "https://login.microsoftonline.com/common/v2.0",
+          "clientIdSettingName": "AZURE_CLIENT_ID",
+          "clientSecretSettingName": "AZURE_CLIENT_SECRET"
+        }
+      },
+      "github": {
+        "registration": {
+          "clientIdSettingName": "GITHUB_CLIENT_ID",
+          "clientSecretSettingName": "GITHUB_CLIENT_SECRET"
+        }
+      },
+      "google": {
+        "registration": {
+          "clientIdSettingName": "GOOGLE_CLIENT_ID",
+          "clientSecretSettingName": "GOOGLE_CLIENT_SECRET"
+        }
+      },
+      "twitter": {
+        "registration": {
+          "consumerKeySettingName": "TWITTER_CONSUMER_KEY",
+          "consumerSecretSettingName": "TWITTER_CONSUMER_SECRET"
+        }
+      }
     }
+  },
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/.auth/**", "/data-api/**", "*.{css,scss,sass,js,json,ico,png,jpg,jpeg,gif,svg,woff,woff2,ttf,eot}"]
   }
 }
