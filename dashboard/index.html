@@ -8,6 +8,9 @@
   <!-- Tailwind for quick prototyping (substitute with a built build in production) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Authentication utilities -->
+  <script src="/js/auth-utils.js"></script>
+
   <!-- Nexa Heavy local font (same as landing) -->
   <link rel="stylesheet" href="/nexa-heavy.css">
 
@@ -230,25 +233,19 @@
       document.getElementById('equipCount').textContent = `${qtd} equipamento${qtd !== 1 ? 's' : ''}`;
     }
 
-    // Verificar autenticação SWA
+    // Verificar autenticação SWA com saudação contextual
     async function checkAuthentication() {
       try {
-        const response = await fetch('/.auth/me');
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
+        const authInfo = await checkAuthenticationStatus();
         
-        const payload = await response.json();
-        const { clientPrincipal } = payload;
-        
-        if (clientPrincipal) {
-          // Usuário autenticado
-          document.getElementById('userInfo').textContent = `Olá, ${clientPrincipal.userDetails}`;
+        if (authInfo.isAuthenticated) {
+          // Usuário autenticado - mostrar saudação contextual
+          document.getElementById('userInfo').textContent = `${authInfo.greeting}, ${authInfo.displayName}!`;
           document.getElementById('userInfo').classList.remove('hidden');
           return true;
         } else {
           // Redirecionar para login se não autenticado
-          window.location.href = '/.auth/login/aad?post_login_redirect_url=/dashboard';
+          window.location.href = '/login?redirect=%2Fdashboard';
           return false;
         }
       } catch (error) {
@@ -256,7 +253,7 @@
         showMessage('Erro ao verificar autenticação. Redirecionando para login...', 'error');
         // Redirecionar para login em caso de erro também
         setTimeout(() => {
-          window.location.href = '/.auth/login/aad?post_login_redirect_url=/dashboard';
+          window.location.href = '/login?redirect=%2Fdashboard';
         }, 2000);
         return false;
       }

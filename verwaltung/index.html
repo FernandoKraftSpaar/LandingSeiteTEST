@@ -7,6 +7,10 @@
   <meta name="description" content="Painel administrativo SmartSpaar — overview clientes, links para CRMs e gestão de utilizadores." />
   <link rel="icon" href="../favicon.ico" />
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Authentication utilities -->
+  <script src="/js/auth-utils.js"></script>
+  
   <style>
     :root{--primary:#1E3A5F;--accent:#95BF39;--accent2:#0B8C38}
     body{font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
@@ -119,6 +123,11 @@
 
     // initial load
     fetchOverview();
+
+    // Require authentication for admin panel
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuthentication('/verwaltung/');
+    });
   </script>
 </body>
 </html>

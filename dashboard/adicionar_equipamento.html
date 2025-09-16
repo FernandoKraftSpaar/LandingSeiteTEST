@@ -8,6 +8,9 @@
   <!-- Tailwind (prototype) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Authentication utilities -->
+  <script src="/js/auth-utils.js"></script>
+
   <!-- Nexa font -->
   <link rel="stylesheet" href="/nexa-heavy.css">
 
@@ -264,20 +267,14 @@
       window.location.href = '/dashboard';
     }
 
-    // SWA Authentication check
+    // SWA Authentication check using shared utility
     async function checkAuth() {
       try {
-        const response = await fetch('/.auth/me');
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
+        const authInfo = await checkAuthenticationStatus();
         
-        const payload = await response.json();
-        const { clientPrincipal } = payload;
-        
-        if (!clientPrincipal) {
+        if (!authInfo.isAuthenticated) {
           // Redireciona para login se não autenticado
-          window.location.href = '/.auth/login/aad?post_login_redirect_url=/dashboard';
+          window.location.href = '/login?redirect=%2Fdashboard';
           return false;
         }
         
@@ -285,7 +282,7 @@
       } catch (error) {
         console.error('Erro ao verificar autenticação:', error);
         // Em caso de erro, também redireciona para login
-        window.location.href = '/.auth/login/aad?post_login_redirect_url=/dashboard';
+        window.location.href = '/login?redirect=%2Fdashboard';
         return false;
       }
     }
