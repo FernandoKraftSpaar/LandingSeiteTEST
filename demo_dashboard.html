@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — SmartSpaar</title>
+  
+  <!-- Tailwind (prototype) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root { --primary: #1E3A5F; --accent: #95BF39; --accent-2: #0B8C38; }
+    .nexa { font-family: 'Nexa Heavy', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+  </style>
+</head>
+<body class="nexa bg-gray-50 text-slate-900 min-h-screen">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-6">
+        <a href="/" class="text-2xl text-[var(--primary)] tracking-tight">SmartSpaar</a>
+        <nav class="hidden md:flex items-center space-x-4">
+          <a href="/dashboard" class="text-[var(--primary)] hover:text-[var(--accent-2)]">Dashboard</a>
+          <a href="/dashboard/equipamentos.html" class="text-slate-700 hover:text-[var(--primary)]">Equipamentos</a>
+          <a href="/dashboard/adicionar_equipamento.html" class="text-slate-700 hover:text-[var(--primary)]">Adicionar</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <div class="h-16"></div>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    
+    <!-- Stats Cards -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <p class="text-sm text-slate-500">Quantidade de Equipamentos</p>
+        <h2 id="qtd-equip" class="mt-3 text-3xl font-bold text-[var(--primary)]">8 (5 tipos)</h2>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <p class="text-sm text-slate-500">Potência Instalada Total</p>
+        <h2 id="pot-total" class="mt-3 text-3xl font-bold text-[var(--primary)]">28.5 kW</h2>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <p class="text-sm text-slate-500">Uso Médio Diário</p>
+        <h2 id="uso-medio" class="mt-3 text-3xl font-bold text-[var(--primary)]">6.8 h</h2>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <p class="text-sm text-slate-500">Consumo Mensal Estimado</p>
+        <h2 id="consumo-mensal" class="mt-3 text-3xl font-bold text-[var(--primary)]">5,814 kWh</h2>
+      </div>
+    </section>
+
+    <!-- Equipment List -->
+    <section class="bg-white rounded-xl shadow-sm p-6 mt-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-[var(--primary)]">Lista de Equipamentos</h2>
+        <div class="text-sm text-slate-500">
+          <span id="equipCount">8 equipamentos (5 tipos)</span>
+        </div>
+      </div>
+      
+      <div class="mt-4 overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nome</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Potência (kW)</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Uso Diário (h)</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Quantidade</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Categoria</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Consumo Diário</th>
+            </tr>
+          </thead>
+          <tbody id="lista-equipamentos" class="bg-white divide-y divide-slate-100">
+            <tr class="hover:bg-slate-50">
+              <td class="px-4 py-3 text-sm font-medium text-slate-900">Compressor de Ar Industrial</td>
+              <td class="px-4 py-3 text-sm text-slate-500">5.5</td>
+              <td class="px-4 py-3 text-sm text-slate-500">8.0</td>
+              <td class="px-4 py-3 text-sm text-slate-500">
+                <span class="inline-flex px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">3</span>
+              </td>
+              <td class="px-4 py-3 text-sm text-slate-500">
+                <span class="inline-flex px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-800">Processo</span>
+              </td>
+              <td class="px-4 py-3 text-sm text-slate-500 font-medium">132.0 kWh</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="px-4 py-3 text-sm font-medium text-slate-900">Motor Bomba Centrífuga</td>
+              <td class="px-4 py-3 text-sm text-slate-500">3.0</td>
+              <td class="px-4 py-3 text-sm text-slate-500">6.0</td>
+              <td class="px-4 py-3 text-sm text-slate-500">
+                <span class="inline-flex px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">2</span>
+              </td>
+              <td class="px-4 py-3 text-sm text-slate-500">
+                <span class="inline-flex px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-800">Motorização</span>
+              </td>
+              <td class="px-4 py-3 text-sm text-slate-500 font-medium">36.0 kWh</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="px-4 py-3 text-sm font-medium text-slate-900">Sistema de Iluminação LED</td>
+              <td class="px-4 py-3 text-sm text-slate-500">0.5</td>
+              <td class="px-4 py-3 text-sm text-slate-500">12.0</td>
+              <td class="px-4 py-3 text-sm text-slate-500">
+                <span class="inline-flex px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">1</span>
+              </td>
+              <td class="px-4 py-3 text-sm text-slate-500">
+                <span class="inline-flex px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-800">Iluminação</span>
+              </td>
+              <td class="px-4 py-3 text-sm text-slate-500 font-medium">6.0 kWh</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="px-4 py-3 text-sm font-medium text-slate-900">Refrigerador Industrial</td>
+              <td class="px-4 py-3 text-sm text-slate-500">2.2</td>
+              <td class="px-4 py-3 text-sm text-slate-500">24.0</td>
+              <td class="px-4 py-3 text-sm text-slate-500">
+                <span class="inline-flex px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">1</span>
+              </td>
+              <td class="px-4 py-3 text-sm text-slate-500">
+                <span class="inline-flex px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-800">Refrigeração</span>
+              </td>
+              <td class="px-4 py-3 text-sm text-slate-500 font-medium">52.8 kWh</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="px-4 py-3 text-sm font-medium text-slate-900">Ventilador Industrial</td>
+              <td class="px-4 py-3 text-sm text-slate-500">1.1</td>
+              <td class="px-4 py-3 text-sm text-slate-500">8.0</td>
+              <td class="px-4 py-3 text-sm text-slate-500">
+                <span class="inline-flex px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">1</span>
+              </td>
+              <td class="px-4 py-3 text-sm text-slate-500">
+                <span class="inline-flex px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-800">Processo</span>
+              </td>
+              <td class="px-4 py-3 text-sm text-slate-500 font-medium">8.8 kWh</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Info Box -->
+    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-blue-800">Nova funcionalidade: Campo de Quantidade</h3>
+          <div class="mt-2 text-sm text-blue-700">
+            <p>O sistema agora permite especificar a quantidade de equipamentos idênticos durante o cadastro. Os cálculos de estatísticas e consumo foram atualizados para considerar as quantidades automaticamente.</p>
+            <ul class="mt-2 list-disc list-inside space-y-1">
+              <li><strong>Estatísticas atualizadas:</strong> Mostra total de equipamentos e tipos distintos</li>
+              <li><strong>Cálculos precisos:</strong> Potência e consumo multiplicados pela quantidade</li>
+              <li><strong>Interface melhorada:</strong> Indicadores visuais com badges azuis para quantidade</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
