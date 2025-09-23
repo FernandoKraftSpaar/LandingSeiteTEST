@@ -72,6 +72,12 @@
           </div>
 
           <div>
+            <label class="block text-sm font-medium text-slate-700">Quantidade</label>
+            <input name="quantidade" id="quantidade" type="number" min="1" step="1" value="1" required class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]" placeholder="Ex: 3" />
+            <p class="text-xs text-slate-500 mt-1">Número de unidades deste equipamento sendo cadastradas.</p>
+          </div>
+
+          <div>
             <label class="block text-sm font-medium text-slate-700">Categoria</label>
             <select name="categoria" id="categoria" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]">
               <option value="">— selecione —</option>
@@ -149,6 +155,7 @@
   "nome": "Compressor AR-23",
   "potencia": 3.5,
   "horas_uso": 6.5,
+  "quantidade": 2,
   "categoria": "Refrigeração",
   "idade": 4,
   "etiqueta_eficiencia": "IE3",
@@ -202,13 +209,19 @@
       statusEl.className = 'text-sm text-blue-600 ml-4';
 
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos
+        
         const response = await fetch(`/data-api/rest/Equipamento/id/${id}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-          }
+          },
+          signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
           const errorText = await response.text();
@@ -228,6 +241,7 @@
           document.getElementById('nome').value = equipment.nome || '';
           document.getElementById('potencia').value = equipment.potencia || '';
           document.getElementById('horas_uso').value = equipment.horas_uso || '';
+          document.getElementById('quantidade').value = equipment.quantidade || 1;
           document.getElementById('categoria').value = equipment.categoria || '';
           document.getElementById('idade').value = equipment.idade || '';
           document.getElementById('etiqueta_eficiencia').value = equipment.etiqueta_eficiencia || '';
@@ -251,7 +265,15 @@
 
       } catch (error) {
         console.error('Erro ao carregar equipamento:', error);
-        statusEl.textContent = `Erro ao carregar equipamento: ${error.message}`;
+        
+        let errorMessage = 'Erro ao carregar equipamento';
+        if (error.name === 'AbortError') {
+          errorMessage = 'Timeout: Carregamento demorou mais que o esperado';
+        } else {
+          errorMessage = `Erro ao carregar equipamento: ${error.message}`;
+        }
+        
+        statusEl.textContent = errorMessage;
         statusEl.className = 'text-sm text-red-600 ml-4';
       }
     }
@@ -298,12 +320,17 @@
 
       submitBtn.disabled = true;
       submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+      
+      // Mostrar indicador de carregamento
+      statusEl.textContent = 'Salvando equipamento...';
+      statusEl.className = 'text-sm text-blue-600 ml-4';
 
       // Build payload para SWA Data API
       const payload = {
         nome: document.getElementById('nome').value.trim(),
         potencia: parseFloat(document.getElementById('potencia').value) || 0,
         horas_uso: parseFloat(document.getElementById('horas_uso').value) || 0,
+        quantidade: parseInt(document.getElementById('quantidade').value) || 1,
         categoria: document.getElementById('categoria').value || null,
         idade: (document.getElementById('idade').value !== '') ? parseInt(document.getElementById('idade').value, 10) : null,
         etiqueta_eficiencia: document.getElementById('etiqueta_eficiencia').value || null,
@@ -316,8 +343,8 @@
       };
 
       // Validação
-      if (!payload.nome || payload.potencia <= 0 || payload.horas_uso < 0) {
-        statusEl.textContent = 'Por favor verifique nome, potência e horas de uso.';
+      if (!payload.nome || payload.potencia <= 0 || payload.horas_uso < 0 || payload.quantidade <= 0) {
+        statusEl.textContent = 'Por favor verifique nome, potência, horas de uso e quantidade.';
         statusEl.className = 'text-sm text-red-600 ml-4';
         submitBtn.disabled = false;
         submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
@@ -331,26 +358,40 @@
         if (isEditMode && editingEquipmentId) {
           // PATCH para atualizar equipamento existente
           // Endpoint: PATCH /data-api/rest/Equipamento/id/{id}
+          statusEl.textContent = 'Atualizando equipamento...';
+          
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos
+          
           response = await fetch(`/data-api/rest/Equipamento/id/${editingEquipmentId}`, {
             method: 'PATCH',
             headers: { 
               'Content-Type': 'application/json',
               'Accept': 'application/json'
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            signal: controller.signal
           });
+          clearTimeout(timeoutId);
           successMessage = 'Equipamento atualizado com sucesso!';
         } else {
           // POST para criar novo equipamento
           // Endpoint: POST /data-api/rest/Equipamento
+          statusEl.textContent = 'Criando equipamento...';
+          
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos
+          
           response = await fetch('/data-api/rest/Equipamento', {
             method: 'POST',
             headers: { 
               'Content-Type': 'application/json',
               'Accept': 'application/json'
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            signal: controller.signal
           });
+          clearTimeout(timeoutId);
           successMessage = 'Equipamento adicionado com sucesso!';
         }
 
@@ -374,7 +415,15 @@
 
       } catch (err) {
         console.error('Erro ao salvar equipamento:', err);
-        statusEl.textContent = `Erro: ${err.message}`;
+        
+        let errorMessage = 'Erro desconhecido';
+        if (err.name === 'AbortError') {
+          errorMessage = 'Timeout: A operação demorou mais que o esperado. Tente novamente.';
+        } else {
+          errorMessage = err.message;
+        }
+        
+        statusEl.textContent = `Erro: ${errorMessage}`;
         statusEl.className = 'text-sm text-red-600 ml-4';
         submitBtn.disabled = false;
         submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');

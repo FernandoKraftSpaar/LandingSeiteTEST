@@ -105,6 +105,7 @@
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nome</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Potência (kW)</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Uso Diário (h)</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Quantidade</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Categoria</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Idade</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Eficiência</th>
@@ -116,7 +117,7 @@
           </thead>
           <tbody id="lista-equipamentos" class="bg-white divide-y divide-slate-100">
             <tr id="loadingRow">
-              <td colspan="10" class="px-4 py-8 text-center text-slate-500">
+              <td colspan="11" class="px-4 py-8 text-center text-slate-500">
                 <div class="inline-flex items-center">
                   <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -184,15 +185,53 @@
       return (value !== null && value !== undefined && value !== '') ? value : fallback;
     }
 
+    // Helper para requisições com timeout e retry
+    async function fetchWithRetry(url, options = {}, maxRetries = 2, timeout = 10000) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+      
+      const fetchOptions = {
+        ...options,
+        signal: controller.signal
+      };
+      
+      for (let attempt = 1; attempt <= maxRetries + 1; attempt++) {
+        try {
+          const response = await fetch(url, fetchOptions);
+          clearTimeout(timeoutId);
+          return response;
+        } catch (error) {
+          clearTimeout(timeoutId);
+          
+          if (attempt <= maxRetries) {
+            console.warn(`⚠️ Tentativa ${attempt} falhou, tentando novamente em 1s...`, error.message);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            continue;
+          }
+          
+          if (error.name === 'AbortError') {
+            throw new Error('Timeout: A requisição demorou mais que o esperado');
+          }
+          throw error;
+        }
+      }
+    }
+
     // Gerar linha da tabela
     function createEquipamentoRow(eq) {
+      const quantidade = parseInt(eq.quantidade) || 1;
       const consumoDiario = (eq.potencia && eq.horas_uso) ? 
-        (parseFloat(eq.potencia) * parseFloat(eq.horas_uso)).toFixed(2) : '-';
+        (parseFloat(eq.potencia) * parseFloat(eq.horas_uso) * quantidade).toFixed(2) : '-';
       
       return `<tr class="hover:bg-slate-50">
         <td class="px-4 py-3 text-sm font-medium text-slate-900">${safeValue(eq.nome)}</td>
         <td class="px-4 py-3 text-sm text-slate-500">${safeValue(eq.potencia)}</td>
         <td class="px-4 py-3 text-sm text-slate-500">${safeValue(eq.horas_uso)}</td>
+        <td class="px-4 py-3 text-sm text-slate-500">
+          <span class="inline-flex px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">
+            ${quantidade}
+          </span>
+        </td>
         <td class="px-4 py-3 text-sm text-slate-500">
           <span class="inline-flex px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-800">
             ${safeValue(eq.categoria, 'Não definida')}
@@ -216,27 +255,59 @@
 
     // Atualizar estatísticas
     function updateStats(equipamentos) {
-      const qtd = equipamentos.length;
-      const potenciaTotal = equipamentos.reduce((sum, eq) => sum + (parseFloat(eq.potencia) || 0), 0);
-      const horasTotalDiario = equipamentos.reduce((sum, eq) => sum + (parseFloat(eq.horas_uso) || 0), 0);
-      const usoMedio = qtd > 0 ? (horasTotalDiario / qtd) : 0;
+      // Calcular quantidade total de equipamentos (considerando as quantidades)
+      const qtdTotal = equipamentos.reduce((sum, eq) => sum + (parseInt(eq.quantidade) || 1), 0);
+      const qtdTipos = equipamentos.length; // Número de tipos diferentes
+      
+      // Calcular potência total considerando as quantidades
+      const potenciaTotal = equipamentos.reduce((sum, eq) => {
+        const quantidade = parseInt(eq.quantidade) || 1;
+        return sum + ((parseFloat(eq.potencia) || 0) * quantidade);
+      }, 0);
+      
+      // Calcular horas total considerando as quantidades
+      const horasTotalDiario = equipamentos.reduce((sum, eq) => {
+        const quantidade = parseInt(eq.quantidade) || 1;
+        return sum + ((parseFloat(eq.horas_uso) || 0) * quantidade);
+      }, 0);
+      
+      const usoMedio = qtdTotal > 0 ? (horasTotalDiario / qtdTotal) : 0;
+      
+      // Calcular consumo mensal considerando as quantidades
       const consumoMensal = equipamentos.reduce((sum, eq) => {
         const potencia = parseFloat(eq.potencia) || 0;
         const horas = parseFloat(eq.horas_uso) || 0;
-        return sum + (potencia * horas * 30);
+        const quantidade = parseInt(eq.quantidade) || 1;
+        return sum + (potencia * horas * quantidade * 30);
       }, 0);
 
-      document.getElementById('qtd-equip').textContent = qtd.toString();
+      document.getElementById('qtd-equip').textContent = `${qtdTotal} (${qtdTipos} tipos)`;
       document.getElementById('pot-total').textContent = `${potenciaTotal.toFixed(2)} kW`;
       document.getElementById('uso-medio').textContent = `${usoMedio.toFixed(1)} h`;
       document.getElementById('consumo-mensal').textContent = `${consumoMensal.toLocaleString('pt-BR')} kWh`;
-      document.getElementById('equipCount').textContent = `${qtd} equipamento${qtd !== 1 ? 's' : ''}`;
+      document.getElementById('equipCount').textContent = `${qtdTotal} equipamento${qtdTotal !== 1 ? 's' : ''} (${qtdTipos} tipo${qtdTipos !== 1 ? 's' : ''})`;
     }
+
+    // Cache de autenticação para evitar chamadas desnecessárias
+    let authCache = null;
+    let authCacheExpiry = 0;
+    const AUTH_CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
     // Verificar autenticação SWA com saudação contextual
     async function checkAuthentication() {
+      // Verificar se temos cache válido
+      if (authCache && Date.now() < authCacheExpiry) {
+        console.log('🔥 Usando cache de autenticação');
+        return authCache.isAuthenticated;
+      }
+
       try {
+        console.log('🔐 Verificando autenticação...');
         const authInfo = await checkAuthenticationStatus();
+        
+        // Cache do resultado
+        authCache = authInfo;
+        authCacheExpiry = Date.now() + AUTH_CACHE_DURATION;
         
         if (authInfo.isAuthenticated) {
           // Usuário autenticado - mostrar saudação contextual
@@ -250,6 +321,9 @@
         }
       } catch (error) {
         console.error('Erro ao verificar autenticação:', error);
+        // Limpar cache em caso de erro
+        authCache = null;
+        authCacheExpiry = 0;
         showMessage('Erro ao verificar autenticação. Redirecionando para login...', 'error');
         // Redirecionar para login em caso de erro também
         setTimeout(() => {
@@ -273,8 +347,8 @@
       try {
         console.log('🔄 Fazendo requisição para /data-api/rest/Equipamento...');
         
-        // Fazer requisição para SWA Data API REST endpoint
-        const response = await fetch('/data-api/rest/Equipamento', {
+        // Fazer requisição para SWA Data API REST endpoint com retry e timeout
+        const response = await fetchWithRetry('/data-api/rest/Equipamento', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -341,8 +415,8 @@
         
         if (loadingRow) {
           loadingRow.innerHTML = `
-            <td colspan="10" class="px-4 py-8 text-center text-red-600">
-              <div class="space-y-2">
+            <td colspan="11" class="px-4 py-8 text-center text-red-600">
+              <div class="space-y-4">
                 <div class="inline-flex items-center">
                   <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -350,8 +424,13 @@
                   Erro ao carregar equipamentos
                 </div>
                 <div class="text-sm">${error.message}</div>
-                <div class="text-xs text-red-500 mt-2">
-                  Verifique o console (F12) para mais detalhes
+                <div class="space-y-2">
+                  <button onclick="loadData()" class="px-4 py-2 bg-[var(--accent)] text-white rounded hover:bg-[var(--accent-2)] text-sm">
+                    Tentar novamente
+                  </button>
+                  <div class="text-xs text-red-500">
+                    Verifique sua conexão com a internet ou tente novamente em alguns minutos
+                  </div>
                 </div>
               </div>
             </td>
