@@ -52,6 +52,7 @@
         "nome": "nome", 
         "potencia": "potencia",
         "horas_uso": "horas_uso",
+        "quantidade": "quantidade",
         "categoria": "categoria",
         "idade": "idade",
         "etiqueta_eficiencia": "etiqueta_eficiencia",

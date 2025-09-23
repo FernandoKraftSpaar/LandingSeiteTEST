@@ -72,6 +72,11 @@
           </div>
 
           <div>
+            <label class="block text-sm font-medium text-slate-700">Quantidade de equipamento</label>
+            <input name="quantidade" id="quantidade" type="number" min="1" required class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]" placeholder="Ex: 1" />
+          </div>
+
+          <div>
             <label class="block text-sm font-medium text-slate-700">Categoria</label>
             <select name="categoria" id="categoria" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]">
               <option value="">— selecione —</option>
@@ -149,6 +154,7 @@
   "nome": "Compressor AR-23",
   "potencia": 3.5,
   "horas_uso": 6.5,
+  "quantidade": 1,
   "categoria": "Refrigeração",
   "idade": 4,
   "etiqueta_eficiencia": "IE3",
@@ -228,6 +234,7 @@
           document.getElementById('nome').value = equipment.nome || '';
           document.getElementById('potencia').value = equipment.potencia || '';
           document.getElementById('horas_uso').value = equipment.horas_uso || '';
+          document.getElementById('quantidade').value = equipment.quantidade || 1;
           document.getElementById('categoria').value = equipment.categoria || '';
           document.getElementById('idade').value = equipment.idade || '';
           document.getElementById('etiqueta_eficiencia').value = equipment.etiqueta_eficiencia || '';
@@ -304,6 +311,7 @@
         nome: document.getElementById('nome').value.trim(),
         potencia: parseFloat(document.getElementById('potencia').value) || 0,
         horas_uso: parseFloat(document.getElementById('horas_uso').value) || 0,
+        quantidade: parseInt(document.getElementById('quantidade').value) || 1,
         categoria: document.getElementById('categoria').value || null,
         idade: (document.getElementById('idade').value !== '') ? parseInt(document.getElementById('idade').value, 10) : null,
         etiqueta_eficiencia: document.getElementById('etiqueta_eficiencia').value || null,
@@ -316,8 +324,8 @@
       };
 
       // Validação
-      if (!payload.nome || payload.potencia <= 0 || payload.horas_uso < 0) {
-        statusEl.textContent = 'Por favor verifique nome, potência e horas de uso.';
+      if (!payload.nome || payload.potencia <= 0 || payload.horas_uso < 0 || payload.quantidade <= 0) {
+        statusEl.textContent = 'Por favor verifique nome, potência, horas de uso e quantidade.';
         statusEl.className = 'text-sm text-red-600 ml-4';
         submitBtn.disabled = false;
         submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
