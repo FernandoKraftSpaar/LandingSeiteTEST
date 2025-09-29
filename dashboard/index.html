@@ -452,9 +452,14 @@
 
     // Inicialização
     document.addEventListener('DOMContentLoaded', async () => {
+      // Mostrar mensagem de validação de autenticação
+      showMessage('Validando autenticação...', 'info');
+      
       // Verificar autenticação antes de carregar dados
       const isAuthenticated = await checkAuthentication();
       if (isAuthenticated) {
+        // Limpar mensagem de validação e carregar dados
+        document.getElementById('statusMessage').classList.add('hidden');
         loadData();
       }
     });
