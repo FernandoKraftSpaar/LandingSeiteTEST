@@ -219,7 +219,7 @@
 
     // Gerar linha da tabela
     function createEquipamentoRow(eq) {
-      const quantidade = parseInt(eq.quantidade) || 1;
+      const quantidade = parseInt(eq.quantidade) || 0;
       const consumoDiario = (eq.potencia && eq.horas_uso) ? 
         (parseFloat(eq.potencia) * parseFloat(eq.horas_uso) * quantidade).toFixed(2) : '-';
       
@@ -256,18 +256,18 @@
     // Atualizar estatísticas
     function updateStats(equipamentos) {
       // Calcular quantidade total de equipamentos (considerando as quantidades)
-      const qtdTotal = equipamentos.reduce((sum, eq) => sum + (parseInt(eq.quantidade) || 1), 0);
+      const qtdTotal = equipamentos.reduce((sum, eq) => sum + (parseInt(eq.quantidade) || 0), 0);
       const qtdTipos = equipamentos.length; // Número de tipos diferentes
       
       // Calcular potência total considerando as quantidades
       const potenciaTotal = equipamentos.reduce((sum, eq) => {
-        const quantidade = parseInt(eq.quantidade) || 1;
+        const quantidade = parseInt(eq.quantidade) || 0;
         return sum + ((parseFloat(eq.potencia) || 0) * quantidade);
       }, 0);
       
       // Calcular horas total considerando as quantidades
       const horasTotalDiario = equipamentos.reduce((sum, eq) => {
-        const quantidade = parseInt(eq.quantidade) || 1;
+        const quantidade = parseInt(eq.quantidade) || 0;
         return sum + ((parseFloat(eq.horas_uso) || 0) * quantidade);
       }, 0);
       
@@ -277,7 +277,7 @@
       const consumoMensal = equipamentos.reduce((sum, eq) => {
         const potencia = parseFloat(eq.potencia) || 0;
         const horas = parseFloat(eq.horas_uso) || 0;
-        const quantidade = parseInt(eq.quantidade) || 1;
+        const quantidade = parseInt(eq.quantidade) || 0;
         return sum + (potencia * horas * quantidade * 30);
       }, 0);
 
