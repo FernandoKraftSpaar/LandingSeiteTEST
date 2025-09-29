@@ -105,7 +105,6 @@
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nome</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Potência (kW)</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Uso Diário (h)</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Quantidade</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Categoria</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Idade</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Eficiência</th>
@@ -117,7 +116,7 @@
           </thead>
           <tbody id="lista-equipamentos" class="bg-white divide-y divide-slate-100">
             <tr id="loadingRow">
-              <td colspan="11" class="px-4 py-8 text-center text-slate-500">
+              <td colspan="10" class="px-4 py-8 text-center text-slate-500">
                 <div class="inline-flex items-center">
                   <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -219,19 +218,13 @@
 
     // Gerar linha da tabela
     function createEquipamentoRow(eq) {
-      const quantidade = parseInt(eq.quantidade) || 1;
       const consumoDiario = (eq.potencia && eq.horas_uso) ? 
-        (parseFloat(eq.potencia) * parseFloat(eq.horas_uso) * quantidade).toFixed(2) : '-';
+        (parseFloat(eq.potencia) * parseFloat(eq.horas_uso)).toFixed(2) : '-';
       
       return `<tr class="hover:bg-slate-50">
         <td class="px-4 py-3 text-sm font-medium text-slate-900">${safeValue(eq.nome)}</td>
         <td class="px-4 py-3 text-sm text-slate-500">${safeValue(eq.potencia)}</td>
         <td class="px-4 py-3 text-sm text-slate-500">${safeValue(eq.horas_uso)}</td>
-        <td class="px-4 py-3 text-sm text-slate-500">
-          <span class="inline-flex px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">
-            ${quantidade}
-          </span>
-        </td>
         <td class="px-4 py-3 text-sm text-slate-500">
           <span class="inline-flex px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-800">
             ${safeValue(eq.categoria, 'Não definida')}
@@ -255,37 +248,34 @@
 
     // Atualizar estatísticas
     function updateStats(equipamentos) {
-      // Calcular quantidade total de equipamentos (considerando as quantidades)
-      const qtdTotal = equipamentos.reduce((sum, eq) => sum + (parseInt(eq.quantidade) || 1), 0);
+      // Calcular quantidade total de equipamentos (cada equipamento conta como 1 unidade)
+      const qtdTotal = equipamentos.length;
       const qtdTipos = equipamentos.length; // Número de tipos diferentes
       
-      // Calcular potência total considerando as quantidades
+      // Calcular potência total
       const potenciaTotal = equipamentos.reduce((sum, eq) => {
-        const quantidade = parseInt(eq.quantidade) || 1;
-        return sum + ((parseFloat(eq.potencia) || 0) * quantidade);
+        return sum + (parseFloat(eq.potencia) || 0);
       }, 0);
       
-      // Calcular horas total considerando as quantidades
+      // Calcular horas total
       const horasTotalDiario = equipamentos.reduce((sum, eq) => {
-        const quantidade = parseInt(eq.quantidade) || 1;
-        return sum + ((parseFloat(eq.horas_uso) || 0) * quantidade);
+        return sum + (parseFloat(eq.horas_uso) || 0);
       }, 0);
       
       const usoMedio = qtdTotal > 0 ? (horasTotalDiario / qtdTotal) : 0;
       
-      // Calcular consumo mensal considerando as quantidades
+      // Calcular consumo mensal
       const consumoMensal = equipamentos.reduce((sum, eq) => {
         const potencia = parseFloat(eq.potencia) || 0;
         const horas = parseFloat(eq.horas_uso) || 0;
-        const quantidade = parseInt(eq.quantidade) || 1;
-        return sum + (potencia * horas * quantidade * 30);
+        return sum + (potencia * horas * 30);
       }, 0);
 
-      document.getElementById('qtd-equip').textContent = `${qtdTotal} (${qtdTipos} tipos)`;
+      document.getElementById('qtd-equip').textContent = `${qtdTotal} equipamento${qtdTotal !== 1 ? 's' : ''}`;
       document.getElementById('pot-total').textContent = `${potenciaTotal.toFixed(2)} kW`;
       document.getElementById('uso-medio').textContent = `${usoMedio.toFixed(1)} h`;
       document.getElementById('consumo-mensal').textContent = `${consumoMensal.toLocaleString('pt-BR')} kWh`;
-      document.getElementById('equipCount').textContent = `${qtdTotal} equipamento${qtdTotal !== 1 ? 's' : ''} (${qtdTipos} tipo${qtdTipos !== 1 ? 's' : ''})`;
+      document.getElementById('equipCount').textContent = `${qtdTotal} equipamento${qtdTotal !== 1 ? 's' : ''} cadastrado${qtdTotal !== 1 ? 's' : ''}`;
     }
 
     // Cache de autenticação para evitar chamadas desnecessárias
@@ -462,9 +452,14 @@
 
     // Inicialização
     document.addEventListener('DOMContentLoaded', async () => {
+      // Mostrar mensagem de validação de autenticação
+      showMessage('Validando autenticação...', 'info');
+      
       // Verificar autenticação antes de carregar dados
       const isAuthenticated = await checkAuthentication();
       if (isAuthenticated) {
+        // Limpar mensagem de validação e carregar dados
+        document.getElementById('statusMessage').classList.add('hidden');
         loadData();
       }
     });

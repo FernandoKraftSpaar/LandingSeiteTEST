@@ -71,11 +71,7 @@
             <input name="horas_uso" id="horas_uso" type="number" step="0.1" min="0" required class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]" placeholder="Ex: 6.5" />
           </div>
 
-          <div>
-            <label class="block text-sm font-medium text-slate-700">Quantidade</label>
-            <input name="quantidade" id="quantidade" type="number" min="1" step="1" value="1" required class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-[var(--primary)] focus:ring-[var(--primary)]" placeholder="Ex: 3" />
-            <p class="text-xs text-slate-500 mt-1">Número de unidades deste equipamento sendo cadastradas.</p>
-          </div>
+
 
           <div>
             <label class="block text-sm font-medium text-slate-700">Categoria</label>
@@ -155,7 +151,6 @@
   "nome": "Compressor AR-23",
   "potencia": 3.5,
   "horas_uso": 6.5,
-  "quantidade": 2,
   "categoria": "Refrigeração",
   "idade": 4,
   "etiqueta_eficiencia": "IE3",
@@ -241,7 +236,6 @@
           document.getElementById('nome').value = equipment.nome || '';
           document.getElementById('potencia').value = equipment.potencia || '';
           document.getElementById('horas_uso').value = equipment.horas_uso || '';
-          document.getElementById('quantidade').value = equipment.quantidade || 1;
           document.getElementById('categoria').value = equipment.categoria || '';
           document.getElementById('idade').value = equipment.idade || '';
           document.getElementById('etiqueta_eficiencia').value = equipment.etiqueta_eficiencia || '';
@@ -269,12 +263,18 @@
         let errorMessage = 'Erro ao carregar equipamento';
         if (error.name === 'AbortError') {
           errorMessage = 'Timeout: Carregamento demorou mais que o esperado';
+        } else if (error.message.includes('HTTP 404')) {
+          errorMessage = 'Equipamento não encontrado';
+        } else if (error.message.includes('HTTP 401') || error.message.includes('HTTP 403')) {
+          errorMessage = 'Erro de autenticação: Redirecionando para login...';
+          setTimeout(() => {
+            window.location.href = '/login?redirect=%2Fdashboard%2Fadicionar_equipamento.html';
+          }, 3000);
         } else {
           errorMessage = `Erro ao carregar equipamento: ${error.message}`;
         }
         
-        statusEl.textContent = errorMessage;
-        statusEl.className = 'text-sm text-red-600 ml-4';
+        showMessage(errorMessage, 'error');
       }
     }
 
@@ -295,17 +295,45 @@
         const authInfo = await checkAuthenticationStatus();
         
         if (!authInfo.isAuthenticated) {
+          // Mostrar mensagem de erro de autenticação mais específica
+          showMessage('Acesso negado. Redirecionando para login...', 'error');
           // Redireciona para login se não autenticado
-          window.location.href = '/login?redirect=%2Fdashboard';
+          setTimeout(() => {
+            window.location.href = '/login?redirect=%2Fdashboard%2Fadicionar_equipamento.html';
+          }, 2000);
           return false;
         }
         
         return true;
       } catch (error) {
         console.error('Erro ao verificar autenticação:', error);
+        // Mostrar mensagem de erro específica
+        showMessage('Erro ao verificar autenticação. Redirecionando para login...', 'error');
         // Em caso de erro, também redireciona para login
-        window.location.href = '/login?redirect=%2Fdashboard';
+        setTimeout(() => {
+          window.location.href = '/login?redirect=%2Fdashboard%2Fadicionar_equipamento.html';
+        }, 2000);
         return false;
+      }
+    }
+
+    // Helper function to show different types of messages
+    function showMessage(message, type = 'info') {
+      const statusEl = document.getElementById('status');
+      statusEl.textContent = message;
+      
+      switch (type) {
+        case 'error':
+          statusEl.className = 'text-sm text-red-600 ml-4';
+          break;
+        case 'success':
+          statusEl.className = 'text-sm text-green-600 ml-4';
+          break;
+        case 'warning':
+          statusEl.className = 'text-sm text-yellow-600 ml-4';
+          break;
+        default:
+          statusEl.className = 'text-sm text-blue-600 ml-4';
       }
     }
 
@@ -330,7 +358,6 @@
         nome: document.getElementById('nome').value.trim(),
         potencia: parseFloat(document.getElementById('potencia').value) || 0,
         horas_uso: parseFloat(document.getElementById('horas_uso').value) || 0,
-        quantidade: parseInt(document.getElementById('quantidade').value) || 1,
         categoria: document.getElementById('categoria').value || null,
         idade: (document.getElementById('idade').value !== '') ? parseInt(document.getElementById('idade').value, 10) : null,
         etiqueta_eficiencia: document.getElementById('etiqueta_eficiencia').value || null,
@@ -343,8 +370,8 @@
       };
 
       // Validação
-      if (!payload.nome || payload.potencia <= 0 || payload.horas_uso < 0 || payload.quantidade <= 0) {
-        statusEl.textContent = 'Por favor verifique nome, potência, horas de uso e quantidade.';
+      if (!payload.nome || payload.potencia <= 0 || payload.horas_uso < 0) {
+        statusEl.textContent = 'Por favor verifique nome, potência e horas de uso.';
         statusEl.className = 'text-sm text-red-600 ml-4';
         submitBtn.disabled = false;
         submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
@@ -417,14 +444,25 @@
         console.error('Erro ao salvar equipamento:', err);
         
         let errorMessage = 'Erro desconhecido';
+        let errorType = 'error';
+        
         if (err.name === 'AbortError') {
           errorMessage = 'Timeout: A operação demorou mais que o esperado. Tente novamente.';
+        } else if (err.message.includes('HTTP 400')) {
+          errorMessage = 'Dados inválidos: Verifique se todos os campos obrigatórios estão preenchidos corretamente.';
+        } else if (err.message.includes('HTTP 401') || err.message.includes('HTTP 403')) {
+          errorMessage = 'Erro de autenticação: Sua sessão pode ter expirado. Redirecionando para login...';
+          errorType = 'warning';
+          setTimeout(() => {
+            window.location.href = '/login?redirect=%2Fdashboard%2Fadicionar_equipamento.html';
+          }, 3000);
+        } else if (err.message.includes('HTTP 500')) {
+          errorMessage = 'Erro interno do servidor: Tente novamente em alguns minutos.';
         } else {
-          errorMessage = err.message;
+          errorMessage = `Erro: ${err.message}`;
         }
         
-        statusEl.textContent = `Erro: ${errorMessage}`;
-        statusEl.className = 'text-sm text-red-600 ml-4';
+        showMessage(errorMessage, errorType);
         submitBtn.disabled = false;
         submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
       }
@@ -432,8 +470,13 @@
 
     // Verificar auth e modo de edição ao carregar página
     document.addEventListener('DOMContentLoaded', async () => {
+      // Mostrar mensagem de validação de autenticação
+      showMessage('Validando autenticação...', 'info');
+      
       const isAuthenticated = await checkAuth();
       if (isAuthenticated) {
+        // Limpar mensagem de validação
+        document.getElementById('status').textContent = '';
         checkEditMode();
       }
     });
