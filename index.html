@@ -256,15 +256,18 @@
         <h2 class="text-2xl font-bold text-[var(--primary)]" data-i18n="pilot_title">Seja um Piloto SmartSpaar</h2>
         <p class="mt-3 text-slate-700" data-i18n="pilot_subtitle">Teste nossa solução sem investimento inicial e receba benefícios exclusivos</p>
         
-        <div class="mt-6 bg-white rounded-lg p-6 shadow-sm">
+        <form id="pilot-registration-form" class="mt-6 bg-white rounded-lg p-6 shadow-sm">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <input type="text" placeholder="Nome completo" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_name_placeholder">
-            <input type="email" placeholder="Email corporativo" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_email_placeholder">
+            <input type="text" id="pilot-name" name="name" placeholder="Nome completo" required class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_name_placeholder">
+            <input type="email" id="pilot-email" name="contact" placeholder="Email corporativo" required class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_email_placeholder">
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <input type="text" placeholder="Empresa" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_company_placeholder">
-            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]">
-              <option data-i18n="pilot_sector_option">Setor de atividade</option>
+            <input type="text" id="pilot-company" name="company" placeholder="Empresa" required class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_company_placeholder">
+            <input type="tel" id="pilot-telefone" name="telefone" placeholder="Telefone" required class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_phone_placeholder">
+          </div>
+          <div class="mb-4">
+            <select id="pilot-sector" name="industrial_branch" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]">
+              <option value="" data-i18n="pilot_sector_option">Setor de atividade</option>
               <option>Indústria Metalúrgica</option>
               <option>Indústria Química</option>
               <option>Indústria Alimentícia</option>
@@ -275,17 +278,19 @@
           </div>
           
           <div class="mb-4">
-            <textarea placeholder="Conte-nos sobre seu maior desafio energético (opcional)" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_challenge_placeholder"></textarea>
+            <textarea id="pilot-challenge" name="challenge" placeholder="Conte-nos sobre seu maior desafio energético (opcional)" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]" data-i18n-placeholder="pilot_challenge_placeholder"></textarea>
           </div>
           
-          <button class="w-full bg-[var(--accent-2)] text-white font-semibold py-3 rounded-lg hover:bg-[var(--accent)] transition-colors" data-i18n="pilot_submit">Quero ser piloto agora</button>
+          <button type="submit" class="w-full bg-[var(--accent-2)] text-white font-semibold py-3 rounded-lg hover:bg-[var(--accent)] transition-colors" data-i18n="pilot_submit">Quero ser piloto agora</button>
+          
+          <div id="pilot-form-message" class="mt-4 hidden"></div>
           
           <div class="mt-4 flex items-center justify-center space-x-4">
             <span class="text-sm text-slate-600" data-i18n="pilot_or">ou</span>
           </div>
           
           <a href="https://wa.me/5551998712569?text=Olá, quero ser piloto da SmartSpaar!" target="_blank" rel="noopener" class="inline-block mt-2 px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors" data-i18n="pilot_whatsapp">Falar via WhatsApp</a>
-        </div>
+        </form>
       </div>
     </section>
 
@@ -410,6 +415,7 @@
         pilot_name_placeholder: "Nome completo",
         pilot_email_placeholder: "Email corporativo",
         pilot_company_placeholder: "Empresa",
+        pilot_phone_placeholder: "Telefone",
         pilot_sector_option: "Setor de atividade",
         pilot_challenge_placeholder: "Conte-nos sobre seu maior desafio energético (opcional)",
         pilot_submit: "Quero ser piloto agora",
@@ -495,6 +501,7 @@
         pilot_name_placeholder: "Vollständige Name",
         pilot_email_placeholder: "Korporativ Email",
         pilot_company_placeholder: "Firma",
+        pilot_phone_placeholder: "Telefon",
         pilot_sector_option: "Aktivitätbereich",
         pilot_challenge_placeholder: "Verzähl uns über dei größte energetisch Herausforderung (optional)",
         pilot_submit: "Ich will Pilot sein jetzt",
@@ -556,6 +563,72 @@
     // Check auth status on page load using shared utility
     document.addEventListener('DOMContentLoaded', () => {
       updateNavigationAuth('auth-button');
+      
+      // Setup pilot registration form handler
+      const pilotForm = document.getElementById('pilot-registration-form');
+      const formMessage = document.getElementById('pilot-form-message');
+      
+      if (pilotForm) {
+        pilotForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          // Disable submit button
+          const submitBtn = pilotForm.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Enviando...';
+          
+          // Hide previous message
+          formMessage.classList.add('hidden');
+          
+          // Get form data
+          const formData = {
+            name: document.getElementById('pilot-name').value,
+            contact: document.getElementById('pilot-email').value,
+            company: document.getElementById('pilot-company').value,
+            telefone: document.getElementById('pilot-telefone').value,
+            industrial_branch: document.getElementById('pilot-sector').value,
+            challenge: document.getElementById('pilot-challenge').value || null
+          };
+          
+          try {
+            const response = await fetch('/data-api/rest/PilotRegistration', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify(formData)
+            });
+            
+            if (response.ok) {
+              // Success
+              formMessage.textContent = '✅ Registro realizado com sucesso! Entraremos em contato em breve.';
+              formMessage.className = 'mt-4 p-4 bg-green-100 text-green-800 rounded-lg';
+              formMessage.classList.remove('hidden');
+              
+              // Reset form
+              pilotForm.reset();
+            } else {
+              // Error
+              const errorData = await response.text();
+              console.error('Form submission error:', errorData);
+              formMessage.textContent = '❌ Erro ao enviar o registro. Por favor, tente novamente ou entre em contato via WhatsApp.';
+              formMessage.className = 'mt-4 p-4 bg-red-100 text-red-800 rounded-lg';
+              formMessage.classList.remove('hidden');
+            }
+          } catch (error) {
+            console.error('Form submission error:', error);
+            formMessage.textContent = '❌ Erro ao enviar o registro. Por favor, tente novamente ou entre em contato via WhatsApp.';
+            formMessage.className = 'mt-4 p-4 bg-red-100 text-red-800 rounded-lg';
+            formMessage.classList.remove('hidden');
+          } finally {
+            // Re-enable submit button
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+          }
+        });
+      }
     });
   </script>
 

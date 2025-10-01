@@ -64,6 +64,33 @@
         "created_at": "created_at",
         "updated_at": "updated_at"
       }
+    },
+    "PilotRegistration": {
+      "source": {
+        "object": "dbo.PilotRegistrations",
+        "type": "table"
+      },
+      "permissions": [
+        {
+          "actions": ["create"],
+          "role": "anonymous"
+        },
+        {
+          "actions": ["read", "update", "delete"],
+          "role": "authenticated"
+        }
+      ],
+      "mappings": {
+        "id": "id",
+        "name": "name",
+        "contact": "contact",
+        "industrial_branch": "industrial_branch",
+        "telefone": "telefone",
+        "company": "company",
+        "challenge": "challenge",
+        "created_at": "created_at",
+        "status": "status"
+      }
     }
   }
 }

@@ -14,3 +14,15 @@ CREATE TABLE [ClientRecord] (
   [active] BIT DEFAULT 1,
   [last_seen] DATETIME2 DEFAULT GETUTCDATE()
 );
+
+CREATE TABLE [PilotRegistrations] (
+  [id] INT IDENTITY(1,1) PRIMARY KEY,
+  [name] NVARCHAR(200) NOT NULL,
+  [contact] NVARCHAR(200) NOT NULL,
+  [industrial_branch] NVARCHAR(100),
+  [telefone] NVARCHAR(50),
+  [company] NVARCHAR(200),
+  [challenge] NVARCHAR(MAX),
+  [created_at] DATETIME2 DEFAULT GETUTCDATE(),
+  [status] NVARCHAR(50) DEFAULT 'pending'
+);
