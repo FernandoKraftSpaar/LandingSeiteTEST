@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SmartSpaar no Campo — Agora também somos do Noroeste</title>
+  <meta name="description" content="SmartSpaar no Campo: economia de energia para produtores rurais. Previsão de consumo, ajuste da demanda, GD solar mais inteligente e condições especiais para os primeiros clientes do Noroeste." />
+  <link rel="icon" href="favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/js/auth-utils.js"></script>
+  <link rel="stylesheet" href="nexa-heavy.css">
+  <style>
+    :root { --primary: #1E3A5F; --accent: #95BF39; --accent-2: #0B8C38; }
+    .nexa { font-family: 'Nexa Heavy', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    html { scroll-behavior: smooth; }
+    @media print {
+      nav, #lang-switch, #print-btn, .no-print { display: none !important; }
+      section, .card { box-shadow: none !important; border: 1px solid #e5e7eb !important; }
+      body { background: #fff; }
+      a { text-decoration: none; color: inherit; }
+    }
+  </style>
+</head>
+<body class="nexa bg-gray-50 text-slate-900">
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <a href="/" class="text-2xl text-[var(--primary)] tracking-tight">SmartSpaar</a>
+        </div>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="/index.html#servicos" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_services">Serviços</a>
+          <a href="#como-funciona" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_how">Como funciona</a>
+          <a href="/index.html#por-que" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_why">Por que escolher</a>
+          <a href="/index.html#validacao" class="text-[var(--primary)] hover:text-[var(--accent-2)]" data-i18n="menu_social">Validação</a>
+        </div>
+        <div class="flex items-center space-x-3">
+          <div id="lang-switch" class="hidden md:flex items-center space-x-2">
+            <button id="btn-pt" class="lang-btn px-2 py-1 rounded-md bg-[var(--primary)] text-white" onclick="switchLang('pt')">PT</button>
+            <button id="btn-hrx" class="lang-btn px-2 py-1 rounded-md bg-white text-[var(--primary)] border border-[var(--primary)]" onclick="switchLang('hrx')">HRX</button>
+          </div>
+          <button id="print-btn" class="hidden md:inline-flex px-3 py-1 rounded-md bg-[var(--accent-2)] text-white" onclick="window.print()" data-i18n="print">Imprimir</button>
+          <div id="auth-button" class="hidden"></div>
+          <button id="mobileBtn" class="md:hidden p-2 rounded-md text-[var(--primary)]" aria-label="Abrir menu" onclick="toggleMobileMenu()">
+            <svg id="icon-open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+            </svg>
+            <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+      <div class="px-4 py-4 space-y-2">
+        <a href="/index.html#servicos" class="block text-[var(--primary)]" data-i18n="menu_services">Serviços</a>
+        <a href="#como-funciona" class="block text-[var(--primary)]" data-i18n="menu_how">Como funciona</a>
+        <a href="/index.html#por-que" class="block text-[var(--primary)]" data-i18n="menu_why">Por que escolher</a>
+        <a href="/index.html#validacao" class="block text-[var(--primary)]" data-i18n="menu_social">Validação</a>
+        <div class="pt-2 border-t flex items-center space-x-2">
+          <button id="m-btn-pt" class="w-1/2 py-2 rounded-md bg-[var(--primary)] text-white" onclick="switchLang('pt')">PT</button>
+          <button id="m-btn-hrx" class="w-1/2 py-2 rounded-md bg-white text-[var(--primary)] border border-[var(--primary)]" onclick="switchLang('hrx')">HRX</button>
+          <button class="w-1/2 py-2 rounded-md bg-[var(--accent-2)] text-white" onclick="window.print()" data-i18n="print">Imprimir</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="h-16 md:h-16"></div>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <section class="bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] rounded-xl text-white px-6 py-16 md:py-20 -mx-4 md:mx-0">
+      <div class="max-w-3xl">
+        <h1 class="text-3xl md:text-4xl font-extrabold leading-tight" data-i18n="hero_title">SmartSpaar no Campo — Agora também somos do Noroeste</h1>
+        <h2 class="text-xl md:text-2xl font-bold mt-2" data-i18n="hero_subtitle">Economia de energia do teu jeito de produzir: previsões, ajustes de demanda e GD solar mais inteligente.</h2>
+        <p class="mt-4 text-lg md:text-xl" data-i18n="hero_sub">Tamo junto no Noroeste Summit (Três de Maio/RS): tu economizas sem atrapalhar a ordenha e o resfriamento — e ainda pode otimizar a tua GD.</p>
+        <div class="mt-8 flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+          <a href="#condicoes" class="inline-block px-6 py-3 rounded-full bg-[var(--accent-2)] hover:bg-[var(--accent)] text-white font-semibold" data-i18n="hero_cta">Quero as condições especiais</a>
+          <a href="#como-funciona" class="text-white/90 underline" data-i18n="hero_secondary">Saiba como funciona</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="beneficios" class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="card bg-white rounded-xl shadow-sm p-6 border-l-4 border-[var(--accent)]">
+        <h3 class="text-xl font-bold text-[var(--primary)]" data-i18n="benefit_1_title">O que tu ganhas com a SmartSpaar</h3>
+        <ul class="mt-3 space-y-2 text-slate-700 list-disc pl-5">
+          <li data-i18n="benefit_1_li1">Previsão de consumo e picos de demanda, aprendendo tua rotina.</li>
+          <li data-i18n="benefit_1_li2">Ajuste da demanda contratada: menos multa, menos desperdício.</li>
+          <li data-i18n="benefit_1_li3">GD solar mais inteligente: compensação melhor e menos crédito perdido.</li>
+          <li data-i18n="benefit_1_li4">Diagnóstico sem burocracia: envia a fatura ou conecta com a concessionária.</li>
+          <li data-i18n="benefit_1_li5">Recomendações sob medida, conforme safra, clima, insumos e vendas.</li>
+          <li data-i18n="benefit_1_li6">Dashboard simples e alertas (até por WhatsApp).</li>
+        </ul>
+      </div>
+      <div class="card bg-white rounded-xl shadow-sm p-6 border-l-4 border-[var(--primary)]">
+        <h3 class="text-xl font-bold text-[var(--primary)]" data-i18n="benefit_2_title">Frictionless de verdade</h3>
+        <ul class="mt-3 space-y-2 text-slate-700 list-disc pl-5">
+          <li data-i18n="benefit_2_li1">Onboarding rápido: hoje com fatura; em breve, integração 100% automática via crawler.</li>
+          <li data-i18n="benefit_2_li2">Sem hardware (na maioria), sem papelada, sem complicação.</li>
+          <li data-i18n="benefit_2_li3">Piloto sem investimento inicial e modelo baseado na economia gerada.</li>
+          <li data-i18n="benefit_2_li4">Tu escolhes usar só uma parte (diagnóstico, GD, etc.) ou tudo.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="leite" class="mt-8 bg-white rounded-xl shadow-sm p-6 border-l-4 border-[var(--accent-2)]">
+      <h3 class="text-xl font-bold text-[var(--primary)]" data-i18n="milk_title">Caso leiteiro: o essencial a gente respeita</h3>
+      <p class="mt-3 text-slate-700" data-i18n="milk_desc">Ordenha e resfriamento são sagrados — não dá pra mexer. A SmartSpaar respeita o que é essencial e adapta o que é flexível (irrigação, ventilação, bombeamento, moagem, iluminação), escalona partidas de motores pra reduzir picos, sugere janelas de melhor custo e planeja a demanda contratada mês a mês.</p>
+      <p class="mt-3 text-slate-700" data-i18n="milk_result">Resultado: menos multa, menos desperdício e mais previsibilidade.</p>
+    </section>
+
+    <section id="gd" class="mt-8 bg-gradient-to-r from-white to-yellow-100 rounded-xl shadow-sm p-6 border-l-4 border-yellow-500">
+      <h3 class="text-xl font-bold text-[var(--primary)]" data-i18n="gd_title">GD Solar no campo: aproveita melhor o que tu já investiu</h3>
+      <ul class="mt-3 space-y-2 text-slate-700 list-disc pl-5">
+        <li data-i18n="gd_li1">Compensação calibrada: geração e consumo alinhados por época (frio/calor, seca/safra).</li>
+        <li data-i18n="gd_li2">Evita crédito parado: menos perdas por compensação ineficiente.</li>
+        <li data-i18n="gd_li3">Ajustes de uso pra bater com a curva da usina, sem atrapalhar tua rotina.</li>
+      </ul>
+    </section>
+
+    <section id="condicoes" class="mt-8 bg-[var(--primary)] text-white rounded-xl p-6">
+      <h3 class="text-xl font-semibold" data-i18n="promo_title">Condições especiais — primeiros produtores rurais do Noroeste</h3>
+      <ul class="mt-3 space-y-2 list-disc pl-5">
+        <li data-i18n="promo_li1">Desconto de entrada e primeira análise gratuita.</li>
+        <li data-i18n="promo_li2">Vagas limitadas para clientes-piloto.</li>
+        <li data-i18n="promo_li3">Atendimento próximo e linguagem do campo.</li>
+        <li data-i18n="promo_li4">Tu só pagas se economizar (modelo de performance).</li>
+      </ul>
+      <p class="mt-3 text-white/90 text-sm" data-i18n="promo_note">Condições promocionais válidas por tempo limitado para a região Noroeste.</p>
+      <div class="mt-4">
+        <a href="https://wa.me/5551998712569?text=Quero%20as%20condi%C3%A7%C3%B5es%20especiais%20da%20SmartSpaar%20no%20Campo" target="_blank" rel="noopener" class="inline-block px-5 py-3 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-2)] text-slate-900 font-semibold" data-i18n="promo_cta">Falar no WhatsApp</a>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="mt-8 bg-white rounded-xl shadow-sm p-6">
+      <h2 class="text-2xl text-[var(--primary)] font-bold" data-i18n="how_title">Como funciona (3 passos)</h2>
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="w-12 h-12 bg-[var(--accent)] rounded-full flex items-center justify-center mx-auto mb-3"><span class="text-white font-bold">1</span></div>
+          <h3 class="font-semibold text-[var(--primary)] mb-2" data-i18n="how_1_title">Integração rápida</h3>
+          <p class="text-slate-700 text-sm" data-i18n="how_1_desc">Tu envias a fatura ou conectas com a concessionária.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-[var(--accent)] rounded-full flex items-center justify-center mx-auto mb-3"><span class="text-white font-bold">2</span></div>
+          <h3 class="font-semibold text-[var(--primary)] mb-2" data-i18n="how_2_title">Modelo que aprende teu campo</h3>
+          <p class="text-slate-700 text-sm" data-i18n="how_2_desc">A gente cruza consumo com produção e rotina (safra, clima, insumos).</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-[var(--accent)] rounded-full flex items-center justify-center mx-auto mb-3"><span class="text-white font-bold">3</span></div>
+          <h3 class="font-semibold text-[var(--primary)] mb-2" data-i18n="how_3_title">Plano de economia</h3>
+          <p class="text-slate-700 text-sm" data-i18n="how_3_desc">Tu recebes ajustes de demanda, otimização de GD e alertas simples.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-8 rounded-xl bg-gradient-to-r from-white to-white border p-6">
+      <div class="bg-[var(--primary)]/5 rounded-lg p-6">
+        <h3 class="text-xl font-semibold text-[var(--primary)]" data-i18n="cta_title">Bora conversar?</h3>
+        <p class="mt-3 text-slate-700" data-i18n="cta_sub">Estamos no Noroeste Summit — Três de Maio/RS. Chama no Whats ou acessa o site.</p>
+        <div class="mt-4 flex flex-wrap gap-3 items-center">
+          <a href="https://wa.me/5551998712569" target="_blank" rel="noopener" class="px-5 py-3 rounded-lg bg-[var(--accent-2)] hover:bg-[var(--accent)] text-white font-semibold" data-i18n="cta_whats">WhatsApp: (51) 99871-2569</a>
+          <a href="https://www.smartspaar.com.br" target="_blank" rel="noopener" class="px-5 py-3 rounded-lg bg-white border text-[var(--primary)] font-semibold hover:bg-[var(--primary)] hover:text-white transition-colors" data-i18n="cta_site">Site: smartspaar.com.br</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="my-12"></div>
+  </main>
+
+  <footer class="mt-12 bg-[var(--primary)] text-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between">
+      <div>
+        <p class="font-semibold text-lg" data-i18n="footer_title">Começa agora sem investimento inicial</p>
+        <p class="text-sm mt-1 text-white/90" data-i18n="footer_sub">Agilidade, baixo custo e resultado em semanas — agora também no campo do Noroeste.</p>
+      </div>
+      <div class="mt-4 md:mt-0">
+        <a id="footer-cta" href="https://wa.me/5551998712569" target="_blank" rel="noopener" class="inline-block px-6 py-3 bg-[var(--accent-2)] rounded-full font-semibold hover:bg-[var(--accent)]" data-i18n="footer_cta">Falar com a SmartSpaar</a>
+        <a id="location" href="https://veleiro.doisirmaos.rs.gov.br/" target="_blank" rel="noopener" class="inline-block px-6 py-3 bg-[var(--accent-2)] rounded-full font-semibold hover:bg-[var(--accent)] ml-2" data-i18n="location">Orgulhosamente do Noroeste e do Ecossistema Veleiro</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const mobileMenuEl = document.getElementById('mobileMenu');
+    const iconOpen = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
+    function toggleMobileMenu() {
+      const isHidden = mobileMenuEl.classList.contains('hidden');
+      if (isHidden) { mobileMenuEl.classList.remove('hidden'); iconOpen.classList.add('hidden'); iconClose.classList.remove('hidden'); }
+      else { mobileMenuEl.classList.add('hidden'); iconOpen.classList.remove('hidden'); iconClose.classList.add('hidden'); }
+    }
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768 && !mobileMenuEl.classList.contains('hidden')) {
+        mobileMenuEl.classList.add('hidden'); iconOpen.classList.remove('hidden'); iconClose.classList.add('hidden');
+      }
+    });
+
+    const t = {
+      pt: {
+        menu_services: "Serviços", menu_how: "Como funciona", menu_why: "Por que escolher", menu_social: "Validação", print: "Imprimir",
+        hero_title: "SmartSpaar no Campo — Agora também somos do Noroeste",
+        hero_subtitle: "Economia de energia do teu jeito de produzir: previsões, ajustes de demanda e GD solar mais inteligente.",
+        hero_sub: "Tamo junto no Noroeste Summit (Três de Maio/RS): tu economizas sem atrapalhar a ordenha e o resfriamento — e ainda pode otimizar a tua GD.",
+        hero_cta: "Quero as condições especiais", hero_secondary: "Saiba como funciona",
+        benefit_1_title: "O que tu ganhas com a SmartSpaar",
+        benefit_1_li1: "Previsão de consumo e picos de demanda, aprendendo tua rotina.",
+        benefit_1_li2: "Ajuste da demanda contratada: menos multa, menos desperdício.",
+        benefit_1_li3: "GD solar mais inteligente: compensação melhor e menos crédito perdido.",
+        benefit_1_li4: "Diagnóstico sem burocracia: envia a fatura ou conecta com a concessionária.",
+        benefit_1_li5: "Recomendações sob medida, conforme safra, clima, insumos e vendas.",
+        benefit_1_li6: "Dashboard simples e alertas (até por WhatsApp).",
+        benefit_2_title: "Frictionless de verdade",
+        benefit_2_li1: "Onboarding rápido: hoje com fatura; em breve, integração 100% automática via crawler.",
+        benefit_2_li2: "Sem hardware (na maioria), sem papelada, sem complicação.",
+        benefit_2_li3: "Piloto sem investimento inicial e modelo baseado na economia gerada.",
+        benefit_2_li4: "Tu escolhes usar só uma parte (diagnóstico, GD, etc.) ou tudo.",
+        milk_title: "Caso leiteiro: o essencial a gente respeita",
+        milk_desc: "Ordenha e resfriamento são sagrados — não dá pra mexer. A SmartSpaar respeita o que é essencial e adapta o que é flexível (irrigação, ventilação, bombeamento, moagem, iluminação), escalona partidas de motores pra reduzir picos, sugere janelas de melhor custo e planeja a demanda contratada mês a mês.",
+        milk_result: "Resultado: menos multa, menos desperdício e mais previsibilidade.",
+        gd_title: "GD Solar no campo: aproveita melhor o que tu já investiu",
+        gd_li1: "Compensação calibrada: geração e consumo alinhados por época (frio/calor, seca/safra).",
+        gd_li2: "Evita crédito parado: menos perdas por compensação ineficiente.",
+        gd_li3: "Ajustes de uso pra bater com a curva da usina, sem atrapalhar tua rotina.",
+        promo_title: "Condições especiais — primeiros produtores rurais do Noroeste",
+        promo_li1: "Desconto de entrada e primeira análise gratuita.",
+        promo_li2: "Vagas limitadas para clientes-piloto.",
+        promo_li3: "Atendimento próximo e linguagem do campo.",
+        promo_li4: "Tu só pagas se economizar (modelo de performance).",
+        promo_note: "Condições promocionais válidas por tempo limitado para a região Noroeste.",
+        promo_cta: "Falar no WhatsApp",
+        how_title: "Como funciona (3 passos)",
+        how_1_title: "Integração rápida", how_1_desc: "Tu envias a fatura ou conectas com a concessionária.",
+        how_2_title: "Modelo que aprende teu campo", how_2_desc: "A gente cruza consumo com produção e rotina (safra, clima, insumos).",
+        how_3_title: "Plano de economia", how_3_desc: "Tu recebes ajustes de demanda, otimização de GD e alertas simples.",
+        cta_title: "Bora conversar?", cta_sub: "Estamos no Noroeste Summit — Três de Maio/RS. Chama no Whats ou acessa o site.",
+        cta_whats: "WhatsApp: (51) 99871-2569", cta_site: "Site: smartspaar.com.br",
+        footer_title: "Começa agora sem investimento inicial",
+        footer_sub: "Agilidade, baixo custo e resultado em semanas — agora também no campo do Noroeste.",
+        footer_cta: "Falar com a SmartSpaar",
+        location: "Orgulhosamente do Noroeste e do Ecossistema Veleiro"
+      },
+      hrx: {
+        menu_services: "Dienscht", menu_how: "Wie's funktioniert", menu_why: "Warum SmartSpaar", menu_social: "Validatschon", print: "Drucke",
+        hero_title: "SmartSpaar uffm Land — Jetzt sinn mer aa vum Noroeschte",
+        hero_subtitle: "Strohmspare no dei Art ze schaffe: Voraussage, Nachfraach-Anpassung un schlauere Solar-VG.",
+        hero_sub: "Mir sinn do im Noroeschte Summit (Três de Maio/RS): du spaarst ohne Melke un Kühle ze größere — un dei Solar-VG werd besser genutzt.",
+        hero_cta: "Ich will d'Sondersbedingunge", hero_secondary: "Seh wie's geht",
+        benefit_1_title: "Was du met SmartSpaar kriegschd",
+        benefit_1_li1: "Voraussage vum Verbruuch un Lastspitze, mir lerne dei Routine.",
+        benefit_1_li2: "Nachfraach richdisch kontraktiert: wenicher Strof, wenicher Verschwendung.",
+        benefit_1_li3: "Schlauere Solar-VG: bessere Kompensatschon, wenicher verlorni Kredit.",
+        benefit_1_li4: "Diagnose ohne Bürokratie: schick dei Rechnong oder verbinn met Versorger.",
+        benefit_1_li5: "Empfehlunge no Saison, Wetter, Inschtand un Verkaaf.",
+        benefit_1_li6: "Einfache Dashboard un Hinweis (aa iwwer WhatsApp).",
+        benefit_2_title: "Wirklich reibungslos",
+        benefit_2_li1: "Schneller Start: heit mit Rechnong; bald 100% automatesch mit Crawler.",
+        benefit_2_li2: "Kei Hardware (meischtens), kei Papierkram, kei Komplikatschon.",
+        benefit_2_li3: "Pilot ohne Anfangsinvestition, bezahle no ersparte Geld.",
+        benefit_2_li4: "Du kannschd Teil nutze (Diagnose, VG, usw.) oder alles.",
+        milk_title: "Milchbetrieb: was heilich isch, bleibt heilich",
+        milk_desc: "Melke un Kühlung sinn heilich — do rühre mer net a. SmartSpaar respektiert das Wichtige un passt aa, was flexibel isch (Bewässerung, Belüftung, Pump, Mahle, Beleuchtung), staffelt Motor-Start fer wenicher Spitze, schlät ginstige Zeitfenster vor un plant die Nachfraach monatlich.",
+        milk_result: "Resultat: wenicher Strof, wenicher Verschwendung, mehr Vorhersehbarkeit.",
+        gd_title: "Solar-VG uffm Land: nutz besser, was du schun investiert hoschd",
+        gd_li1: "Richtigi Kompensatschon: Erzeugung un Verbruuch na dä Jahreszitte (Kält/Hitze, Trocken/Ernte).",
+        gd_li2: "Kei Kredit verliere: Verlust durch schlechte Kompensatschon vermeide.",
+        gd_li3: "Nutzung passend zu dei Anlagenkurv, ohne dei Routine zu größere.",
+        promo_title: "Sondersbedingunge — erschte Landwirt vum Noroeschte",
+        promo_li1: "Einstiegsrabatt un die erscht Analyse umsonst.",
+        promo_li2: "Begrenzt Platz fer Pilot-Kund.",
+        promo_li3: "Noh dran un in dei Sproch.",
+        promo_li4: "Du bezahlschd nur, wenn du sparschd (Performance-Modell).",
+        promo_note: "Aktionsbedingunge fer kurzi Zit im Noroeschte.",
+        promo_cta: "Über WhatsApp spreche",
+        how_title: "Wie's geht (3 Schritt)",
+        how_1_title: "Schnelli Verbindung", how_1_desc: "Du schickschd die Rechnong oder verbinnschd mit Versorger.",
+        how_2_title: "Modell lernt dei Hof", how_2_desc: "Mir vergleiche Verbruuch met Produktion un Routine (Saison, Wetter, Inschtand).",
+        how_3_title: "Spar-Plan", how_3_desc: "Du griegschd Nachfraach-Anpassung, Solar-VG-Optimierung un einfache Hinweis.",
+        cta_title: "Loss uns schwätze!", cta_sub: "Mir sinn do am Noroeschte Summit — Três de Maio/RS. Schreib iwwer Whats oder geh uff die Seit.",
+        cta_whats: "WhatsApp: (51) 99871-2569", cta_site: "Seit: smartspaar.com.br",
+        footer_title: "Fang jetzt aa ohne Anfangsinvestition",
+        footer_sub: "Schnell, günschtig un Resultat in Woche — jetzt aa uffm Land vum Noroeschte.",
+        footer_cta: "Mit SmartSpaar schwätze",
+        location: "Mit Stolz vum Noroeschte un vum Veleiro Ökosystem"
+      }
+    };
+
+    function switchLang(lang) {
+      const btnPt = document.getElementById('btn-pt');
+      const btnHrx = document.getElementById('btn-hrx');
+      if (btnPt && btnHrx) {
+        if (lang === 'pt') { btnPt.classList.add('bg-[var(--primary)]','text-white'); btnPt.classList.remove('bg-white','text-[var(--primary)]','border'); btnHrx.classList.remove('bg-[var(--primary)]','text-white'); btnHrx.classList.add('bg-white','text-[var(--primary)]','border'); }
+        else { btnHrx.classList.add('bg-[var(--primary)]','text-white'); btnHrx.classList.remove('bg-white','text-[var(--primary)]','border'); btnPt.classList.remove('bg-[var(--primary)]','text-white'); btnPt.classList.add('bg-white','text-[var(--primary)]','border'); }
+      }
+      const mBtnPt = document.getElementById('m-btn-pt');
+      const mBtnHrx = document.getElementById('m-btn-hrx');
+      if (mBtnPt && mBtnHrx) {
+        if (lang === 'pt') { mBtnPt.classList.add('bg-[var(--primary)]','text-white'); mBtnPt.classList.remove('bg-white','text-[var(--primary)]','border'); mBtnHrx.classList.remove('bg-[var(--primary)]','text-white'); mBtnHrx.classList.add('bg-white','text-[var(--primary)]','border'); }
+        else { mBtnHrx.classList.add('bg-[var(--primary)]','text-white'); mBtnHrx.classList.remove('bg-white','text-[var(--primary)]','border'); mBtnPt.classList.remove('bg-[var(--primary)]','text-white'); mBtnPt.classList.add('bg-white','text-[var(--primary)]','border'); }
+      }
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[lang] && t[lang][key]) el.textContent = t[lang][key];
+      });
+      document.documentElement.lang = (lang === 'pt') ? 'pt' : (lang === 'hrx' ? 'hrx' : 'pt');
+    }
+
+    switchLang('pt');
+    document.addEventListener('DOMContentLoaded', () => { if (typeof updateNavigationAuth === 'function') updateNavigationAuth('auth-button'); });
+  </script>
+</body>
+</html>
