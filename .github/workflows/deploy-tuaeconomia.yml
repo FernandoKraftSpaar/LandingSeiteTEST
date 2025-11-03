@@ -26,7 +26,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20' # ← Atualizar para Node 20 (LTS)
           cache: 'npm'
           cache-dependency-path: tuaeconomia/package-lock.json
       
@@ -41,6 +41,13 @@ jobs:
           npm run build
         env:
           NODE_ENV: production
+      
+      # ✅ Adicionar validação
+      - name: Verify build output
+        run: |
+          cd tuaeconomia
+          ls -la dist/
+          test -f dist/index.html || exit 1
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
