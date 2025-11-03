@@ -1,8 +1,20 @@
-# Welcome to your Lovable project
+# Tua Economia - Otimizador de Demanda Elétrica
+
+> **📌 IMPORTANTE**: Para informações completas sobre como este aplicativo funciona e por que ele não está acessível online, consulte **[README_DEPLOYMENT.md](./README_DEPLOYMENT.md)**
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/f85cee55-0079-485e-87ef-98fe5e3c159b
+
+## 🎯 O Que é Este Aplicativo?
+
+Este é um **calculador de otimização de contratos de demanda elétrica** que ajuda empresas a:
+- Calcular a demanda contratada ideal
+- Estimar economia através de ajustes contratuais
+- Identificar subcontratação e sobrecontratação
+- Recomendar o melhor momento para mudanças
+
+**Documentação Completa**: [CLEVER_CONTRACT_ADVISOR_DOCUMENTATION.md](../CLEVER_CONTRACT_ADVISOR_DOCUMENTATION.md)
 
 ## How can I edit this code?
 
