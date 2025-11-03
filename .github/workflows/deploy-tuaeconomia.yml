@@ -1,0 +1,48 @@
+name: Deploy Tuaeconomia App
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'tuaeconomia/**'
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    name: Build and Deploy Tuaeconomia
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          lfs: false
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: tuaeconomia/package-lock.json
+      
+      - name: Install dependencies
+        run: |
+          cd tuaeconomia
+          npm ci
+      
+      - name: Build Application
+        run: |
+          cd tuaeconomia
+          npm run build
+        env:
+          NODE_ENV: production
+      
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_TUAECONOMIA }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "tuaeconomia"
+          output_location: "dist"
+          skip_app_build: true
