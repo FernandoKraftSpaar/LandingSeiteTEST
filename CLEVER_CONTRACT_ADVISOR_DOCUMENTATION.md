@@ -120,6 +120,8 @@ The algorithm uses a **conservative optimization method** that:
 - Provides present-value calculations for future savings
 - More accurate long-term financial projections
 
+**⚠️ Current Limitation**: The IGPM factor implementation is currently a stub that returns 1.0 (no correction). To enable full inflation correction, the `igpmFactor()` function in `optimizer.ts` needs to be updated with actual IGPM data or integration with a financial data API.
+
 ### Practical Constraints
 - Honors minimum contract requirements
 - Respects change request delays
@@ -227,7 +229,7 @@ To make the app accessible online:
 
 #### Option B: Manual Deployment
 ```bash
-cd clever-contract-advisor-main/clever-contract-advisor-main
+cd tuaeconomia
 npm install
 npm run build
 # Deploy the /dist folder to any static host:
